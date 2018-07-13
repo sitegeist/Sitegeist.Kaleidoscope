@@ -1,0 +1,5 @@
+prototype(Sitegeist.Kaleidoscope:ResourceImageSource) {
+	@class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\ResourceImageSourceImplementation'
+	path = null
+	package = false
+}

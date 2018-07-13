@@ -162,7 +162,7 @@ variants are needed. This frontend know-how is now encapsulated into the present
 
 ## ImageSource FusionObjects
 
-The package contains two ImageSource-FusionObjects that encapsulate the intention to
+The package contains ImageSource-FusionObjects that encapsulate the intention to
 render an image. ImageSource-Objects return Eel-Helpers that allow to
 enforcing the rendered dimensions later in the rendering process.
 
@@ -192,6 +192,20 @@ Arguments:
 - `foregroundColor`: The foreground color of the dummyimage (default = 'fff')
 - `text`: The text that is rendered on the image (default = null, show size)
 - `preset`, `width` and `height` are supported as explained above
+
+
+### `Sitegeist.Kaleidoscope:UriImageSource`
+
+Arguments:
+- `uri`: The uri that will be rendered
+- !!! `preset`, `width` and `height` have no effect on this ImageSource
+
+### `Sitegeist.Kaleidoscope:ResourceImageSource`
+
+Arguments:
+- `package`: The default width for the image before scaling (default = 600)
+- `path`: The default height for the image before scaling (default = 400)
+- !!! `preset`, `width` and `height` have no effect on this ImageSource
 
 ## ImageSource EEl-Helpers
 

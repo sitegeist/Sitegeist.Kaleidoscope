@@ -1,0 +1,5 @@
+prototype(Sitegeist.Kaleidoscope:UriImageSource) {
+	@class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\UriImageSourceImplementation'
+
+	uri = ''
+}
