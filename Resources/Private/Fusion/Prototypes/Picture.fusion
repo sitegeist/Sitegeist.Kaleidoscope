@@ -5,9 +5,6 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 			imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 			sources = Neos.Fusion:RawArray {
 				1 = Neos.Fusion:RawArray {
-					imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
-						text = "hello world"
-					}
 					resolutions = ${[1, 1.5, 2]}
 					media = '(mmin-width: 1600px)'
 				}
@@ -18,6 +15,12 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 						800 = '800px'
 					}
 					media = '(max-width: 1599px)'
+				}
+				3 = Neos.Fusion:RawArray {
+					imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+						text = "im am here for printing"
+					}
+					media = 'print'
 				}
 			}
 			alt = 'Elva dressed as a fairy'
@@ -33,16 +36,25 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 		<picture>
 			<Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
 				<source
-					@if.has={source.resolutions}
+					@if.hasResolutions={source.resolutions}
+					@if.hasMedia={source.media}
 					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
 					srcset={subImageSource.resolutionSrcset(source.resolutions)}
 					media={source.media}
 				/>
 				<source
-					@if.has={source.sizes}
+					@if.hasSizes={source.sizes}
+					@if.hasMedia={source.media}
 					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
 					srcset={subImageSource.widthSrcset(Array.keys(source.sizes))}
 					sizes={Array.join(source.sizes, ", ")}
+					media={source.media}
+				/>
+				<source
+					@if.hasNeitherSourceNorSize={!source.sizes && !source.resolutions}
+					@if.hasMedia={source.media}
+					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
+					srcset={subImageSource}
 					media={source.media}
 				/>
 			</Neos.Fusion:Collection>
