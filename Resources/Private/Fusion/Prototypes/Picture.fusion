@@ -1,0 +1,56 @@
+prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
+
+	@styleguide {
+		props {
+			imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+			sources = Neos.Fusion:RawArray {
+				1 = Neos.Fusion:RawArray {
+					imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+						text = "hello world"
+					}
+					resolutions = ${[1, 1.5, 2]}
+					media = '(mmin-width: 1600px)'
+				}
+				2 = Neos.Fusion:RawArray {
+					sizes = Neos.Fusion:RawArray {
+						320 = '(max-width: 320px) 280px'
+						480 = '(max-width: 480px) 440px'
+						800 = '800px'
+					}
+					media = '(max-width: 1599px)'
+				}
+			}
+			alt = 'Elva dressed as a fairy'
+		}
+	}
+
+	imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+	sources = null
+	alt = null
+	title = null
+
+	renderer = afx`
+		<picture>
+			<Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
+				<source
+					@if.has={source.resolutions}
+					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
+					srcset={subImageSource.resolutionSrcset(source.resolutions)}
+					media={source.media}
+				/>
+				<source
+					@if.has={source.sizes}
+					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
+					srcset={subImageSource.widthSrcset(Array.keys(source.sizes))}
+					sizes={Array.join(source.sizes, ", ")}
+					media={source.media}
+				/>
+			</Neos.Fusion:Collection>
+			<img
+				src={props.imageSource}
+				alt={props.alt}
+				title={props.title}
+			/>
+		</picture>
+	`
+}

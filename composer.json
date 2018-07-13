@@ -1,0 +1,21 @@
+{
+    "description": "Responsive-images for Neos",
+    "type": "neos-package",
+    "name": "sitegeist/kaleidoscope",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "neos/flow": "*",
+        "neos/fusion-afx": "*",
+        "neos/media": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sitegeist\\Kaleidoscope\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Sitegeist.Kaleidoscope"
+        }
+    }
+}

@@ -1,0 +1,13 @@
+prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
+	@class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\DummyImageSourceImplementation'
+
+	baseWidth = 600
+	baseHeight = 400
+	backgroundColor = '999'
+	foregroundColor = 'fff'
+	text = null
+
+	preset = null
+	width = null
+	height = null
+}

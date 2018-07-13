@@ -1,0 +1,42 @@
+prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
+
+	@styleguide {
+		props {
+			imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+			alt = 'Elva dressed as a fairy'
+		}
+
+		propSets {
+			multires {
+				resolutions = ${[1, 1.5, 2]}
+			}
+			multisize {
+				sizes = Neos.Fusion:RawArray {
+					320 = '(max-width: 320px) 280px'
+					480 = '(max-width: 480px) 440px'
+					800 = '800px'
+				}
+			}
+		}
+	}
+
+	@propTypes {
+		imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+	}
+
+	imageSource = null
+	sizes = null
+	resolutions = null
+	alt = null
+	title = null
+
+	renderer = afx`
+		<img
+			src={props.imageSource}
+			srcset={props.sizes ? props.imageSource.widthSrcset(Array.keys(props.sizes)) : (props.resolutions ? props.imageSource.resolutionSrcset(props.resolutions) : null)}
+			sizes={props.sizes ? Array.join(props.sizes, ', ') : null}
+			alt={props.alt}
+			title={props.title}
+		/>
+	`
+}
