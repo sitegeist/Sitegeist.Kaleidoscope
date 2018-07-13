@@ -21,7 +21,7 @@ by our employer http://www.sitegeist.de.*
 
 ## Installation
 
-Sitegeist.Monocle is available via packagist run `composer require sitegeist/kaleidoscope`.
+Sitegeist.Kaleidoscope is available via packagist run `composer require sitegeist/kaleidoscope`.
 We use semantic-versioning so every breaking change will increase the major-version number.
 
 ## Usage
