@@ -6,7 +6,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 			sources = Neos.Fusion:RawArray {
 				1 = Neos.Fusion:RawArray {
 					resolutions = ${[1, 1.5, 2]}
-					media = '(mmin-width: 1600px)'
+					media = 'screen and (min-width: 1600px)'
 				}
 				2 = Neos.Fusion:RawArray {
 					sizes = Neos.Fusion:RawArray {
@@ -14,7 +14,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 						480 = '(max-width: 480px) 440px'
 						800 = '800px'
 					}
-					media = '(max-width: 1599px)'
+					media = 'screen and (max-width: 1599px)'
 				}
 				3 = Neos.Fusion:RawArray {
 					imageSource = Sitegeist.Kaleidoscope:DummyImageSource {

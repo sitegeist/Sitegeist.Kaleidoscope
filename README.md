@@ -85,14 +85,10 @@ Props:
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 sources = Neos.Fusion:RawArray {
-
-    # multires source for large device that has a special source
+    # multires variant for large device
     1 = Neos.Fusion:RawArray {
-        imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
-            text = "hello world"
-        }
         resolutions = ${[1, 1.5, 2]}
-        media = '(mmin-width: 1600px)'
+        media = 'screen and (min-width: 1600px)'
     }
 
     # multisize variant that is based on tha main imageSource
@@ -102,7 +98,15 @@ sources = Neos.Fusion:RawArray {
             480 = '(max-width: 480px) 440px'
             800 = '800px'
         }
-        media = '(max-width: 1599px)'
+        media = 'screen and (max-width: 1599px)'
+    }
+
+    # special source for printing
+    3 = Neos.Fusion:RawArray {
+        imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+            text = "im am here for printing"
+        }
+        media = 'print'
     }
 }
 
