@@ -77,7 +77,10 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
 
         if ($this->targetWidth) {
             $scaledHelper->setWidth(round($factor * $this->targetWidth));
+        } else {
+            $scaledHelper->setWidth(round($factor * $this->asset->getWidth()));
         }
+
         if ($this->targetHeight) {
             $scaledHelper->setHeight(round($factor * $this->targetHeight));
         }
