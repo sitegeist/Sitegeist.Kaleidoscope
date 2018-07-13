@@ -174,7 +174,7 @@ but can also applied on the returned object. This will override the fusion-setti
 
 All ImageSources support the following fusion properties:
 
-- `preset`: Apply a configuration preset (default null, settings below override the preset)
+- `preset`: Set width and/or height via named-preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
 - `width`: Set the intended width (default null)
 - `height`: Set the intended height (default null)
 
@@ -218,7 +218,7 @@ dimensions and to render the `src` and `srcset`-attributes.
 
 Methods of ImageSource-Helpers that are accessible via EEL:
 
-- `applyPreset( string )`: Apply width and height from a thumbnailPreset identified by its name
+- `applyPreset( string )`: Set width and/or height via named-preset from Settings `Neos.Media.thumbnailPresets`
 - `setWidth( integer )`: Set the intend width
 - `setHeight( integer )`: Set the intended height
 - `src ()` : Render a src attribute for the given ImageSource-object

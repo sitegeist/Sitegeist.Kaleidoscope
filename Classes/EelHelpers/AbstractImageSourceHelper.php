@@ -62,6 +62,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
                 }
             }
         }
+        return $this;
     }
 
     /**
