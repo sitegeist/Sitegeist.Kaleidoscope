@@ -2,7 +2,7 @@
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Media\Domain\Model\Image;
+use Neos\Media\Domain\Model\ImageInterface;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\Media\Domain\Service\ThumbnailService;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
@@ -40,17 +40,9 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
 
     /**
      * AssetImageSourceHelper constructor.
-     * @param Image $asset
+     * @param ImageInterface $asset
      */
-    public function __construct(Image $asset)
-    {
-        $this->asset = $asset;
-    }
-
-    /**
-     * @param Image $asset
-     */
-    public function setAsset(Image $asset): void
+    public function __construct(ImageInterface $asset)
     {
         $this->asset = $asset;
     }

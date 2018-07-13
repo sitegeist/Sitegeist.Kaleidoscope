@@ -5,14 +5,13 @@ use Neos\Flow\Annotations as Flow;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\AssetImageSourceHelper;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
-use Neos\Media\Domain\Model\Image;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 {
     /**
      * @return mixed
      */
-    public function getAsset() : Image
+    public function getAsset()
     {
         return $this->fusionValue('asset');
     }
