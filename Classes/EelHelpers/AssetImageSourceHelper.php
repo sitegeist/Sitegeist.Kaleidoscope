@@ -75,6 +75,8 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
 
         if ($this->targetHeight) {
             $scaledHelper->setHeight(round($factor * $this->targetHeight));
+        } else if (!$this->targetWidth) {
+            $scaledHelper->setHeight(round($factor * $this->asset->getHeight()));
         }
 
         return $scaledHelper;
@@ -84,7 +86,7 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
     {
         $async = $this->request ? $this->async : false;
         $allowCropping = ($this->targetWidth && $this->targetHeight);
-        $allowUpScaling = true;
+        $allowUpScaling = false;
 
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $this->targetWidth,
