@@ -24,11 +24,6 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
         $this->uri = $uri;
     }
 
-    public function scale(float $factor): ImageSourceHelperInterface
-    {
-        return $this;
-    }
-
     public function src(): string
     {
         return $this->uri;

@@ -72,13 +72,18 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function widthSrcset(array $widthSet): string
     {
-        $srcsetArray = [];
-        foreach ($widthSet as $targetWidth) {
-            $scaleFactor = $targetWidth / $this->getWidth();
-            $scaled = $this->scale($scaleFactor);
-            $srcsetArray[] = $scaled->src() . ' ' . $targetWidth . 'w';
+        if ($this instanceof ScalableImageSourceHelperInterface) {
+            $srcsetArray = [];
+            foreach ($widthSet as $targetWidth) {
+                $scaleFactor = $targetWidth / $this->getWidth();
+                $scaled = $this->scale($scaleFactor);
+                $srcsetArray[] = $scaled->src() . ' ' . $targetWidth . 'w';
+            }
+            return implode(', ', $srcsetArray);
+        } else {
+            return $this->src();
         }
-        return implode(', ', $srcsetArray);
+
     }
 
     /**
@@ -89,12 +94,16 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function resolutionSrcset(array $resolutionSet): string
     {
-        $srcsetArray = [];
-        foreach ($resolutionSet as $scaleFactor) {
-            $scaled = $this->scale($scaleFactor);
-            $srcsetArray[] = $scaled->src() . ' ' . $scaleFactor . 'x';
+        if ($this instanceof ScalableImageSourceHelperInterface) {
+            $srcsetArray = [];
+            foreach ($resolutionSet as $scaleFactor) {
+                $scaled = $this->scale($scaleFactor);
+                $srcsetArray[] = $scaled->src() . ' ' . $scaleFactor . 'x';
+            }
+            return implode(', ', $srcsetArray);
+        } else {
+            return $this->src();
         }
-        return implode(', ', $srcsetArray);
     }
 
     /**

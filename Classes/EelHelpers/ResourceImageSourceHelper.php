@@ -27,11 +27,6 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
         $this->path = $path;
     }
 
-    public function scale(float $factor): ImageSourceHelperInterface
-    {
-        return $this;
-    }
-
     public function src(): string
     {
         return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);

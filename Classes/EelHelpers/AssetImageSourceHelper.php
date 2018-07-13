@@ -8,7 +8,7 @@ use Neos\Media\Domain\Service\ThumbnailService;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Flow\Mvc\ActionRequest;
 
-class AssetImageSourceHelper extends AbstractImageSourceHelper
+class AssetImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
 {
 
     /**
@@ -46,6 +46,7 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
     {
         $this->asset = $asset;
     }
+
 
     /**
      * @param bool $async

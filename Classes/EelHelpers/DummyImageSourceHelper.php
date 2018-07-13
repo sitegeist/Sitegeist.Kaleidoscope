@@ -3,7 +3,7 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
 
-class DummyImageSourceHelper extends AbstractImageSourceHelper
+class DummyImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
 {
     protected $baseWidth = 600;
 

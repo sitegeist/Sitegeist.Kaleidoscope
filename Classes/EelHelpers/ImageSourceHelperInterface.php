@@ -11,8 +11,6 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function applyPreset(string $name) : ImageSourceHelperInterface;
 
-    public function scale(float $factor): ImageSourceHelperInterface;
-
     public function src() : string;
 
     public function widthSrcset(array $widthSet) : string;
