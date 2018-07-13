@@ -36,15 +36,4 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
     {
         return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);
     }
-
-    public function getWidth() : int
-    {
-        return 0;
-    }
-
-
-    public function getHeight() : int
-    {
-        return 0;
-    }
 }

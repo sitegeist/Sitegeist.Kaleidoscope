@@ -19,9 +19,5 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function resolutionSrcset(array $resolutionSet) : string;
 
-    public function getWidth() : int;
-
-    public function getHeight() : int;
-
     public function __toString() : string;
 }

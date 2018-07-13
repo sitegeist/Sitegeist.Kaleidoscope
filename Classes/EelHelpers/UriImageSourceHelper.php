@@ -33,15 +33,4 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
     {
         return $this->uri;
     }
-
-    public function getWidth() : int
-    {
-        return 0;
-    }
-
-
-    public function getHeight() : int
-    {
-        return 0;
-    }
 }

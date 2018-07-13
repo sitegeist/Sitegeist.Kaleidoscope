@@ -113,14 +113,4 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper
 
         return $thumbnailData['src'];
     }
-
-    public function getWidth() : int
-    {
-        return $this->asset->getWidth();
-    }
-
-    public function getHeight() : int
-    {
-        return $this->asset->getHeight();
-    }
 }
