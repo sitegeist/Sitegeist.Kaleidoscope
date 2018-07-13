@@ -26,6 +26,136 @@ We use semantic-versioning so every breaking change will increase the major-vers
 
 ## Usage
 
+## Image/Picture FusionObjects
+
+The Kaleidoscope package integrates two main fusion-objects that an render
+the given ImageSource as `img`- or `picture`-tag.
+
+### `Sitegeist.Kaleidoscope:Image`
+
+Render an `img`-tag with optional `srcset` based on `sizes` or `resolutions`.
+
+Props:
+
+- `imageSource`: the imageSource to render
+- `sizes`: an array with the different widths as keys and the needed media queries as value
+- `resolutions`: an array of numbers that represents the needed resolutions
+- `alt`: alt-attribute for the tag
+- `title`: title attribute for the tag
+
+
+Image with srcset in multiple resolutions:
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+resolutions = ${[1,1.5,2]}
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.sizes} />
+`
+```
+
+Image with srcset in multiple sizes:
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+sizes = Neos.Fusion:RawArray {
+    320 = '(max-width: 320px) 280px'
+    480 = '(max-width: 480px) 440px'
+    800 = '800px'
+}
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sizes={props.sizes} />
+`
+```
+
+Note: If sizes and resolutions are passed only sizes are rendered. If neither is passed the whole srcset is omitted and only the src-attribute is rendered.
+
+### `Sitegeist.Kaleidoscope:Picture`
+
+Render a `picture`-tag with various sources.
+
+Props:
+- `imageSource`: the imageSource to render
+- `sources`: an array of source definitions that contains. Each item contains the keys `media`, `sizes` or `resolutions` and an optional `imageSource`
+- `alt`: alt-attribute for the tag
+- `title`: title attribute for the tag
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+sources = Neos.Fusion:RawArray {
+
+    # multires source for large device that has a special source
+    1 = Neos.Fusion:RawArray {
+        imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+            text = "hello world"
+        }
+        resolutions = ${[1, 1.5, 2]}
+        media = '(mmin-width: 1600px)'
+    }
+
+    # multisize variant that is based on tha main imageSource
+    2 = Neos.Fusion:RawArray {
+        sizes = Neos.Fusion:RawArray {
+            320 = '(max-width: 320px) 280px'
+            480 = '(max-width: 480px) 440px'
+            800 = '800px'
+        }
+        media = '(max-width: 1599px)'
+    }
+}
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sources={props.sources} />
+`
+```
+
+## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
+
+```
+prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusion:Component) {
+
+    #
+    # Use the DummyImageSource inside the styleguide
+    #
+    @styleguide {
+        props {
+            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+        }
+    }
+
+    #
+    # Enforce the dimensions of the passed images by cropping to 1600 x 800
+    #
+    imageSource = null
+    imageSource.@process.emforeDimensions = ${value.setWidth(1600).setHeight(900)}
+
+    renderer = afx`
+        <img class="keyvisual" src={props.imageSource} srcset={props.imageSource.resolutionSrcset([1,1.5,2])} />
+    `
+}
+```
+
+Please note that the enforced dimensions are applied in the presentational component.
+The dimension enforcement is applied to the DummySource aswell as to the AssetSource
+which will be defined by the integration.
+
+The integration of the component above as content-element works like this:
+
+```
+prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:ContentComponent) {
+    renderer = Vendor.Site:Component.ResponsiveKevisualImage {
+        imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
+            asset = ${q(node).property('image')}
+        }
+    }
+}
+```
+
+This shows that integration-code dos not need to know the required image dimensions or wich
+variants are needed. This frontend know-how is now encapsulated into the presentational-component.
+
 ## ImageSource FusionObjects
 
 The package contains two ImageSource-FusionObjects that encapsulate the intention to
@@ -120,128 +250,7 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
 In this example devices smaller than 800px will show a 400x400 square image,
 while larger devices will render a multires-source in the orginal image dimension.
 
-## Image/Picture FusionObjects
 
-### `Sitegeist.Kaleidoscope:Image`
-
-Props:
-
-- `imageSource`: the imageSource to render
-- `sizes`: an array with the different widths as keys and the needed media queries as value
-- `resolutions`: an array of numbers that represents the needed resolutions
-- `alt`: alt-attribute for the tag
-- `title`: title attribute for the tag
-
-
-Image with srcset in multiple resolutions:
-
-```
-imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-resolutions = ${[1,1.5,2]}
-
-renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.sizes} />
-`
-```
-
-Image with srcset in multiple sizes:
-
-```
-imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-sizes = Neos.Fusion:RawArray {
-    320 = '(max-width: 320px) 280px'
-    480 = '(max-width: 480px) 440px'
-    800 = '800px'
-}
-
-renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sizes={props.sizes} />
-`
-```
-
-Note: If sizes and resolutions are passed only sizes are rendered. If neither is passed the whole srcset is omitted and only the src-attribute is rendered.
-
-### `Sitegeist.Kaleidoscope:Picture`
-
-Props:
-- `imageSource`: the imageSource to render
-- `sources`: an array of source definitions that contains. Each item contains the keys `media`, `sizes` or `resolutions` and an optional `imageSource`
-- `alt`: alt-attribute for the tag
-- `title`: title attribute for the tag
-
-```
-imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-sources = Neos.Fusion:RawArray {
-
-    # multires source for large device that has a special source
-    1 = Neos.Fusion:RawArray {
-        imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
-            text = "hello world"
-        }
-        resolutions = ${[1, 1.5, 2]}
-        media = '(mmin-width: 1600px)'
-    }
-
-    # multisize variant that is based on tha main imageSource
-    2 = Neos.Fusion:RawArray {
-        sizes = Neos.Fusion:RawArray {
-            320 = '(max-width: 320px) 280px'
-            480 = '(max-width: 480px) 440px'
-            800 = '800px'
-        }
-        media = '(max-width: 1599px)'
-    }
-}
-
-renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sources={props.sources} />
-`
-```
-
-## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
-
-```
-prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusion:Component) {
-
-    #
-    # Use the DummyImageSource inside the styleguide
-    #
-    @styleguide {
-        props {
-            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-        }
-    }
-
-    #
-    # Enforce the dimensions of the passed images by cropping to 1600 x 800
-    #
-    imageSource = null
-    imageSource.@process.emforeDimensions = ${value.setWidth(1600).setHeight(900)}
-
-    renderer = afx`
-        <img class="keyvisual" src={props.imageSource} srcset={props.imageSource.resolutionSrcset([1,1.5,2])} />
-    `
-}
-```
-
-Please note that the enforced dimensions are applied in the presentational component.
-The dimension enforcement is applied to the DummySource aswell as to the AssetSource
-which will be defined by the integration.
-
-The integration of the component above as content-element works like this:
-
-```
-prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:ContentComponent) {
-    renderer = Vendor.Site:Component.ResponsiveKevisualImage {
-        imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
-            asset = ${q(node).property('image')}
-        }
-    }
-}
-```
-
-This shows that integration-code dos not need to know the required image dimensions or wich
-variants are needed. This frontend know-how is now encapsulated into the presentational-component.
 
 ## Contribution
 
