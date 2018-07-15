@@ -15,6 +15,16 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
 
     protected $text = null;
 
+    protected $baseUri = '';
+
+    /**
+     * @param ControllerContext $controllerContext
+     */
+    public function __construct(string $baseUri)
+    {
+        $this->baseUri = $baseUri;
+    }
+
     /**
      * @param int $baseWidth
      */
@@ -73,17 +83,16 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
 
     public function src(): string
     {
-        $url = 'https://dummyimage.com';
-
-        $url .= '/' . $this->getWidth() . 'x' . $this->getHeight();
-        $url .= '/' . ($this->backgroundColor ?: '000');
-        $url .= '/' . ($this->foregroundColor ?: 'fff');
-
-        if ($this->text) {
-            $url .=  '&text=' . urlencode($this->text);
-        }
-
-        return $url;
+        $uri = $this->baseUri . '?' . http_build_query (
+            [
+                'width' => $this->getWidth(),
+                'height' => $this->getHeight(),
+                'backgroundColor' => ($this->backgroundColor ?: '000'),
+                'foregroundColor' => ($this->foregroundColor ?: 'fff'),
+                'text' => ($this->text ?: $this->getWidth() . ' x ' . $this->getHeight())
+            ]
+        );
+        return $uri;
     }
 
     public function getWidth() : int

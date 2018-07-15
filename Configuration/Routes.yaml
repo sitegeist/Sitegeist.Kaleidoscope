@@ -1,0 +1,12 @@
+##
+# Kaleidoscope-DummyImage
+
+-
+  name:  'Kaleidoscope-DummyImage'
+  uriPattern: 'kaleidoscope/dummyimage'
+  defaults:
+    '@package':    'Sitegeist.Kaleidoscope'
+    '@controller': 'DummyImage'
+    '@action':     'image'
+  httpMethods: ['GET']
+  appendExceedingArguments: TRUE
