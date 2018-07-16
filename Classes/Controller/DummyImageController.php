@@ -72,15 +72,15 @@ class DummyImageController extends ActionController
         $baseShapeAspectRatio = $baseShapeWidth / $baseShapeHeight;
 
         $baseShape = [
-            new Point(15,250), // links unten
-            new Point(15,15), // links oben
-            new Point(585,15), // rechts oben
-            new Point(585,250), // rechts unten
+            new Point(15,250), // left ground
+            new Point(15,15), // left top
+            new Point(585,15), // right top
+            new Point(585,250), // right ground
             new Point(580,250),
 
-            new Point(410,110),
-            new Point(360,160),
-            new Point(220,30),
+            new Point(440,110), // small mountain
+            new Point(360,190),  // saddle
+            new Point(220,50), // big mountain
 
             new Point(20,250),
         ];
