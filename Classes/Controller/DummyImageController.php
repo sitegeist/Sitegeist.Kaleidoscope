@@ -135,6 +135,7 @@ class DummyImageController extends ActionController
         }
 
         // build result
+        $this->response->setHeader( 'Cache-Control', 'max-age=883000000');
         $this->response->setHeader( 'Content-type', 'image/png');
         return $image->get('png');
     }
