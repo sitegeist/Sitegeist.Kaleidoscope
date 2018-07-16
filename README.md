@@ -54,7 +54,7 @@ imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 resolutions = ${[1,1.5,2]}
 
 renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.sizes} />
+    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.resolutions} />
 `
 ```
 
