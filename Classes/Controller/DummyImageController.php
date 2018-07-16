@@ -59,8 +59,8 @@ class DummyImageController extends ActionController
 
         // create imagine
         $palette = new Palette\RGB();
-        $bgColor = $palette->color($backgroundColor);
-        $textColor =  $palette->color($foregroundColor);
+        $bgColor = $palette->color(is_numeric($backgroundColor) ? '#' . $backgroundColor : $backgroundColor);
+        $textColor =  $palette->color(is_numeric($foregroundColor) ? '#' . $foregroundColor : $foregroundColor);
 
         // create image
         $imageBox = new Box($width, $height);
