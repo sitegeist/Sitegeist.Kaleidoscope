@@ -85,17 +85,17 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
     {
         $uri = $this->baseUri . '?' . http_build_query (
             [
-                'width' => $this->getWidth(),
-                'height' => $this->getHeight(),
+                'width' => $this->getCurrentWidth(),
+                'height' => $this->getCurrentHeight(),
                 'backgroundColor' => ($this->backgroundColor ?: '000'),
                 'foregroundColor' => ($this->foregroundColor ?: 'fff'),
-                'text' => ($this->text ?: $this->getWidth() . ' x ' . $this->getHeight())
+                'text' => ($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
             ]
         );
         return $uri;
     }
 
-    public function getWidth() : int
+    public function getCurrentWidth() : int
     {
         if ($this->targetWidth) {
             return $this->targetWidth;
@@ -107,7 +107,7 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
     }
 
 
-    public function getHeight() : int
+    public function getCurrentHeight() : int
     {
         if ($this->targetHeight) {
             return $this->targetHeight;

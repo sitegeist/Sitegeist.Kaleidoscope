@@ -76,7 +76,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
         if ($this instanceof ScalableImageSourceHelperInterface) {
             $srcsetArray = [];
             foreach ($widthSet as $targetWidth) {
-                $scaleFactor = $targetWidth / $this->getWidth();
+                $scaleFactor = $targetWidth / $this->getCurrentWidth();
                 $scaled = $this->scale($scaleFactor);
                 $srcsetArray[] = $scaled->src() . ' ' . $targetWidth . 'w';
             }

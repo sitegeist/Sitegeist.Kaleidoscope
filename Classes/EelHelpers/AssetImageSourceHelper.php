@@ -111,4 +111,27 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
 
         return $thumbnailData['src'];
     }
+
+    public function getCurrentWidth() : int
+    {
+        if ($this->targetWidth) {
+            return $this->targetWidth;
+        } elseif ($this->targetHeight) {
+            return round($this->targetHeight * $this->asset->getWidth() / $this->asset->getHeight());
+        } else {
+            return $this->baseWidth;
+        }
+    }
+
+
+    public function getCurrentHeight() : int
+    {
+        if ($this->targetHeight) {
+            return $this->targetHeight;
+        } elseif ($this->targetWidth) {
+            return round($this->targetWidth *  $this->asset->getHeight() / $this->asset->getWidth());
+        } else {
+            return $this->baseHeight;
+        }
+    }
 }
