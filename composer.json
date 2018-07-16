@@ -6,7 +6,8 @@
     "require": {
         "neos/flow": "*",
         "neos/fusion-afx": "*",
-        "neos/media": "*"
+        "neos/media": "*",
+        "neos/imagine": "*"
     },
     "autoload": {
         "psr-4": {

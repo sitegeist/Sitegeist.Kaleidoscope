@@ -3,3 +3,9 @@ Neos:
     fusion:
       autoInclude:
         Sitegeist.Kaleidoscope: true
+
+  Flow:
+    mvc:
+      routes:
+        'Sitegeist.Kaleidoscope':
+          position: 'before Neos.Neos'

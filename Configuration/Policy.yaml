@@ -1,0 +1,11 @@
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'Sitegeist.Kaleidoscope:DummyImage':
+      matcher: 'method(Sitegeist\Kaleidoscope\Controller\DummyImageController->(image)Action())'
+
+roles:
+  'Neos.Flow:Everybody':
+    privileges:
+      -
+        privilegeTarget: 'Sitegeist.Kaleidoscope:DummyImage'
+        permission: GRANT

@@ -1,0 +1,5 @@
+Sitegeist\Kaleidoscope\Controller\DummyImageController:
+  properties:
+    imagineService:
+      object:
+        factoryObjectName: Neos\Imagine\ImagineFactory

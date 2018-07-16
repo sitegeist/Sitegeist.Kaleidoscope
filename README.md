@@ -11,8 +11,12 @@ We want to help implementing responsive-images in the context of atomic-fusion
 and enable previewing fusion-components and their full responsive behavior in the
 Sitegeist.Monocle living styleguide.
 
-Sitegeist.Kaleidoscope comes with Fusion-ImageSources for Assets, DummyImages, Resources
-and static Uris.
+Sitegeist.Kaleidoscope comes with four Fusion-ImageSources:
+
+- Assets: Images uploaded by Editors
+- DummyImages: Dummyimages created by a local service
+- Resources: Static resources from Packages
+- static Uris: any Url
 
 ### Authors & Sponsors
 
