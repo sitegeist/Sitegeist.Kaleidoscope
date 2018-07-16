@@ -114,7 +114,7 @@ sources = Neos.Fusion:RawArray {
 }
 
 renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sources={props.sources} />
+    <Sitegeist.Kaleidoscope:Picture imageSource={props.imageSource} sources={props.sources} />
 `
 ```
 
