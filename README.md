@@ -45,31 +45,68 @@ Render an `img`-tag with optional `srcset` based on `sizes` or `resolutions`.
 Props:
 
 - `imageSource`: the imageSource to render
-- `sizes`: an array with the different widths as keys and the needed media queries as value
+- `sizes`: array of the needed media queries for the sizes attribute (if no width is given the keys are used as widths)
+- `widths`: array of image-widths that shall be rendered (if no `sizes` but are given `sizes="100vw"` is assumed)
 - `resolutions`: an array of numbers that represents the needed resolutions
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
 
-Image with srcset in multiple resolutions:
+#### Image with srcset in multiple resolutions:
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-resolutions = ${[1,1.5,2]}
+resolutions = ${[1,2,3]}
 
 renderer = afx`
     <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.resolutions} />
 `
 ```
+will render as:
 
-Image with srcset in multiple sizes:
+```
+<img src="_baseurl_" srcset="_url_1_ 1x, _url_2_ 2x, _url_3_ 3x">
+```
+
+#### Image with srcset in multiple sizes:
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+widths = ${[320, 400, 600, 800, 1000, 1200, 1600]}
+sizes = Neos.Fusion:RawArray {
+    large = '(min-width: 800px) 1000px'
+    medium = '(min-width: 480px) 800px'
+    small = '(min-width: 320px) 440px'
+    default = '100vw'
+}
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} widths={props.widths} sizes={props.sizes} />
+`
+```
+
+will render as:
+
+```
+<img
+    src="_baseurl_"
+    srcset="_url_1_ 320w, _url_2_ 400w, _url_3_ 600w, _url_4_ 800w, _url_5_ 1000w, _url_6_ 1200w, _url_7_ 1600w"
+    sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
+/>
+```
+
+If the sizes map 1:1 to the different widths the the syntax can be simplified by
+using the keys of sizes as width definitions.
+
+Attention: The keys are sorted in this case so make sure to define the smaller breakpoints at start.
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 sizes = Neos.Fusion:RawArray {
-    320 = '(max-width: 320px) 280px'
-    480 = '(max-width: 480px) 440px'
-    800 = '800px'
+    280 = '(max-width: 280px) 280px'
+    440 = '(max-width: 480px) 440px'
+    800 = '(max-width: 800px) 800px'
+    1000 = '100vw'
 }
 
 renderer = afx`
@@ -77,39 +114,40 @@ renderer = afx`
 `
 ```
 
-Note: If sizes and resolutions are passed only sizes are rendered. If neither is passed the whole srcset is omitted and only the src-attribute is rendered.
+Note: `widths` and / or `sizes are preferred to `resolutions`. If neither is passed the whole `srcset is omitted and only the `src`-attribute is rendered.
 
 ### `Sitegeist.Kaleidoscope:Picture`
-
+`
 Render a `picture`-tag with various sources.
 
 Props:
 - `imageSource`: the imageSource to render
-- `sources`: an array of source definitions that contains. Each item contains the keys `media`, `sizes` or `resolutions` and an optional `imageSource`
+- `sources`: an array of source definitions that contains. Each item contains the keys `media`, `sizes`, `widths` or `resolutions` and an optional `imageSource`
+- `sizes`: array of the needed media queries for the sizes attribute of the default image
+- `widths`: array of image-widths that shall be rendered for the default image
+- `resolutions`: an array of numbers that represents the needed resolutions for the default image
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 sources = Neos.Fusion:RawArray {
-    # multires variant for large device
-    1 = Neos.Fusion:RawArray {
+    large = Neos.Fusion:RawArray {
         resolutions = ${[1, 1.5, 2]}
         media = 'screen and (min-width: 1600px)'
     }
 
-    # multisize variant that is based on tha main imageSource
-    2 = Neos.Fusion:RawArray {
+    small = Neos.Fusion:RawArray {
+        widths = ${[320,480,800]}
         sizes = Neos.Fusion:RawArray {
-            320 = '(max-width: 320px) 280px'
-            480 = '(max-width: 480px) 440px'
-            800 = '800px'
+            small = '(max-width: 320px) 280px'
+            medium = '(max-width: 480px) 440px'
+            large = '100vw'
         }
         media = 'screen and (max-width: 1599px)'
     }
 
-    # special source for printing
-    3 = Neos.Fusion:RawArray {
+    print = Neos.Fusion:RawArray {
         imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
             text = "im am here for printing"
         }
@@ -120,6 +158,27 @@ sources = Neos.Fusion:RawArray {
 renderer = afx`
     <Sitegeist.Kaleidoscope:Picture imageSource={props.imageSource} sources={props.sources} />
 `
+```
+
+will render as:
+
+```
+<picture>
+  <source
+    srcset="_large_url_1_ 1x, _large_url_2_ 1.5x, _large_url_3_ 2x"
+    media="screen and (min-width: 1600px)"
+    />
+  <source
+    srcset="_small_url_1_ 320w, _small_url_2_ 480w, _small_url_3_ 800w, _small_url_4_ 1000w"
+    sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
+    media="screen and (max-width: 1599px)"
+    />
+  <source
+    srcset="_print_url_1_"
+    media="print"
+    />
+  <img src="_base_url_">
+</picture>
 ```
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle

@@ -9,10 +9,11 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 					media = 'screen and (min-width: 1600px)'
 				}
 				2 = Neos.Fusion:RawArray {
+					widths = ${[320, 480, 800, 1000]}
 					sizes = Neos.Fusion:RawArray {
-						320 = '(max-width: 320px) 280px'
-						480 = '(max-width: 480px) 440px'
-						800 = '800px'
+						small = '(max-width: 320px) 280px'
+						medium = '(max-width: 480px) 440px'
+						large = '800px'
 					}
 					media = 'screen and (max-width: 1599px)'
 				}
@@ -28,6 +29,9 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 	}
 
 	imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+	sizes = null
+	widths = null
+	resolutions = null
 	sources = null
 	alt = null
 	title = null
@@ -43,23 +47,26 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 					media={source.media}
 				/>
 				<source
-					@if.hasSizes={source.sizes}
+					@if.hasSizesOrWidth={source.sizes || source.widths}
 					@if.hasMedia={source.media}
 					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
-					srcset={subImageSource.widthSrcset(Array.keys(source.sizes))}
-					sizes={Array.join(source.sizes, ", ")}
+					srcset={subImageSource.widthSrcset(source.widths ? source.widths : Array.keys(source.sizes))}
+					sizes={source.sizes ? Array.join(source.sizes, ", ") : '100vw'}
 					media={source.media}
 				/>
 				<source
-					@if.hasNeitherSourceNorSize={!source.sizes && !source.resolutions}
+					@if.hasNeitherSourceNorSize={!source.sizes && !source.resolutions && !source.widths}
 					@if.hasMedia={source.media}
 					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
 					srcset={subImageSource}
 					media={source.media}
 				/>
 			</Neos.Fusion:Collection>
-			<img
-				src={props.imageSource}
+			<Sitegeist.Kaleidoscope:Image
+				imageSource={props.imageSource}
+				sizes={props.sizes}
+				widths={props.widths}
+				resolutions={props.resolutions}
 				alt={props.alt}
 				title={props.title}
 			/>
