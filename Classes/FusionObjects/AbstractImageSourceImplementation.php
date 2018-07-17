@@ -34,11 +34,14 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     /**
      * Create helper and initialize width and height
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceHelperInterface|null
      */
-    public function evaluate() : ImageSourceHelperInterface
+    public function evaluate() : ?ImageSourceHelperInterface
     {
         $helper = $this->createHelper();
+        if (is_null($helper)) {
+            return $helper;
+        }
 
         if ($preset = $this->getPreset()) {
             $helper->applyPreset($preset);
@@ -58,7 +61,7 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     /**
      * Create helper
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceHelperInterface|null
      */
-    abstract protected function createHelper() : ImageSourceHelperInterface;
+    abstract protected function createHelper() : ?ImageSourceHelperInterface;
 }

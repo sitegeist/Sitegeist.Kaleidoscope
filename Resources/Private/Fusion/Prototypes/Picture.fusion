@@ -33,7 +33,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 	title = null
 
 	renderer = afx`
-		<picture>
+		<picture @if.has={props.imageSource}>
 			<Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
 				<source
 					@if.hasResolutions={source.resolutions}

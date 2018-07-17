@@ -31,7 +31,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 	title = null
 
 	renderer = afx`
-		<img
+		<img @if.has={props.imageSource}
 			src={props.imageSource}
 			srcset={props.sizes ? props.imageSource.widthSrcset(Array.keys(props.sizes)) : (props.resolutions ? props.imageSource.resolutionSrcset(props.resolutions) : null)}
 			sizes={props.sizes ? Array.join(props.sizes, ', ') : null}

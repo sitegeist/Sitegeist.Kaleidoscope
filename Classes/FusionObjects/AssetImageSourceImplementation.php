@@ -27,11 +27,15 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     /**
      * Create helper and initialize with the default values
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceHelperInterface|null
      */
-    public function createHelper() : ImageSourceHelperInterface
+    public function createHelper() : ?ImageSourceHelperInterface
     {
         $asset = $this->getAsset();
+        if (!$asset) {
+            return null;
+        }
+
         $helper = new AssetImageSourceHelper($asset);
         $helper->setAsync((bool)$this->getAsync());
         $helper->setRequest($this->getRuntime()->getControllerContext()->getRequest());
