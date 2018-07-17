@@ -202,7 +202,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     imageSource.@process.enforeDimensions = ${value ? value.setWidth(1600).setHeight(900) : null}
 
     renderer = afx`
-        <img class="keyvisual" src={props.imageSource} srcset={props.imageSource.resolutionSrcset([1,1.5,2])} />
+        <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={[1,1.5,2]} />
     `
 }
 ```
