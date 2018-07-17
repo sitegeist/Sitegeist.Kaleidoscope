@@ -199,7 +199,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     # Enforce the dimensions of the passed images by cropping to 1600 x 800
     #
     imageSource = null
-    imageSource.@process.enforeDimensions = ${value.setWidth(1600).setHeight(900)}
+    imageSource.@process.enforeDimensions = ${value ? value.setWidth(1600).setHeight(900) : null}
 
     renderer = afx`
         <img class="keyvisual" src={props.imageSource} srcset={props.imageSource.resolutionSrcset([1,1.5,2])} />
