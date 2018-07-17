@@ -119,7 +119,7 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         } elseif ($this->targetHeight) {
             return round($this->targetHeight * $this->asset->getWidth() / $this->asset->getHeight());
         } else {
-            return $this->baseWidth;
+            return $this->asset->getWidth();
         }
     }
 
@@ -131,7 +131,7 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         } elseif ($this->targetWidth) {
             return round($this->targetWidth *  $this->asset->getHeight() / $this->asset->getWidth());
         } else {
-            return $this->baseHeight;
+            return $this->asset->getHeight();
         }
     }
 }
