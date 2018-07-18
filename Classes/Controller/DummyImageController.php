@@ -124,11 +124,14 @@ class DummyImageController extends ActionController
         $baseShapeHeight = 400;
         $baseShapeAspectRatio = $baseShapeWidth / $baseShapeHeight;
 
+        /**
+         * @var $baseShape Point[]
+         */
         $baseShape = [
-            new Point(15, 250), // left ground
-            new Point(15, 15), // left top
-            new Point(585, 15), // right top
-            new Point(585, 250), // right ground
+            new Point(0, 250), // left ground
+            new Point(0, 0), // left top
+            new Point(600, 0), // right top
+            new Point(600, 250), // right ground
             new Point(580, 250),
 
             new Point(440, 110), // small mountain
@@ -142,6 +145,10 @@ class DummyImageController extends ActionController
         $factor = ($imageAspectRatio > $baseShapeAspectRatio) ? (float)$height / (float)$baseShapeHeight : (float)$width / (float)$baseShapeWidth;
         $xoffset = ($imageAspectRatio > $baseShapeAspectRatio) ? ($width - ($baseShapeWidth * $factor)) / 2.0 : 0.0;
         $yoffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
+
+        /**
+         * @var $transformedShape Point[]
+         */
         $transformedShape = array_map(
             function (Point $point) use ($factor, $xoffset, $yoffset) {
                 return new Point($point->getX() * $factor + $xoffset, $point->getY() * $factor + $yoffset);
@@ -150,15 +157,10 @@ class DummyImageController extends ActionController
         );
 
         // adjust some points based on aspect ratio
-        if ($imageAspectRatio < $baseShapeAspectRatio) {
-            $transformedShape[1] = new Point($transformedShape[1]->getX(), $baseShape[1]->getY() * $factor);
-            $transformedShape[2] = new Point($transformedShape[2]->getX(), $baseShape[2]->getY() * $factor);
-        } else {
-            $transformedShape[0] = new Point($baseShape[0]->getX() * $factor, $transformedShape[0]->getY());
-            $transformedShape[1] = new Point($baseShape[0]->getX() * $factor, $transformedShape[1]->getY());
-            $transformedShape[2] = new Point($width - $baseShape[0]->getX() * $factor, $transformedShape[2]->getY());
-            $transformedShape[3] = new Point($width - $baseShape[0]->getX() * $factor, $transformedShape[3]->getY());
-        }
+        $transformedShape[0] = new Point(0, $transformedShape[0]->getY());
+        $transformedShape[1] = new Point(0, 0);
+        $transformedShape[2] = new Point( $width, 0);
+        $transformedShape[3] = new Point( $width, $transformedShape[3]->getY());
 
         // draw shape
         $image->draw()->polygon(
@@ -178,9 +180,11 @@ class DummyImageController extends ActionController
      */
     protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor,int $width, int $height): void
     {
-        $b1 = 5;
-        $b2 = 10;
-        $b3 = 15;
+        $borderWidth = ($width + $height) / 100;
+
+        $b1 = (int)round($borderWidth * 0.5);
+        $b2 = (int)round($borderWidth);
+        $b3 = (int)round($borderWidth * 1.5);
 
         $image->draw()->polygon(
             [
