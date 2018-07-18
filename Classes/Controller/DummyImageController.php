@@ -36,42 +36,50 @@ class DummyImageController extends ActionController
     /**
      * Get a dummy-image
      *
-     * @param int $width
-     * @param int $height
-     * @param string $backgroundColor
-     * @param string $foregroundColor
-     * @param string $text
+     * @param int $w
+     * @param int $h
+     * @param string $bg
+     * @param string $fg
+     * @param string $t
      */
-    public function imageAction (int $width = 600, int $height = 400, string $backgroundColor = '#000', string $foregroundColor = '#fff', string $text = null)
+    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null)
     {
         // limit input arguments
-        if ($width > 9999 || $height > 9999 ) {
-            $width = 9999;
+        if ($w > 9999 || $h > 9999 ) {
+            $w = 9999;
         }
 
-        if ($height > 9999) {
-            $height = 9999;
+        if ($h > 9999) {
+            $h = 9999;
         }
 
-        if (is_null($text)) {
-            $text = (string)$width . ' x ' . (string)$height;
+        if (is_null($t)) {
+            $t = (string)$w . ' x ' . (string)$h;
         }
+
+        $width = $w;
+        $height = $h;
+        $text = $t;
 
         // create imagine
         $palette = new Palette\RGB();
-        $bgColor = $palette->color(is_numeric($backgroundColor) ? '#' . $backgroundColor : $backgroundColor);
-        $textColor =  $palette->color(is_numeric($foregroundColor) ? '#' . $foregroundColor : $foregroundColor);
+        $backgroundColor = $palette->color($bg);
+        $foregroundColor = $palette->color($fg);
 
         // create image
         $imageBox = new Box($width, $height);
-        $image = $this->imagineService->create($imageBox, $bgColor);
+        $image = $this->imagineService->create($imageBox);
+        $image->usePalette($palette);
 
-        // render shape
-        $this->renderShape($image, $textColor, $width, $height);
+        $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
 
-        // render text
-        if ($text) {
-            $this->renderText($image, $textColor, $width, $height, $text);
+        $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+
+        $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
+
+
+        if ($t) {
+            $this->renderText($image, $foregroundColor, $width, $height, $text);
         }
 
         // build result
@@ -82,11 +90,34 @@ class DummyImageController extends ActionController
 
     /**
      * @param ImageInterface $image
-     * @param ColorInterface $color
+     * @param ColorInterface $foregroundColor
+     * @param ColorInterface $backgroundColor
      * @param int $width
      * @param int $height
      */
-    protected function renderShape(ImageInterface $image, ColorInterface $color, int $width, int $height): void
+    protected function renderBackground(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor, int $width, int $height): void
+    {
+        $image->draw()->polygon(
+            [
+                new Point(0,0),
+                new Point($width, 0),
+                new Point($width, $height),
+                new Point(0, $height)
+            ],
+            $backgroundColor,
+            true,
+            1
+        );
+
+    }
+    /**
+     * @param ImageInterface $image
+     * @param ColorInterface $foregroundColor
+     * @param ColorInterface $backgroundColor
+     * @param int $width
+     * @param int $height
+     */
+    protected function renderShape(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor, int $width, int $height): void
     {
         $imageAspectRatio = $width / $height;
         $baseShapeWidth = 600;
@@ -129,13 +160,52 @@ class DummyImageController extends ActionController
             $transformedShape[3] = new Point($width - $baseShape[0]->getX() * $factor, $transformedShape[3]->getY());
         }
 
-        // finally draw image
+        // draw shape
         $image->draw()->polygon(
             $transformedShape,
-            $color,
+            $foregroundColor,
             true,
             1
         );
+    }
+
+    /**
+     * @param ImageInterface $image
+     * @param ColorInterface $foregroundColor
+     * @param ColorInterface $backgroundColor
+     * @param int $width
+     * @param int $height
+     */
+    protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor,int $width, int $height): void
+    {
+        $b1 = 5;
+        $b2 = 10;
+        $b3 = 15;
+
+        $image->draw()->polygon(
+            [
+                new Point($b1,$b1),
+                new Point($width - $b1,$b1),
+                new Point($width - $b1 ,$height - $b1),
+                new Point($b1,$height- $b1)
+            ],
+            $backgroundColor,
+            false,
+            $b2
+        );
+
+        $image->draw()->polygon(
+            [
+                new Point($b3,$b3),
+                new Point($width - $b3, $b3),
+                new Point($width - $b3, $height - $b3),
+                new Point($b3, $height - $b3)
+            ],
+            $foregroundColor,
+            false,
+            $b2
+        );
+
     }
 
     /**

@@ -85,11 +85,11 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
     {
         $uri = $this->baseUri . '?' . http_build_query (
             [
-                'width' => $this->getCurrentWidth(),
-                'height' => $this->getCurrentHeight(),
-                'backgroundColor' => ($this->backgroundColor ?: '000'),
-                'foregroundColor' => ($this->foregroundColor ?: 'fff'),
-                'text' => ($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
+                'w' => $this->getCurrentWidth(),
+                'h' => $this->getCurrentHeight(),
+                'bg' => ($this->backgroundColor ?: '000'),
+                'fg' => ($this->foregroundColor ?: 'fff'),
+                't' => ($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
             ]
         );
         return $uri;
