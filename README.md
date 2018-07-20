@@ -45,9 +45,8 @@ Render an `img`-tag with optional `srcset` based on `sizes` or `resolutions`.
 Props:
 
 - `imageSource`: the imageSource to render
-- `sizes`: media queries for the sizes-attribute (arrays are imploded with ', ')
-- `widths`: image-widths (array) that shall be rendered
-- `resolutions`: resolutions factors (array, `widths` has priority)
+- `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
+- `sizes`: sizes attribute of the default image (string ot array)
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
@@ -56,10 +55,12 @@ Props:
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-resolutions = ${[1,2,3]}
 
 renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={props.resolutions} />
+    <Sitegeist.Kaleidoscope:Image
+        imageSource={props.imageSource}
+        srcset="1x, 2x, 3x"
+        />
 `
 ```
 will render as:
@@ -72,11 +73,13 @@ will render as:
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-widths = ${[320, 400, 600, 800, 1000, 1200, 1600]}
-sizes = '(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw'
 
 renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} widths={props.widths} sizes={props.sizes} />
+    <Sitegeist.Kaleidoscope:Image
+        imageSource={props.imageSource}
+        srcset="320w, 400w, 600w, 800w, 1000w, 1200w, 1600w"
+        sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
+        />
 `
 ```
 
@@ -99,12 +102,10 @@ Props:
 - `sources`: an array of source definitions that supports the following keys
    - `media`: the media query of this source
    - `imageSource`: alternate image-source for art direction purpose
-   - `widths`: required widths (array) for the source
-   - `resolutions`: resolutions for the source (array, `widths` has priority)
-   - `sizes`: sizes attribute of the source  (arrays are imploded with ', ')
-- `widths`: required widths (array) for the the default image
-- `resolutions`: resolutions for the default image  (array, `widths` has priority)
-- `sizes`: sizes attribute of the default image (arrays are imploded with ', ')
+   - `srcset`: media descriptors like '1.5x' or '600w' (string ot array)
+   - `sizes`: sizes attribute (string ot array)
+- `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
+- `sizes`: sizes attribute of the default image (string ot array)
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
@@ -112,12 +113,12 @@ Props:
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 sources = Neos.Fusion:RawArray {
     large = Neos.Fusion:RawArray {
-        resolutions = ${[1, 1.5, 2]}
+        srcset = '1x, 1.5x, 2x'
         media = 'screen and (min-width: 1600px)'
     }
 
     small = Neos.Fusion:RawArray {
-        widths = ${[320,480,800]}
+        srcset = '320w, 480w, 800w'
         sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
         media = 'screen and (max-width: 1599px)'
     }
@@ -177,7 +178,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     imageSource.@process.enforeDimensions = ${value ? value.setWidth(1600).setHeight(900) : null}
 
     renderer = afx`
-        <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} resolutions={[1,1.5,2]} />
+        <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} srcset="1x, 1.5x, 2x" />
     `
 }
 ```
@@ -260,8 +261,7 @@ Methods of ImageSource-Helpers that are accessible via EEL:
 - `setWidth( integer )`: Set the intend width
 - `setHeight( integer )`: Set the intended height
 - `src ()` : Render a src attribute for the given ImageSource-object
-- `widthSrcset ( array of integers )` : render a srcset attribute for the ImageSource with width descriptors.
-- `resolutionSrcset ( array of floats )` : render a srcset attribute for the ImageSource with pixel density descriptors.
+- `srcset ( array of descriptors )` : render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 
 Note: The Eel-helpers cannot be created directly. They have to be created
 by using the `Sitegeist.Kaleidoscope:AssetImageSource` or
@@ -276,7 +276,7 @@ Render an `img`-tag with `src` and a `srcset` in multiple resolutions:
     renderer = afx`
         <img
             src={props.imageSource}
-            srcset={props.imageSource.resolutionSrcset([1,1.5,2])}
+            srcset={props.imageSource.srcset('1x, 1.5x, 2x')}
         />
     `
 ```
@@ -288,7 +288,7 @@ Render an `img`-tag with `src` plus `srcset` and `sizes`:
     renderer = afx`
         <img
             src={props.imageSource}
-            srcset={props.imageSource.widthSrcset([400,600,800])}
+            srcset={props.imageSource.srcset('400w, 600w, 800w')}
             sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
         />
     `
@@ -300,7 +300,7 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
     renderer = afx`
         <picture>
             <source srcset={props.imageSource.width(400).height(400)} media="(max-width: 799px)" />
-            <source srcset={props.imageSource.resolutionSrcset([1,1.5,2])} media="(min-width: 800px)" />
+            <source srcset={props.imageSource.srcset('400w, 600w, 800w')} media="(min-width: 800px)" />
             <img src={props.imageSource} />
         </picture>
     `
@@ -308,8 +308,6 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
 
 In this example devices smaller than 800px will show a 400x400 square image,
 while larger devices will render a multires-source in the orginal image dimension.
-
-
 
 ## Contribution
 

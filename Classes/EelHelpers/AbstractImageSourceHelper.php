@@ -66,40 +66,33 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * Render sourceset Attribute for various width
+     * Render sourceset Attribute for various media descriptors
      *
-     * @param array $widthSet
+     * @param mixed $mediaDescriptors
      * @return string
      */
-    public function widthSrcset(array $widthSet): string
+    public function srcset($mediaDescriptors): string
     {
         if ($this instanceof ScalableImageSourceHelperInterface) {
             $srcsetArray = [];
-            foreach ($widthSet as $targetWidth) {
-                $scaleFactor = $targetWidth / $this->getCurrentWidth();
-                $scaled = $this->scale($scaleFactor);
-                $srcsetArray[] = $scaled->src() . ' ' . $targetWidth . 'w';
+
+            if (is_array($mediaDescriptors) || $mediaDescriptors instanceof \Traversable) {
+                $descriptors = $mediaDescriptors;
+            } else {
+                $descriptors = Arrays::trimExplode(',', (string)$mediaDescriptors);
             }
-            return implode(', ', $srcsetArray);
-        } else {
-            return $this->src();
-        }
 
-    }
-
-    /**
-     * Render sourceset Attribute for various resolution
-     *
-     * @param array $resolutionSet
-     * @return string
-     */
-    public function resolutionSrcset(array $resolutionSet): string
-    {
-        if ($this instanceof ScalableImageSourceHelperInterface) {
-            $srcsetArray = [];
-            foreach ($resolutionSet as $scaleFactor) {
-                $scaled = $this->scale($scaleFactor);
-                $srcsetArray[] = $scaled->src() . ' ' . $scaleFactor . 'x';
+            foreach ($descriptors as $descriptor) {
+                if (preg_match('/^(?<width>[0-9]+)w$/u', $descriptor, $matches)) {
+                    $width = (int) $matches['width'];
+                    $scaleFactor = $width / $this->getCurrentWidth();
+                    $scaled = $this->scale($scaleFactor);
+                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
+                } elseif (preg_match('/^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches)){
+                    $factor = (float) $matches['factor'];
+                    $scaled = $this->scale($factor);
+                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
+                }
             }
             return implode(', ', $srcsetArray);
         } else {
@@ -115,7 +108,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'applyPreset', 'src', 'widthSrcset', 'resolutionSrcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'applyPreset', 'src', 'srcset'])) {
             return true;
         } else {
             return false;

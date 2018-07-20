@@ -7,28 +7,30 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 		}
 
 		propSets {
-			multires {
-				resolutions = ${[1, 1.5, 2]}
+			multires_array {
+				srcset = ${['1x', '1.5x', '2x']}
 			}
-			multisize {
-				widths = ${[320, 400, 600, 800, 1000, 1200, 1600]}
-				sizes = Neos.Fusion:RawArray {
-					large = '(min-width: 800px) 1000px'
-					medium = '(min-width: 480px) 800px'
-					small = '(min-width: 320px) 440px'
-					default = '100vw'
-				}
+
+			multires_string {
+				srcset = '1x, 1.5x, 2x'
 			}
-			multisize_sizeOnly {
-				sizes = Neos.Fusion:RawArray {
-					1000 = '(min-width: 800px) 1000px'
-					800 = '(min-width: 480px) 800px'
-					440 = '(min-width: 320px) 440px'
-					280 = '100vw'
-				}
+
+			multisize_array {
+				srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
 			}
-			multisize_widthOnly {
-				widths = ${[320, 400, 600, 800, 1000, 1200, 1600]}
+
+			multisize_string {
+				srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+			}
+
+			sizes_array {
+				srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+				sizes = ${['(max-width: 320px) 280px', '(max-width: 480px) 440px', '800px']}
+			}
+
+			sizes_string {
+				srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+				sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
 			}
 		}
 	}
@@ -38,20 +40,20 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 	}
 
 	imageSource = null
+	srcset = null
 	sizes = null
-	widths = null
-	resolutions = null
 	alt = null
 	title = null
+	class = null
 
 	renderer = afx`
 		<img @if.has={props.imageSource}
 			src={props.imageSource}
-			srcset={null}
-			srcset.@process.resolutionSrcset={props.resolutions ? props.imageSource.resolutionSrcset(props.resolutions) : value}
-			srcset.@process.widthSrcset={props.widths ? props.imageSource.widthSrcset(props.widths) : value}
+			srcset={props.imageSource.srcset(props.srcset)}
+			srcset.@if.has={props.srcset}
 			sizes={props.sizes}
 			sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+			class={props.class}
 			alt={props.alt}
 			title={props.title}
 		/>
