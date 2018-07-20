@@ -246,7 +246,7 @@ All ImageSources support the following fusion properties:
 Arguments:
 
 - `asset`: An image asset that shall be rendered (defaults to the context value `asset`)
-- `async`: Defer image-rendering until the image is actually requested by the browser
+- `async`: Defer image-rendering until the image is actually requested by the browser (default true)
 - `preset`, `width` and `height` are supported as explained above
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`

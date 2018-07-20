@@ -1,7 +1,7 @@
 prototype(Sitegeist.Kaleidoscope:AssetImageSource) {
 	@class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\AssetImageSourceImplementation'
 	asset = ${asset}
-	async = false
+	async = true
 
 	preset = null
 	witdh = null
