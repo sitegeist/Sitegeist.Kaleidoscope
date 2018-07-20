@@ -47,8 +47,11 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 	renderer = afx`
 		<img @if.has={props.imageSource}
 			src={props.imageSource}
-			srcset={(props.widths || props.sizes) ? props.imageSource.widthSrcset( props.widths ? props.widths : Array.keys(props.sizes) ) : (props.resolutions ? props.imageSource.resolutionSrcset(props.resolutions) : null)}
-			sizes={(props.widths || props.sizes) ? (props.sizes ? Array.join(props.sizes, ', ') : '100vw') : null}
+			srcset={null}
+			srcset.@process.resolutionSrcset={props.resolutions ? props.imageSource.resolutionSrcset(props.resolutions) : value}
+			srcset.@process.widthSrcset={props.widths ? props.imageSource.widthSrcset(props.widths) : value}
+			sizes={props.sizes}
+			sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
 			alt={props.alt}
 			title={props.title}
 		/>

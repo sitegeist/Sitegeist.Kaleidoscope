@@ -45,9 +45,9 @@ Render an `img`-tag with optional `srcset` based on `sizes` or `resolutions`.
 Props:
 
 - `imageSource`: the imageSource to render
-- `sizes`: array of the needed media queries for the sizes attribute (if no width is given the keys are used as widths)
-- `widths`: array of image-widths that shall be rendered (if no `sizes` but are given `sizes="100vw"` is assumed)
-- `resolutions`: an array of numbers that represents the needed resolutions
+- `sizes`: media queries for the sizes-attribute (arrays are imploded with ', ')
+- `widths`: image-widths (array) that shall be rendered
+- `resolutions`: resolutions factors (array, `widths` has priority)
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
@@ -73,12 +73,7 @@ will render as:
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 widths = ${[320, 400, 600, 800, 1000, 1200, 1600]}
-sizes = Neos.Fusion:RawArray {
-    large = '(min-width: 800px) 1000px'
-    medium = '(min-width: 480px) 800px'
-    small = '(min-width: 320px) 440px'
-    default = '100vw'
-}
+sizes = '(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw'
 
 renderer = afx`
     <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} widths={props.widths} sizes={props.sizes} />
@@ -95,37 +90,21 @@ will render as:
 />
 ```
 
-If the sizes map 1:1 to the different widths the the syntax can be simplified by
-using the keys of sizes as width definitions.
-
-Attention: The keys are sorted in this case so make sure to define the smaller breakpoints at start.
-
-```
-imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-sizes = Neos.Fusion:RawArray {
-    280 = '(max-width: 280px) 280px'
-    440 = '(max-width: 480px) 440px'
-    800 = '(max-width: 800px) 800px'
-    1000 = '100vw'
-}
-
-renderer = afx`
-    <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} sizes={props.sizes} />
-`
-```
-
-Note: `widths` and / or `sizes are preferred to `resolutions`. If neither is passed the whole `srcset is omitted and only the `src`-attribute is rendered.
-
 ### `Sitegeist.Kaleidoscope:Picture`
 `
 Render a `picture`-tag with various sources.
 
 Props:
 - `imageSource`: the imageSource to render
-- `sources`: an array of source definitions that contains. Each item contains the keys `media`, `sizes`, `widths` or `resolutions` and an optional `imageSource`
-- `sizes`: array of the needed media queries for the sizes attribute of the default image
-- `widths`: array of image-widths that shall be rendered for the default image
-- `resolutions`: an array of numbers that represents the needed resolutions for the default image
+- `sources`: an array of source definitions that supports the following keys
+   - `media`: the media query of this source
+   - `imageSource`: alternate image-source for art direction purpose
+   - `widths`: required widths (array) for the source
+   - `resolutions`: resolutions for the source (array, `widths` has priority)
+   - `sizes`: sizes attribute of the source  (arrays are imploded with ', ')
+- `widths`: required widths (array) for the the default image
+- `resolutions`: resolutions for the default image  (array, `widths` has priority)
+- `sizes`: sizes attribute of the default image (arrays are imploded with ', ')
 - `alt`: alt-attribute for the tag
 - `title`: title attribute for the tag
 
@@ -139,11 +118,7 @@ sources = Neos.Fusion:RawArray {
 
     small = Neos.Fusion:RawArray {
         widths = ${[320,480,800]}
-        sizes = Neos.Fusion:RawArray {
-            small = '(max-width: 320px) 280px'
-            medium = '(max-width: 480px) 440px'
-            large = '100vw'
-        }
+        sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
         media = 'screen and (max-width: 1599px)'
     }
 
