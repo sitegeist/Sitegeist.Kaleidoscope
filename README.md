@@ -1,6 +1,7 @@
 # Sitegeist.Kaleidoscope
 
 ## Responsive Images for Neos
+### with Atomic.Fusion & Monocle in mind
 
 This package implements responsive-images for Neos for beeing used via Fusion.
 
