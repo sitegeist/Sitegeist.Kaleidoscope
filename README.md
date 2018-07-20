@@ -2,7 +2,22 @@
 
 ## Responsive Images for Neos
 
-This package implements responsive-images for Neos.
+This package implements responsive-images for Neos for beeing used via Fusion.
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+    width = 800
+    height = 200
+}
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Image
+        imageSource={props.imageSource}
+        srcset="320w, 400w, 600w, 800w, 1000w, 1200w, 1600w"
+        sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
+    />
+`
+```
 
 By separating the aspects of image-definition, size-constraining and  rendering
 we enable the separation of those aspects into different fusion-components.
@@ -13,10 +28,10 @@ Sitegeist.Monocle living styleguide.
 
 Sitegeist.Kaleidoscope comes with four Fusion-ImageSources:
 
-- Assets: Images uploaded by Editors
-- DummyImages: Dummyimages created by a local service
-- Resources: Static resources from Packages
-- static Uris: any Url
+- Sitegeist.Kaleidoscope:AssetImageSource: Images uploaded by Editors
+- Sitegeist.Kaleidoscope:DummyImageSource: Dummyimages created by a local service
+- Sitegeist.Kaleidoscope:ResourceImageSource: Static resources from Packages
+- Sitegeist.Kaleidoscope:UriImageSource: any Url
 
 ### Authors & Sponsors
 
