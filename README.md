@@ -62,9 +62,9 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `alt`: alt-attribute for the tag
-- `title`: title attribute for the tag
-
+- `alt`: alt-attribute for the img tag
+- `title`: title attribute for the img tag
+- `class`: class attribute for the img tag
 
 #### Image with srcset in multiple resolutions:
 
@@ -121,8 +121,9 @@ Props:
    - `sizes`: sizes attribute (string ot array)
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `alt`: alt-attribute for the tag
-- `title`: title attribute for the tag
+- `alt`: alt-attribute for the picture tag
+- `title`: title attribute for the picture tag
+- `class`: class attribute for the picture tag
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
