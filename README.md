@@ -315,7 +315,7 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <picture>
-            <source srcset={props.imageSource.width(400).height(400)} media="(max-width: 799px)" />
+            <source srcset={props.imageSource.setWidth(400).setHeight(400)} media="(max-width: 799px)" />
             <source srcset={props.imageSource.srcset('400w, 600w, 800w')} media="(min-width: 800px)" />
             <img src={props.imageSource} />
         </picture>
