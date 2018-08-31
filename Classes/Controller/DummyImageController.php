@@ -180,36 +180,25 @@ class DummyImageController extends ActionController
      */
     protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor,int $width, int $height): void
     {
-        $borderWidth = ($width + $height) / 100;
+        $borderWidth = 20;
 
-        $b1 = (int)round($borderWidth * 0.5);
-        $b2 = (int)round($borderWidth);
-        $b3 = (int)round($borderWidth * 1.5);
-
-        $image->draw()->polygon(
-            [
-                new Point($b1,$b1),
-                new Point($width - $b1,$b1),
-                new Point($width - $b1 ,$height - $b1),
-                new Point($b1,$height- $b1)
-            ],
-            $backgroundColor,
-            false,
-            $b2
-        );
-
-        $image->draw()->polygon(
-            [
-                new Point($b3,$b3),
-                new Point($width - $b3, $b3),
-                new Point($width - $b3, $height - $b3),
-                new Point($b3, $height - $b3)
-            ],
-            $foregroundColor,
-            false,
-            $b2
-        );
-
+        for ($i = 0; $i <= $borderWidth; $i++) {
+            $x1 = $i;
+            $x2 = $width - $i;
+            $y1 = $i;
+            $y2 = $height - $i;
+            $image->draw()->polygon(
+                [
+                    new Point($x1, $y1),
+                    new Point($x2, $y1),
+                    new Point($x2, $y2),
+                    new Point($x1, $y2)
+                ],
+                ($i > $borderWidth / 2 ? $foregroundColor : $backgroundColor),
+                false,
+                1
+            );
+        }
     }
 
     /**
