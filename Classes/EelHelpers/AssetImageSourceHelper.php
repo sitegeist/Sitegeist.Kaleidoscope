@@ -69,15 +69,15 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         $scaledHelper = clone($this);
 
         if ($this->targetWidth) {
-            $scaledHelper->setWidth(round($factor * $this->targetWidth));
+            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->targetWidth));
         } else {
-            $scaledHelper->setWidth(round($factor * $this->asset->getWidth()));
+            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->asset->getWidth()));
         }
 
         if ($this->targetHeight) {
-            $scaledHelper->setHeight(round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->targetHeight));
         } else if (!$this->targetWidth) {
-            $scaledHelper->setHeight(round($factor * $this->asset->getHeight()));
+            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->asset->getHeight()));
         }
 
         return $scaledHelper;

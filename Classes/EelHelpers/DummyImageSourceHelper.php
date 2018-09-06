@@ -72,10 +72,10 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         $scaledHelper->setBaseHeight(round($factor * $this->baseHeight));
 
         if ($this->targetWidth) {
-            $scaledHelper->setWidth(round($factor * $this->targetWidth));
+            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->targetWidth));
         }
         if ($this->targetHeight) {
-            $scaledHelper->setHeight(round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->targetHeight));
         }
 
         return $scaledHelper;

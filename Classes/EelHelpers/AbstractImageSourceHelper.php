@@ -97,6 +97,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
                     $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
                 }
             }
+            \Neos\Flow\var_dump([$descriptors,$srcsetArray]);
             return implode(', ', $srcsetArray);
         } else {
             return $this->src();
