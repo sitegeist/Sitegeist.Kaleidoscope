@@ -29,14 +29,16 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
     public function setWidth(int $targetWidth = null) : ImageSourceHelperInterface
     {
-        $this->targetWidth = $targetWidth;
-        return $this;
+        $newSource = clone($this);
+        $newSource->targetWidth = $targetWidth;
+        return $newSource;
     }
 
     public function setHeight(int $targetHeight = null) : ImageSourceHelperInterface
     {
-        $this->targetHeight = $targetHeight;
-        return $this;
+        $newSource = clone($this);
+        $newSource->targetHeight = $targetHeight;
+        return $newSource;
     }
 
     /**
@@ -47,22 +49,23 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function applyPreset(string $name) : ImageSourceHelperInterface
     {
+        $newSource = clone($this);
         if ($this->thumbnailPresets) {
             $preset = Arrays::getValueByPath($this->thumbnailPresets, $name);
             if ($preset) {
                 if ($width = Arrays::getValueByPath($preset, 'width')) {
-                    $this->setWidth($width);
+                    $newSource->setWidth($width);
                 } elseif ($width = Arrays::getValueByPath($preset, 'maximumWidth')) {
-                    $this->setWidth($width);
+                    $newSource->setWidth($width);
                 }
                 if ($height = Arrays::getValueByPath($preset, 'height')) {
-                    $this->setHeight($height);
+                    $newSource->setHeight($height);
                 } elseif ($height = Arrays::getValueByPath($preset, 'maximumHeight')) {
-                    $this->setHeight($height);
+                    $newSource->setHeight($height);
                 }
             }
         }
-        return $this;
+        return $newSource;
     }
 
     /**
