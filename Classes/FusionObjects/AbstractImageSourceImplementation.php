@@ -44,15 +44,15 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
         }
 
         if ($preset = $this->getPreset()) {
-            $helper->applyPreset($preset);
+            $helper = $helper->applyPreset($preset);
         }
 
         if ($width = $this->getWidth()) {
-            $helper->setWidth($width);
+            $helper = $helper->setWidth($width);
         }
 
         if ($height = $this->getHeight()) {
-            $helper->setHeight($height);
+            $helper = $helper->setHeight($height);
         }
 
         return $helper;
