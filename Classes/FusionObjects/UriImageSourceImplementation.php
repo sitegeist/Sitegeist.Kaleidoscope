@@ -3,7 +3,6 @@ namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Flow\Annotations as Flow;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
-use Sitegeist\Kaleidoscope\EelHelpers\ResourceImageSourceHelper;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
 

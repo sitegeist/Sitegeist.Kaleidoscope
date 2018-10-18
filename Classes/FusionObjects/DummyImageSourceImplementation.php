@@ -4,7 +4,6 @@ namespace Sitegeist\Kaleidoscope\FusionObjects;
 use Neos\Flow\Annotations as Flow;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\DummyImageSourceHelper;
-use Neos\Fusion\FusionObjects\AbstractFusionObject;
 
 class DummyImageSourceImplementation extends AbstractImageSourceImplementation
 {

@@ -5,7 +5,7 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\AssetImageSourceHelper;
-use Neos\Fusion\FusionObjects\AbstractFusionObject;
+use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 {
