@@ -2,12 +2,26 @@
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\ResourceManager;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\AssetImageSourceHelper;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 {
+    /**
+     * @Flow\Inject
+     * @var ResourceManager
+     */
+    protected $resourceManager;
+
+    /**
+     * @var array
+     */
+    protected $nonScalableMediaTypes = [
+        'image/svg+xml'
+    ];
+
     /**
      * @return mixed
      */
@@ -34,6 +48,11 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         $asset = $this->getAsset();
         if (!$asset) {
             return null;
+        }
+
+        if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes)) {
+            $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
+            return new UriImageSourceHelper($uri);
         }
 
         $helper = new AssetImageSourceHelper($asset);
