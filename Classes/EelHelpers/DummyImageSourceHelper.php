@@ -89,7 +89,7 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
                 'h' => $this->getCurrentHeight(),
                 'bg' => ($this->backgroundColor ?: '000'),
                 'fg' => ($this->foregroundColor ?: 'fff'),
-                't' => ($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
+                't' => (trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight()))
             ]
         );
         return $uri;
