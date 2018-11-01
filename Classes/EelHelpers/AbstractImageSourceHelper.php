@@ -118,7 +118,6 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
         }
     }
 
-
     /**
      * If the source is cast to string the default source is returned
      *
@@ -126,6 +125,10 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function __toString(): string
     {
-        return $this->src();
+        try {
+            return $this->src();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
