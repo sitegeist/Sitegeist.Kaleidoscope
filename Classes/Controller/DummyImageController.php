@@ -45,12 +45,21 @@ class DummyImageController extends ActionController
     public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null)
     {
         // limit input arguments
-        if ($w > 9999 || $h > 9999 ) {
+        if ($w > 9999) {
             $w = 9999;
         }
 
         if ($h > 9999) {
             $h = 9999;
+        }
+
+        // limit input arguments
+        if ($w < 10 ) {
+            $w = 10;
+        }
+
+        if ($h < 10) {
+            $h = 10;
         }
 
         if (is_null($t)) {
@@ -71,15 +80,32 @@ class DummyImageController extends ActionController
         $image = $this->imagineService->create($imageBox);
         $image->usePalette($palette);
 
+        // render border
+        $renderBorder = ($w >= 70 && $h >= 70);
+
+        // render shape
+        $renderShape = ($w >= 200 && $h >= 100);
+
+        $renderText = ($w >= 50 && $h >= 30);
+
+        $renderPattern = ($w >= 20 && $h >= 20);
+
         $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
 
-        $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+        if ($renderShape) {
+            $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+        }
 
-        $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
+        if ($renderBorder) {
+            $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
+        }
 
+        if ($t && $renderText) {
+            $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
+        }
 
-        if ($t) {
-            $this->renderText($image, $foregroundColor, $width, $height, $text);
+        if ($renderPattern) {
+            $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height, $text);
         }
 
         // build result
@@ -180,7 +206,7 @@ class DummyImageController extends ActionController
      */
     protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor,int $width, int $height): void
     {
-        $borderWidth = 20;
+        $borderWidth = 10;
 
         for ($i = 0; $i <= $borderWidth; $i++) {
             $x1 = $i;
@@ -208,7 +234,7 @@ class DummyImageController extends ActionController
      * @param int $height
      * @param string $text
      */
-    protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text): void
+    protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, $center = false): void
     {
         $initialFontSize = 10;
         $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans/NotoSans-Regular.ttf";
@@ -217,7 +243,7 @@ class DummyImageController extends ActionController
         // scale text to fit the image
         $initialFontBox = $initialFont->box($text);
         $targetFontWidth = $width * .5;
-        $targetFontHeight = $height * .3;
+        $targetFontHeight = $center ? $height * .5 : $height * .20;
         $correctedFontSizeByWidth = $targetFontWidth * $initialFontSize / $initialFontBox->getWidth();
         $correctedFontSizeByHeight = $targetFontHeight * $initialFontSize / $initialFontBox->getHeight();
 
@@ -226,8 +252,40 @@ class DummyImageController extends ActionController
         $actualFontBox = $actualFont->box($text);
         $imageCenterPosition = new Point($width / 2 , $height / 2);
         $textCenterPosition = new Point\Center($actualFontBox);
-        $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), ($height * .73 - $actualFontBox->getHeight() * .5));
+        if ($center) {
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), ($height * .5 - $actualFontBox->getHeight() * .5));
+        } else {
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), ($height * .78 - $actualFontBox->getHeight() * .5));
+        }
         $image->draw()->text($text, $actualFont, $centeredTextPosition);
     }
 
+    protected function renderPattern(ImageInterface $image, ColorInterface $patternColor, int $width, int $height): void
+    {
+        $borderWidth = 5;
+        $patternSize = 50;
+
+        $limitingDimension = $width > $height ? $height : $width;
+
+        if ($limitingDimension < ($patternSize + $borderWidth + $borderWidth)) {
+            $patternSize = $limitingDimension - $borderWidth - $borderWidth;
+        }
+
+        for ($i = 0; $i < $patternSize; $i++) {
+            for ($k = 0; $k < $patternSize; $k++) {
+
+                if ($k > $patternSize - $i || $i > $patternSize - $k) {
+                    continue;
+                }
+
+                if (
+                    $i == $k ||
+                    ($i % 2 && $k % 2)
+
+                ) {
+                    $image->draw()->dot(new Point($borderWidth + $i, $borderWidth + $k), $patternColor);
+                }
+            }
+        }
+    }
 }

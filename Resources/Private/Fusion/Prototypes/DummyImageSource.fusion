@@ -11,3 +11,38 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
 	width = null
 	height = null
 }
+
+//    this is only for testing of a large variant og dummy images
+//
+//prototype(Sitegeist.Kaleidoscope:DummyImageSource.Preview) < prototype(Neos.Fusion:Component) {
+//
+//    @styleguide {
+//        title = "DummyImageSource"
+//    }
+//
+//    imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+//    dimensions = ${[10,20,30,50,70,100,200,300,600,1000,2000]}
+//
+//    renderer = afx`
+//        <table>
+//            <thead>
+//                <th></th>
+//                <Neos.Fusion:Collection collection={props.dimensions} itemName="width" @children="itemRenderer">
+//                    <th>W {width}</th>
+//                </Neos.Fusion:Collection>
+//            </thead>
+//            <tbody>
+//                <Neos.Fusion:Collection collection={props.dimensions} itemName="height" @children="itemRenderer">
+//                    <tr>
+//                        <th>H {height}</th>
+//                        <Neos.Fusion:Collection collection={props.dimensions} itemName="width" @children="itemRenderer">
+//                            <td>
+//                                <img src={props.imageSource.setWidth(width).setHeight(height)} width={width} height={height} />
+//                            </td>
+//                        </Neos.Fusion:Collection>
+//                    </tr>
+//                </Neos.Fusion:Collection>
+//            </tbody>
+//        </table>
+//    `
+//}
