@@ -261,8 +261,8 @@ Arguments:
 ### `Sitegeist.Kaleidoscope:ResourceImageSource`
 
 Arguments:
-- `package`: The default width for the image before scaling (default = 600)
-- `path`: The default height for the image before scaling (default = 400)
+- `package`: The package key (e.g. `'My.Package'`) (default = false)
+- `path`: Path to resource, either a path relative to `Public` and `package` or a `resource://` URI (default = null)
 - !!! `preset`, `width` and `height` have no effect on this ImageSource
 
 ## ImageSource EEl-Helpers
