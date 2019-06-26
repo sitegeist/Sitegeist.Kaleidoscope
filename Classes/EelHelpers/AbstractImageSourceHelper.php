@@ -27,16 +27,39 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     protected $thumbnailPresets;
 
-    public function setWidth(int $targetWidth = null) : ImageSourceHelperInterface
+    /**
+     * @param int|null $targetWidth
+     * @param bool $preserveAspectRatio
+     * @return ImageSourceHelperInterface
+     */
+    public function setWidth(int $targetWidth = null, bool $preserveAspect = false) : ImageSourceHelperInterface
     {
         $newSource = clone($this);
         $newSource->targetWidth = $targetWidth;
         return $newSource;
     }
 
-    public function setHeight(int $targetHeight = null) : ImageSourceHelperInterface
+    /**
+     * @param int|null $targetHeight
+     * @param bool $preserverAspectRatio
+     * @return ImageSourceHelperInterface
+     */
+    public function setHeight(int $targetHeight = null, bool $preserveAspect = false) : ImageSourceHelperInterface
     {
         $newSource = clone($this);
+        $newSource->targetHeight = $targetHeight;
+        return $newSource;
+    }
+
+    /**
+     * @param int|null $targetWidth
+     * @param int|null $targetHeight
+     * @return ImageSourceHelperInterface
+     */
+    public function setDimensions(int $targetWidth = null, int $targetHeight = null) : ImageSourceHelperInterface
+    {
+        $newSource = clone($this);
+        $newSource->targetWidth = $targetWidth;
         $newSource->targetHeight = $targetHeight;
         return $newSource;
     }
@@ -111,7 +134,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'applyPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyPreset', 'src', 'srcset'])) {
             return true;
         } else {
             return false;

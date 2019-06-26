@@ -5,9 +5,11 @@ use Neos\Eel\ProtectedContextAwareInterface;
 
 interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 {
-    public function setWidth(int $width = null) : ImageSourceHelperInterface;
+    public function setWidth(int $width = null, bool $preserveAspect = false) : ImageSourceHelperInterface;
 
-    public function setHeight(int $height = null) : ImageSourceHelperInterface;
+    public function setHeight(int $height = null, bool $preserveAspect = false) : ImageSourceHelperInterface;
+
+    public function setDimensions(int $width = null, int $height = null) : ImageSourceHelperInterface;
 
     public function applyPreset(string $name) : ImageSourceHelperInterface;
 
