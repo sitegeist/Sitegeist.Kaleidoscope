@@ -3,7 +3,7 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
 
-class DummyImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
+class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 {
     protected $baseWidth = 600;
 
@@ -65,22 +65,9 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         $this->text = $text;
     }
 
-    public function scale(float $factor): ImageSourceHelperInterface
-    {
-        $scaledHelper = clone($this);
-        $scaledHelper->setBaseWidth(round($factor * $this->baseWidth));
-        $scaledHelper->setBaseHeight(round($factor * $this->baseHeight));
-
-        if ($this->targetWidth) {
-            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->targetWidth));
-        }
-        if ($this->targetHeight) {
-            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->targetHeight));
-        }
-
-        return $scaledHelper;
-    }
-
+    /**
+     * @return string
+     */
     public function src(): string
     {
         $uri = $this->baseUri . '?' . http_build_query (
@@ -93,28 +80,5 @@ class DummyImageSourceHelper extends AbstractImageSourceHelper implements Scalab
             ]
         );
         return $uri;
-    }
-
-    public function getCurrentWidth() : int
-    {
-        if ($this->targetWidth) {
-            return $this->targetWidth;
-        } elseif ($this->targetHeight) {
-            return round($this->targetHeight * $this->baseWidth / $this->baseHeight);
-        } else {
-            return $this->baseWidth;
-        }
-    }
-
-
-    public function getCurrentHeight() : int
-    {
-        if ($this->targetHeight) {
-            return $this->targetHeight;
-        } elseif ($this->targetWidth) {
-            return round($this->targetWidth * $this->baseHeight / $this->baseWidth);
-        } else {
-            return $this->baseHeight;
-        }
     }
 }

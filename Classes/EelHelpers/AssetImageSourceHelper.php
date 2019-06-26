@@ -8,7 +8,7 @@ use Neos\Media\Domain\Service\ThumbnailService;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Flow\Mvc\ActionRequest;
 
-class AssetImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
+class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 {
 
     /**
@@ -45,6 +45,8 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
     public function __construct(ImageInterface $asset)
     {
         $this->asset = $asset;
+        $this->baseWidth = $this->asset->getWidth();
+        $this->baseHeight = $this->asset->getHeight();
     }
 
 
@@ -64,25 +66,12 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         $this->request = $request;
     }
 
-    public function scale(float $factor): ImageSourceHelperInterface
-    {
-        $scaledHelper = clone($this);
-
-        if ($this->targetWidth) {
-            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->targetWidth));
-        } else {
-            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->asset->getWidth()));
-        }
-
-        if ($this->targetHeight) {
-            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->targetHeight));
-        } else if (!$this->targetWidth) {
-            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->asset->getHeight()));
-        }
-
-        return $scaledHelper;
-    }
-
+    /**
+     * @return string
+     * @throws \Neos\Flow\Mvc\Routing\Exception\MissingActionNameException
+     * @throws \Neos\Media\Exception\AssetServiceException
+     * @throws \Neos\Media\Exception\ThumbnailServiceException
+     */
     public function src(): string
     {
         $async = $this->request ? $this->async : false;
@@ -112,26 +101,5 @@ class AssetImageSourceHelper extends AbstractImageSourceHelper implements Scalab
         return $thumbnailData['src'];
     }
 
-    public function getCurrentWidth() : int
-    {
-        if ($this->targetWidth) {
-            return $this->targetWidth;
-        } elseif ($this->targetHeight) {
-            return round($this->targetHeight * $this->asset->getWidth() / $this->asset->getHeight());
-        } else {
-            return $this->asset->getWidth();
-        }
-    }
 
-
-    public function getCurrentHeight() : int
-    {
-        if ($this->targetHeight) {
-            return $this->targetHeight;
-        } elseif ($this->targetWidth) {
-            return round($this->targetWidth *  $this->asset->getHeight() / $this->asset->getWidth());
-        } else {
-            return $this->asset->getHeight();
-        }
-    }
 }

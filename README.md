@@ -274,8 +274,9 @@ dimensions and to render the `src` and `srcset`-attributes.
 Methods of ImageSource-Helpers that are accessible via EEL:
 
 - `applyPreset( string )`: Set width and/or height via named-preset from Settings `Neos.Media.thumbnailPresets`
-- `setWidth( integer )`: Set the intend width
-- `setHeight( integer )`: Set the intended height
+- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height aswell if 
+- `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
+- `setDimensions( integer, interger)`: Set the intended width and height
 - `src ()` : Render a src attribute for the given ImageSource-object
 - `srcset ( array of descriptors )` : render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 

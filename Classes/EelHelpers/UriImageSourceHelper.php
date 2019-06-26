@@ -24,6 +24,9 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
         $this->uri = $uri;
     }
 
+    /**
+     * @return string
+     */
     public function src(): string
     {
         return $this->uri;
