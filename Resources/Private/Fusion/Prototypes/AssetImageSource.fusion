@@ -6,4 +6,5 @@ prototype(Sitegeist.Kaleidoscope:AssetImageSource) {
 	preset = null
 	width = null
 	height = null
+    format = null
 }

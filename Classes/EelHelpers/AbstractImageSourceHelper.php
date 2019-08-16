@@ -22,6 +22,11 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $targetHeight;
 
     /**
+     * @var string|null
+     */
+    protected $targetFormat = null;
+
+    /**
      * @var mixed
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
@@ -48,6 +53,17 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     {
         $newSource = clone($this);
         $newSource->targetHeight = $targetHeight;
+        return $newSource;
+    }
+
+    /**
+     * @param string|null $format
+     * @return ImageSourceHelperInterface
+     */
+    public function setFormat(?string $format = null) : ImageSourceHelperInterface
+    {
+        $newSource = clone($this);
+        $newSource->targetFormat = $format;
         return $newSource;
     }
 
@@ -134,7 +150,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'src', 'srcset'])) {
             return true;
         } else {
             return false;

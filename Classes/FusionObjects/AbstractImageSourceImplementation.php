@@ -24,6 +24,14 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return string|null
+     */
+    public function getFormat(): ?string
+    {
+        return $this->fusionValue('format');
+    }
+
+    /**
      * @return mixed
      */
     public function getPreset()
@@ -53,6 +61,10 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
 
         if ($height = $this->getHeight()) {
             $helper = $helper->setHeight($height);
+        }
+
+        if ($format = $this->getFormat()) {
+            $helper = $helper->setFormat($format);
         }
 
         return $helper;
