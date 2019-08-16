@@ -232,6 +232,7 @@ All ImageSources support the following fusion properties:
 - `preset`: Set width and/or height via named-preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
 - `width`: Set the intended width (default null)
 - `height`: Set the intended height (default null)
+- `format`: Set the image output format, like webp (default null)
 
 ### `Sitegeist.Kaleidoscope:AssetImageSource`
 
