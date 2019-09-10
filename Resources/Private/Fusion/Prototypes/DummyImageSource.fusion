@@ -8,6 +8,7 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
     text = null
 
     thumbnailPreset = null
+    variantPreset = null
     width = null
     height = null
 }

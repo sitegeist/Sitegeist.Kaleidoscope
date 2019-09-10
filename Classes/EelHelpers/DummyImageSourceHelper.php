@@ -86,7 +86,9 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
                     'h' => $this->getCurrentHeight(),
                     'bg' => $this->backgroundColor ?: '000',
                     'fg' => $this->foregroundColor ?: 'fff',
-                    't' => trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
+                    't' => trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight()),
+                    'pi' => $this->targetImageVariant['presetIdentifier'] ?? '',
+                    'pv' => $this->targetImageVariant['presetVariantName'] ?? ''
                 ]
             );
     }

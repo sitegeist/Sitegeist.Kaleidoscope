@@ -4,6 +4,7 @@ prototype(Sitegeist.Kaleidoscope:AssetImageSource) {
     async = true
 
     thumbnailPreset = null
+    variantPreset = null
     width = null
     height = null
 }

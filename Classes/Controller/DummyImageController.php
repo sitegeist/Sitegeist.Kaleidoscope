@@ -10,9 +10,17 @@ use Imagine\Image\Palette;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Flow\Package\PackageManagerInterface;
 use Neos\Flow\ResourceManagement\ResourceManager;
+use Neos\Media\Domain\Model\Adjustment\ImageAdjustmentInterface;
+use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
+use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
+use Neos\Media\Exception\AssetVariantGeneratorException;
+use Neos\Media\Exception\ImageServiceException;
+use Neos\Utility\ObjectAccess;
+use Psr\Log\LoggerInterface;
 
 class DummyImageController extends ActionController
 {
@@ -35,6 +43,18 @@ class DummyImageController extends ActionController
     protected $packageManager;
 
     /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var array
+     * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
+     */
+    protected $variantPresets;
+
+    /**
      * Get a dummy-image
      *
      * @param int $w
@@ -42,35 +62,29 @@ class DummyImageController extends ActionController
      * @param string $bg
      * @param string $fg
      * @param string $t
+     * @param string $pi
+     * @param string $pv
      * @return string
+     * @throws AssetVariantGeneratorException
+     * @throws ImageServiceException
      */
-    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null): string
+    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $pi = null, string $pv = null): string
     {
         // limit input arguments
         if ($w > 9999) {
             $w = 9999;
+        } elseif ($w < 10) {
+            $w = 10;
         }
 
         if ($h > 9999) {
             $h = 9999;
-        }
-
-        // limit input arguments
-        if ($w < 10) {
-            $w = 10;
-        }
-
-        if ($h < 10) {
+        } elseif ($h < 10) {
             $h = 10;
-        }
-
-        if ($t === null) {
-            $t = (string)$w . ' x ' . (string)$h;
         }
 
         $width = $w;
         $height = $h;
-        $text = $t;
 
         // create imagine
         $palette = new Palette\RGB();
@@ -82,15 +96,18 @@ class DummyImageController extends ActionController
         $image = $this->imagineService->create($imageBox);
         $image->usePalette($palette);
 
-        // render border
-        $renderBorder = ($w >= 70 && $h >= 70);
+        if (isset($this->variantPresets[$pi]['variants'][$pv])) {
+            $image = $this->applyVariantPresetAdjustments($image, $pi, $pv);
+            $width = $image->getSize()->getWidth();
+            $height = $image->getSize()->getHeight();
+        } else {
+            $this->logger->notice(sprintf('Variant "%s" of preset "%s" is not configured', $pi, $pv), LogEnvironment::fromMethodName(__METHOD__));
+        }
 
-        // render shape
-        $renderShape = ($w >= 200 && $h >= 100);
-
-        $renderText = ($w >= 50 && $h >= 30);
-
-        $renderPattern = ($w >= 20 && $h >= 20);
+        $renderBorder = ($width >= 70 && $height >= 70);
+        $renderShape = ($width >= 200 && $height >= 100);
+        $renderText = ($width >= 50 && $height >= 30);
+        $renderPattern = ($width >= 20 && $height >= 20);
 
         $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
 
@@ -102,7 +119,8 @@ class DummyImageController extends ActionController
             $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
         }
 
-        if ($t && $renderText) {
+        if ($renderText) {
+            $text = trim((string)$t) ?: sprintf('%s x %s', $width, $height);
             $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
         }
 
@@ -114,6 +132,42 @@ class DummyImageController extends ActionController
         $this->response->setHeader('Cache-Control', 'max-age=883000000');
         $this->response->setHeader('Content-type', 'image/png');
         return $image->get('png');
+    }
+
+    /**
+     * @param ImageInterface $image
+     * @param string $pi
+     * @param string $pv
+     * @return ImageInterface
+     * @throws AssetVariantGeneratorException
+     * @throws ImageServiceException
+     */
+    protected function applyVariantPresetAdjustments(ImageInterface $image, string $pi, string $pv): ImageInterface
+    {
+        $assetVariantPreset = VariantPreset::fromConfiguration($this->variantPresets[$pi]);
+        foreach ($assetVariantPreset->variants()[$pv]->adjustments() as $adjustmentConfiguration) {
+            assert($adjustmentConfiguration instanceof Adjustment);
+            $adjustmentClassName = $adjustmentConfiguration->type();
+            if (!class_exists($adjustmentClassName)) {
+                throw new AssetVariantGeneratorException(sprintf('Unknown image variant adjustment type "%s".', $adjustmentClassName), 1568213194);
+            }
+            $adjustment = new $adjustmentClassName();
+            if (!$adjustment instanceof ImageAdjustmentInterface) {
+                throw new AssetVariantGeneratorException(sprintf('Image variant adjustment "%s" does not implement "%s".', $adjustmentClassName, ImageAdjustmentInterface::class), 1568213198);
+            }
+            foreach ($adjustmentConfiguration->options() as $key => $value) {
+                ObjectAccess::setProperty($adjustment, $key, $value);
+            }
+
+            if (!$adjustment instanceof ImageAdjustmentInterface) {
+                throw new ImageServiceException(sprintf('Could not apply the %s adjustment to image because it does not implement the ImageAdjustmentInterface.', get_class($adjustment)), 1381400362);
+            }
+            if ($adjustment->canBeApplied($image)) {
+                $image = $adjustment->applyToImage($image);
+            }
+        }
+
+        return $image;
     }
 
     /**

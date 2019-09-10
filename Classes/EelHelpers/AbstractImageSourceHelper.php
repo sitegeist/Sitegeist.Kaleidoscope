@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Utility\Arrays;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractImageSourceHelper
@@ -25,9 +27,26 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
     /**
      * @var array
+     */
+    protected $targetImageVariant = [];
+
+    /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var array
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
     protected $thumbnailPresets;
+
+    /**
+     * @var array
+     * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
+     */
+    protected $variantPresets;
 
     /**
      * @param int|null $targetWidth
@@ -92,6 +111,24 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
+     * Use the variant generated from the given variant preset in this image source
+     *
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return ImageSourceHelperInterface
+     */
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    {
+        if (!isset($this->variantPresets[$presetIdentifier]['variants'][$presetVariantName])) {
+            $this->logger->warning(sprintf('Variant "%s" of preset "%s" is not configured', $presetVariantName, $presetIdentifier), LogEnvironment::fromMethodName(__METHOD__));
+        }
+
+        $newSource = clone $this;
+        $newSource->targetImageVariant = ['presetIdentifier' => $presetIdentifier, 'presetVariantName' => $presetVariantName];
+        return $newSource;
+    }
+
+    /**
      * Render sourceset Attribute for various media descriptors
      *
      * @param mixed $mediaDescriptors
@@ -134,7 +171,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyThumbnailPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset'])) {
             return true;
         }
 

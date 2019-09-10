@@ -33,6 +33,14 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return mixed
+     */
+    public function getVariantPreset()
+    {
+        return $this->fusionValue('variantPreset');
+    }
+
+    /**
      * Create helper and initialize width and height
      *
      * @return ImageSourceHelperInterface|null
@@ -44,8 +52,13 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
             return $helper;
         }
 
-        if ($preset = $this->getThumbnailPreset()) {
-            $helper = $helper->applyThumbnailPreset($preset);
+        if ($thumbnailPreset = $this->getThumbnailPreset()) {
+            $helper = $helper->applyThumbnailPreset($thumbnailPreset);
+        }
+
+        if (($variantPreset = $this->getVariantPreset()) && (strpos($variantPreset, '::') !== false)) {
+            [$presetIdentifier, $presetVariantName] = explode('::', $variantPreset, 2);
+            $helper = $helper->useVariantPreset($presetIdentifier, $presetVariantName);
         }
 
         if ($width = $this->getWidth()) {

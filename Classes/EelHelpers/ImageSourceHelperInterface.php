@@ -15,6 +15,8 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function applyThumbnailPreset(string $name): ImageSourceHelperInterface;
 
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface;
+
     public function src(): string;
 
     public function srcset($mediaDescriptors): string;

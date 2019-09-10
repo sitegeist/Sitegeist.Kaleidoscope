@@ -6,14 +6,16 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Media\Domain\Model\AssetInterface;
+use Neos\Media\Domain\Model\AssetVariantInterface;
 use Neos\Media\Domain\Model\ImageInterface;
+use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
+use Neos\Media\Domain\Model\VariantSupportInterface;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\Media\Domain\Service\ThumbnailService;
 
 class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 {
-
     /**
      * @Flow\Inject
      * @var ThumbnailService
@@ -81,6 +83,11 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
             return '';
         }
 
+        $assetVariant = null;
+        if ($this->asset instanceof VariantSupportInterface && $this->targetImageVariant !== []) {
+            $assetVariant = $this->getAssetVariant($this->asset, $this->targetImageVariant['presetIdentifier'], $this->targetImageVariant['presetVariantName']);
+        }
+
         $async = $this->request ? $this->async : false;
         $allowCropping = ($this->targetWidth && $this->targetHeight);
         $allowUpScaling = false;
@@ -96,7 +103,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         );
 
         $thumbnailData = $this->assetService->getThumbnailUriAndSizeForAsset(
-            $this->asset,
+            $assetVariant ?? $this->asset,
             $thumbnailConfiguration,
             $this->request
         );
@@ -108,4 +115,28 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         return $thumbnailData['src'];
     }
 
+    /**
+     * @param VariantSupportInterface $asset
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return ImageVariant
+     * @todo Remove when getVariant() is available in VariantSupportInterface
+     */
+    private function getAssetVariant(VariantSupportInterface $asset, string $presetIdentifier, string $presetVariantName): ?ImageVariant
+    {
+        $variants = $asset->getVariants();
+
+        if ($variants === []) {
+            return null;
+        }
+
+        $variants = array_filter(
+            $variants,
+            static function (AssetVariantInterface $variant) use ($presetIdentifier, $presetVariantName) {
+                return ($variant->getPresetIdentifier() === $presetIdentifier && $variant->getPresetVariantName() === $presetVariantName);
+            }
+        );
+
+        return $variants === [] ? null : current($variants);
+    }
 }

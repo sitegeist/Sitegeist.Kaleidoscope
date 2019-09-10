@@ -224,12 +224,13 @@ The package contains ImageSource-FusionObjects that encapsulate the intention to
 render an image. ImageSource-Objects return Eel-Helpers that allow to
 enforcing the rendered dimensions later in the rendering process.
 
-Note: The settings for `width`, `height` and `thumbnailPreset` can be defined via fusion
-but can also applied on the returned object. This will override the fusion-settings.
+Note: The settings for `width`, `height`, `thumbnailPreset` and `variantPreset` can be defined
+via fusion but can also applied on the returned object. This will override the fusion-settings.
 
 All ImageSources support the following fusion properties:
 
 - `thumbnailPreset`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
+- `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)
 - `width`: Set the intended width (default null)
 - `height`: Set the intended height (default null)
 
@@ -239,7 +240,8 @@ Arguments:
 
 - `asset`: An image asset that shall be rendered (defaults to the context value `asset`)
 - `async`: Defer image-rendering until the image is actually requested by the browser (default true)
-- `thumbnailPreset`, `width` and `height` are supported as explained above
+- `thumbnailPreset`: `width` and `height` are supported as explained above
+- `variantPreset`: as explained above
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`
 
@@ -249,21 +251,24 @@ Arguments:
 - `backgroundColor`: The background color of the dummy image (default = '999')
 - `foregroundColor`: The foreground color of the dummy image (default = 'fff')
 - `text`: The text that is rendered on the image (default = null, show size)
-- `thumbnailPreset`, `width` and `height` are supported as explained above
+- `thumbnailPreset`: `width` and `height` are supported as explained above
+- `variantPreset`: as explained above
 
 
 ### `Sitegeist.Kaleidoscope:UriImageSource`
 
 Arguments:
 - `uri`: The uri that will be rendered
-- !!! `thumbnailPreset`, `width` and `height` have no effect on this ImageSource
+- !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
+- !!! `variantPreset`: has no effect on this ImageSource
 
 ### `Sitegeist.Kaleidoscope:ResourceImageSource`
 
 Arguments:
 - `package`: The package key (e.g. `'My.Package'`) (default = false)
 - `path`: Path to resource, either a path relative to `Public` and `package` or a `resource://` URI (default = null)
-- !!! `thumbnailPreset`, `width` and `height` have no effect on this ImageSource
+- !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
+- !!! `variantPreset`: has no effect on this ImageSource
 
 ## ImageSource EEl-Helpers
 
@@ -274,11 +279,12 @@ dimensions and to render the `src` and `srcset`-attributes.
 Methods of ImageSource-Helpers that are accessible via EEL:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
-- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height aswell if 
+- `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
+- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if 
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
-- `src ()` : Render a src attribute for the given ImageSource-object
-- `srcset ( array of descriptors )` : render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
+- `src ()`: Render a src attribute for the given ImageSource-object
+- `srcset ( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 
 Note: The Eel-helpers cannot be created directly. They have to be created
 by using the `Sitegeist.Kaleidoscope:AssetImageSource` or
