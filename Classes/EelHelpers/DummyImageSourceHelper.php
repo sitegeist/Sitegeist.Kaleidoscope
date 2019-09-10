@@ -1,27 +1,37 @@
 <?php
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+declare(strict_types=1);
 
-use Neos\Flow\Annotations as Flow;
+namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 {
-    protected $baseWidth = 600;
-
-    protected $baseHeight = 400;
-
+    /**
+     * @var string
+     */
     protected $backgroundColor = '999';
 
+    /**
+     * @var string
+     */
     protected $foregroundColor = 'fff';
 
-    protected $text = null;
+    /**
+     * @var string
+     */
+    protected $text;
 
+    /**
+     * @var string
+     */
     protected $baseUri = '';
 
     /**
-     * @param ControllerContext $controllerContext
+     * @param string $baseUri
      */
     public function __construct(string $baseUri)
     {
+        $this->baseWidth = 600;
+        $this->baseHeight = 400;
         $this->baseUri = $baseUri;
     }
 
@@ -70,15 +80,14 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
      */
     public function src(): string
     {
-        $uri = $this->baseUri . '?' . http_build_query (
-            [
-                'w' => $this->getCurrentWidth(),
-                'h' => $this->getCurrentHeight(),
-                'bg' => ($this->backgroundColor ?: '000'),
-                'fg' => ($this->foregroundColor ?: 'fff'),
-                't' => (trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight()))
-            ]
-        );
-        return $uri;
+        return $this->baseUri . '?' . http_build_query(
+                [
+                    'w' => $this->getCurrentWidth(),
+                    'h' => $this->getCurrentHeight(),
+                    'bg' => $this->backgroundColor ?: '000',
+                    'fg' => $this->foregroundColor ?: 'fff',
+                    't' => trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight())
+                ]
+            );
     }
 }

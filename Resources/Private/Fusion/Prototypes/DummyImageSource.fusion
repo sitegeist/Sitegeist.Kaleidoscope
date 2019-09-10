@@ -1,18 +1,18 @@
 prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
-	@class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\DummyImageSourceImplementation'
+    @class = 'Sitegeist\\Kaleidoscope\\FusionObjects\\DummyImageSourceImplementation'
 
-	baseWidth = 600
-	baseHeight = 400
-	backgroundColor = '999'
-	foregroundColor = 'fff'
-	text = null
+    baseWidth = 600
+    baseHeight = 400
+    backgroundColor = '999'
+    foregroundColor = 'fff'
+    text = null
 
-	preset = null
-	width = null
-	height = null
+    preset = null
+    width = null
+    height = null
 }
 
-//    this is only for testing of a large variant og dummy images
+//    this is only for testing of a large variant of dummy images
 //
 //prototype(Sitegeist.Kaleidoscope:DummyImageSource.Preview) < prototype(Neos.Fusion:Component) {
 //

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
@@ -12,12 +14,12 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
      */
     protected $resourceManager;
 
-    protected $uri = null;
+    protected $uri;
 
     /**
      * ResourceImageSourceHelper constructor.
-     * @param string $package
-     * @param string $path
+     *
+     * @param string $uri
      */
     public function __construct(string $uri)
     {
