@@ -27,9 +27,9 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     /**
      * @return mixed
      */
-    public function getPreset()
+    public function getThumbnailPreset()
     {
-        return $this->fusionValue('preset');
+        return $this->fusionValue('thumbnailPreset') ?? $this->fusionValue('preset');
     }
 
     /**
@@ -44,8 +44,8 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
             return $helper;
         }
 
-        if ($preset = $this->getPreset()) {
-            $helper = $helper->applyPreset($preset);
+        if ($preset = $this->getThumbnailPreset()) {
+            $helper = $helper->applyThumbnailPreset($preset);
         }
 
         if ($width = $this->getWidth()) {

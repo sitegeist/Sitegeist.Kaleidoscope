@@ -67,12 +67,12 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * Apply definitions from a preset to this image source
+     * Apply definitions from a thumbnail preset to this image source
      *
      * @param string $name
      * @return ImageSourceHelperInterface
      */
-    public function applyPreset(string $name): ImageSourceHelperInterface
+    public function applyThumbnailPreset(string $name): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         if ($this->thumbnailPresets && isset($this->thumbnailPresets[$name])) {
@@ -134,7 +134,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'applyThumbnailPreset', 'src', 'srcset'])) {
             return true;
         }
 
