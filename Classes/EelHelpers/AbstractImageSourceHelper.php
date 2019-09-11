@@ -94,7 +94,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     public function applyThumbnailPreset(string $name): ImageSourceHelperInterface
     {
         $newSource = clone $this;
-        if ($this->thumbnailPresets && isset($this->thumbnailPresets[$name])) {
+        if (isset($this->thumbnailPresets[$name])) {
             $preset = $this->thumbnailPresets[$name];
             if ($width = $preset['width'] ?? null) {
                 $newSource->setWidth($width);
@@ -106,6 +106,8 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
             } elseif ($height = $preset['maximumHeight'] ?? null) {
                 $newSource->setHeight($height);
             }
+        } else {
+            $this->logger->warning(sprintf('Thumbnail preset "%s" is not configured', $name), LogEnvironment::fromMethodName(__METHOD__));
         }
         return $newSource;
     }
