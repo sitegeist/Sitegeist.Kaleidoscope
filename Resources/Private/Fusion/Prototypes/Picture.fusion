@@ -9,6 +9,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 					media = 'screen and (min-width: 1600px)'
 				}
 				2 = Neos.Fusion:RawArray {
+					format = 'webp'
 					srcset = '320w, 480w, 800w, 1000w'
 					sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
 					media = 'screen and (max-width: 1599px)'
@@ -35,12 +36,12 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 	renderer = afx`
 		<picture @if.has={props.imageSource} class={props.class}>
 			<Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
-				<source
-					@context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
+                <Sitegeist.Kaleidoscope:Source
+					imageSource={source.imageSource ? source.imageSource : props.imageSource}
+					format={source.format}
 					media={source.media}
-					srcset={source.srcset ? subImageSource.srcset(source.srcset) : subImageSource.src()}
-					sizes={source.sizes}
-					sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+					srcset={source.srcset ? source.srcset : props.srcset}
+					sizes={source.sizes ? source.sizes : props.sizes}
 				/>
 			</Neos.Fusion:Collection>
 			<Sitegeist.Kaleidoscope:Image

@@ -116,6 +116,7 @@ Props:
 - `imageSource`: the imageSource to render
 - `sources`: an array of source definitions that supports the following keys
    - `media`: the media query of this source
+   - `format`: the format for this source
    - `imageSource`: alternate image-source for art direction purpose
    - `srcset`: media descriptors like '1.5x' or '600w' (string ot array)
    - `sizes`: sizes attribute (string ot array)
@@ -139,6 +140,12 @@ sources = Neos.Fusion:RawArray {
         media = 'screen and (max-width: 1599px)'
     }
 
+    webp = Neos.Fusion:RawArray {
+        srcset = '320w, 480w, 800w'
+        sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
+        format = 'webp'
+    }
+    
     print = Neos.Fusion:RawArray {
         imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
             text = "im am here for printing"
@@ -172,6 +179,17 @@ will render as:
   <img src="_base_url_">
 </picture>
 ```
+### `Sitegeist.Kaleidoscope:Source`
+
+Render an `src`-tag with `srcset`, `sizes`, `type` and `media` attributes.
+
+Props:
+
+- `imageSource`: the imageSource to render
+- `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
+- `sizes`: (optional) sizes attribute (string or array)
+- `format`: (optional) the format for images im the source like `png` or `webp` will enforce rendering and render a matching `type`
+- `media`: (optional) the media query for the given source
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
 
