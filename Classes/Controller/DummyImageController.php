@@ -71,48 +71,55 @@ class DummyImageController extends ActionController
         $height = $h;
         $text = $t;
 
-        // create imagine
-        $palette = new Palette\RGB();
-        $backgroundColor = $palette->color($bg);
-        $foregroundColor = $palette->color($fg);
+        try {
+            // create imagine
+            $palette = new Palette\RGB();
+            $backgroundColor = $palette->color($bg);
+            $foregroundColor = $palette->color($fg);
 
-        // create image
-        $imageBox = new Box($width, $height);
-        $image = $this->imagineService->create($imageBox);
-        $image->usePalette($palette);
+            // create image
+            $imageBox = new Box($width, $height);
+            $image = $this->imagineService->create($imageBox);
+            $image->usePalette($palette);
 
-        // render border
-        $renderBorder = ($w >= 70 && $h >= 70);
+            // render border
+            $renderBorder = ($width >= 70 && $height >= 70);
 
-        // render shape
-        $renderShape = ($w >= 200 && $h >= 100);
+            // render shape
+            $renderShape = ($width >= 200 && $height >= 100);
 
-        $renderText = ($w >= 50 && $h >= 30);
+            $renderText = ($width >= 50 && $height >= 30);
 
-        $renderPattern = ($w >= 20 && $h >= 20);
+            $renderPattern = ($width >= 20 && $height >= 20);
 
-        $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
+            $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
 
-        if ($renderShape) {
-            $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+            if ($renderShape) {
+                $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+            }
+
+            if ($renderBorder) {
+                $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
+            }
+
+            if ($t && $renderText) {
+                $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
+            }
+
+            if ($renderPattern) {
+                $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height, $text);
+            }
+
+            // build result
+            $this->response->setHeader('Cache-Control', 'max-age=883000000');
+            $this->response->setHeader('Content-type', 'image/' . $f);
+            return $image->get($f);
+        } catch (\Exception $e) {
+            // something went wrong we return the error image png
+            $this->response->setStatusCode(500);
+            $this->response->setHeader('Content-type', 'image/png');
+            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
         }
-
-        if ($renderBorder) {
-            $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
-        }
-
-        if ($t && $renderText) {
-            $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
-        }
-
-        if ($renderPattern) {
-            $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height, $text);
-        }
-
-        // build result
-        $this->response->setHeader( 'Cache-Control', 'max-age=883000000');
-        $this->response->setHeader( 'Content-type', 'image/' . $f);
-        return $image->get($f);
     }
 
     /**
