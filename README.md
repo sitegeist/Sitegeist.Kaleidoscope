@@ -115,11 +115,11 @@ Render a `picture`-tag with various sources.
 Props:
 - `imageSource`: the imageSource to render
 - `sources`: an array of source definitions that supports the following keys
-   - `media`: the media query of this source
-   - `format`: the format for this source
    - `imageSource`: alternate image-source for art direction purpose
    - `srcset`: media descriptors like '1.5x' or '600w' (string ot array)
    - `sizes`: sizes attribute (string ot array)
+   - `media`: the media attribute for this source
+   - `type`: the type attribute for this source
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
 - `alt`: alt-attribute for the picture tag
@@ -141,9 +141,10 @@ sources = Neos.Fusion:RawArray {
     }
 
     webp = Neos.Fusion:RawArray {
+        imageSource = {imageSource.setFormat('webp')} 
         srcset = '320w, 480w, 800w'
         sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
-        format = 'webp'
+        type = 'image/webp'
     }
     
     print = Neos.Fusion:RawArray {
@@ -188,7 +189,7 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: (optional) sizes attribute (string or array)
-- `format`: (optional) the format for images im the source like `png` or `webp` will enforce rendering and render a matching `type`
+- `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.setFormat()`
 - `media`: (optional) the media query for the given source
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
@@ -296,6 +297,7 @@ Methods of ImageSource-Helpers that are accessible via EEL:
 - `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height aswell if 
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
+- `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
 - `src ()` : Render a src attribute for the given ImageSource-object
 - `srcset ( array of descriptors )` : render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 
