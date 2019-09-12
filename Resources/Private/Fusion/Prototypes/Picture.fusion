@@ -1,56 +1,60 @@
 prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 
-	@styleguide {
-		props {
-			imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-			sources = Neos.Fusion:RawArray {
-				1 = Neos.Fusion:RawArray {
-					srcset = '1x, 1.5x, 2x'
-					media = 'screen and (min-width: 1600px)'
-				}
-				2 = Neos.Fusion:RawArray {
-					format = 'webp'
-					srcset = '320w, 480w, 800w, 1000w'
-					sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
-					media = 'screen and (max-width: 1599px)'
-				}
-				3 = Neos.Fusion:RawArray {
-					imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
-						text = "im am here for printing"
-					}
-					media = 'print'
-				}
-			}
-			alt = 'Elva dressed as a fairy'
-		}
-	}
+    @styleguide {
+        props {
+            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+            sources = Neos.Fusion:RawArray {
+                1 = Neos.Fusion:RawArray {
+                    srcset = '1x, 1.5x, 2x'
+                    media = 'screen and (min-width: 1600px)'
+                }
+                2 = Neos.Fusion:RawArray {
+                    imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                        text = "im am in webp format"
+                        format = 'webp'
+                    }
+                    srcset = '320w, 480w, 800w, 1000w'
+                    sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+                    type = 'image/webp'
+                    media = 'screen and (max-width: 1599px)'
+                }
+                3 = Neos.Fusion:RawArray {
+                    imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                        text = "im am here for printing"
+                    }
+                    media = 'print'
+                }
+            }
+            alt = 'Elva dressed as a fairy'
+        }
+    }
 
-	imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-	srcset = null
-	sizes = null
-	sources = null
-	alt = null
-	title = null
-	class = null
+    imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+    srcset = null
+    sizes = null
+    sources = null
+    alt = null
+    title = null
+    class = null
 
-	renderer = afx`
-		<picture @if.has={props.imageSource} class={props.class}>
-			<Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
+    renderer = afx`
+        <picture @if.has={props.imageSource} class={props.class}>
+            <Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
                 <Sitegeist.Kaleidoscope:Source
-					imageSource={source.imageSource ? source.imageSource : props.imageSource}
-					format={source.format}
-					media={source.media}
-					srcset={source.srcset ? source.srcset : props.srcset}
-					sizes={source.sizes ? source.sizes : props.sizes}
-				/>
-			</Neos.Fusion:Collection>
-			<Sitegeist.Kaleidoscope:Image
-				imageSource={props.imageSource}
-				sizes={props.sizes}
-				srcset={props.srcset}
-				alt={props.alt}
-				title={props.title}
-			/>
-		</picture>
-	`
+                    imageSource={source.imageSource ? source.imageSource : props.imageSource}
+                    type={source.type}
+                    media={source.media}
+                    srcset={source.srcset ? source.srcset : props.srcset}
+                    sizes={source.sizes ? source.sizes : props.sizes}
+                />
+            </Neos.Fusion:Collection>
+            <Sitegeist.Kaleidoscope:Image
+                imageSource={props.imageSource}
+                sizes={props.sizes}
+                srcset={props.srcset}
+                alt={props.alt}
+                title={props.title}
+            />
+        </picture>
+    `
 }
