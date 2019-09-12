@@ -70,15 +70,28 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
      */
     public function src(): string
     {
-        $uri = $this->baseUri . '?' . http_build_query (
-            [
-                'w' => $this->getCurrentWidth(),
-                'h' => $this->getCurrentHeight(),
-                'bg' => ($this->backgroundColor ?: '000'),
-                'fg' => ($this->foregroundColor ?: 'fff'),
-                't' => (trim($this->text ?: $this->getCurrentWidth() . ' x ' . $this->getCurrentHeight()))
-            ]
-        );
+        $arguments = [
+            'w' => $this->getCurrentWidth(),
+            'h' => $this->getCurrentHeight()
+        ];
+
+        if ($this->backgroundColor) {
+            $arguments['bg'] = $this->backgroundColor;
+        }
+
+        if ($this->foregroundColor) {
+            $arguments['fg'] = $this->foregroundColor;
+        }
+
+        if ($this->text) {
+            $arguments['t'] = $this->text;
+        }
+
+        if ($this->targetFormat) {
+            $arguments['f'] = $this->targetFormat;
+        }
+
+        $uri = $this->baseUri . '?' . http_build_query ($arguments);
         return $uri;
     }
 }
