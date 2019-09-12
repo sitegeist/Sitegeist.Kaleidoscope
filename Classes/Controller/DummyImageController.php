@@ -41,8 +41,9 @@ class DummyImageController extends ActionController
      * @param string $bg
      * @param string $fg
      * @param string $t
+     * @param string $f
      */
-    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null)
+    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png')
     {
         // limit input arguments
         if ($w > 9999) {
@@ -110,8 +111,8 @@ class DummyImageController extends ActionController
 
         // build result
         $this->response->setHeader( 'Cache-Control', 'max-age=883000000');
-        $this->response->setHeader( 'Content-type', 'image/png');
-        return $image->get('png');
+        $this->response->setHeader( 'Content-type', 'image/' . $f);
+        return $image->get($f);
     }
 
     /**

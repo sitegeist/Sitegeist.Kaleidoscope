@@ -1,61 +1,61 @@
 prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 
-	@styleguide {
-		props {
-			imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-			alt = 'Elva dressed as a fairy'
-		}
+    @styleguide {
+        props {
+            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+            alt = 'Elva dressed as a fairy'
+        }
 
-		propSets {
-			multires_array {
-				srcset = ${['1x', '1.5x', '2x']}
-			}
+        propSets {
+            multires_array {
+                srcset = ${['1x', '1.5x', '2x']}
+            }
 
-			multires_string {
-				srcset = '1x, 1.5x, 2x'
-			}
+            multires_string {
+                srcset = '1x, 1.5x, 2x'
+            }
 
-			multisize_array {
-				srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
-			}
+            multisize_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+            }
 
-			multisize_string {
-				srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
-			}
+            multisize_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+            }
 
-			sizes_array {
-				srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
-				sizes = ${['(max-width: 320px) 280px', '(max-width: 480px) 440px', '800px']}
-			}
+            sizes_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+                sizes = ${['(max-width: 320px) 280px', '(max-width: 480px) 440px', '800px']}
+            }
 
-			sizes_string {
-				srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
-				sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
-			}
-		}
-	}
+            sizes_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+                sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            }
+        }
+    }
 
-	@propTypes {
-		imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
-	}
+    @propTypes {
+        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+    }
 
-	imageSource = null
-	srcset = null
-	sizes = null
-	alt = null
-	title = null
-	class = null
+    imageSource = null
+    srcset = null
+    sizes = null
+    alt = null
+    title = null
+    class = null
 
-	renderer = afx`
-		<img @if.has={props.imageSource}
-			src={props.imageSource}
-			srcset={props.imageSource.srcset(props.srcset)}
-			srcset.@if.has={props.srcset}
-			sizes={props.sizes}
-			sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-			class={props.class}
-			alt={props.alt}
-			title={props.title}
-		/>
-	`
+    renderer = afx`
+        <img @if.has={props.imageSource}
+            src={props.imageSource}
+            srcset={props.imageSource.srcset(props.srcset)}
+            srcset.@if.has={props.srcset}
+            sizes={props.sizes}
+            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+            class={props.class}
+            alt={props.alt}
+            title={props.title}
+        />
+    `
 }
