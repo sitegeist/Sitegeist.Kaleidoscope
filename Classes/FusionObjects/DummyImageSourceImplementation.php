@@ -10,41 +10,41 @@ use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 class DummyImageSourceImplementation extends AbstractImageSourceImplementation
 {
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getBaseWidth()
+    public function getBaseWidth(): ?int
     {
         return $this->fusionValue('baseWidth');
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getBaseHeight()
+    public function getBaseHeight(): ?int
     {
         return $this->fusionValue('baseHeight');
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getBackgroundColor()
+    public function getBackgroundColor(): ?string
     {
         return $this->fusionValue('backgroundColor');
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getForegroundColor()
+    public function getForegroundColor(): ?string
     {
         return $this->fusionValue('foregroundColor');
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getText()
+    public function getText(): ?string
     {
         return $this->fusionValue('text');
     }
