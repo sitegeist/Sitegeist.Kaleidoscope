@@ -9,8 +9,13 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     media = 'screen and (min-width: 1600px)'
                 }
                 2 = Neos.Fusion:RawArray {
+                    imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                        text = "im am in webp format"
+                        format = 'webp'
+                    }
                     srcset = '320w, 480w, 800w, 1000w'
                     sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+                    type = 'image/webp'
                     media = 'screen and (max-width: 1599px)'
                 }
                 3 = Neos.Fusion:RawArray {
@@ -35,20 +40,20 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     renderer = afx`
         <picture @if.has={props.imageSource} class={props.class}>
             <Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
-                <source
-                    @context.subImageSource={source.imageSource ? source.imageSource : props.imageSource}
+                <Sitegeist.Kaleidoscope:Source
+                    imageSource={source.imageSource ? source.imageSource : props.imageSource}
+                    type={source.type}
                     media={source.media}
-                    srcset={source.srcset ? subImageSource.srcset(source.srcset) : subImageSource.src()}
-                    sizes={source.sizes}
-                    sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+                    srcset={source.srcset ? source.srcset : props.srcset}
+                    sizes={source.sizes ? source.sizes : props.sizes}
                 />
             </Neos.Fusion:Collection>
             <Sitegeist.Kaleidoscope:Image
-                    imageSource={props.imageSource}
-                    sizes={props.sizes}
-                    srcset={props.srcset}
-                    alt={props.alt}
-                    title={props.title}
+                imageSource={props.imageSource}
+                sizes={props.sizes}
+                srcset={props.srcset}
+                alt={props.alt}
+                title={props.title}
             />
         </picture>
     `

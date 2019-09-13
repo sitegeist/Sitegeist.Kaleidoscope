@@ -91,7 +91,6 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         $async = $this->request ? $this->async : false;
         $allowCropping = ($this->targetWidth && $this->targetHeight);
         $allowUpScaling = false;
-
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $this->targetWidth,
             $this->targetWidth,
@@ -99,7 +98,9 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
             $this->targetHeight,
             $allowCropping,
             $allowUpScaling,
-            $async
+            $async,
+            null,
+            $this->targetFormat
         );
 
         $thumbnailData = $this->assetService->getThumbnailUriAndSizeForAsset(

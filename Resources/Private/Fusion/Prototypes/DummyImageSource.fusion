@@ -11,6 +11,7 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
     variantPreset = null
     width = null
     height = null
+    format = null
 }
 
 //    this is only for testing of a large variant of dummy images

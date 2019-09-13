@@ -62,13 +62,12 @@ class DummyImageController extends ActionController
      * @param string $bg
      * @param string $fg
      * @param string $t
+     * @param string $f
      * @param string $pi
      * @param string $pv
      * @return string
-     * @throws AssetVariantGeneratorException
-     * @throws ImageServiceException
      */
-    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $pi = null, string $pv = null): string
+    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png', string $pi = null, string $pv = null): string
     {
         // limit input arguments
         if ($w > 9999) {
@@ -86,52 +85,61 @@ class DummyImageController extends ActionController
         $width = $w;
         $height = $h;
 
-        // create imagine
-        $palette = new Palette\RGB();
-        $backgroundColor = $palette->color($bg);
-        $foregroundColor = $palette->color($fg);
+        try {
+            $palette = new Palette\RGB();
+            $backgroundColor = $palette->color($bg);
+            $foregroundColor = $palette->color($fg);
 
-        // create image
-        $imageBox = new Box($width, $height);
-        $image = $this->imagineService->create($imageBox);
-        $image->usePalette($palette);
+            // create image
+            $imageBox = new Box($width, $height);
+            $image = $this->imagineService->create($imageBox);
+            $image->usePalette($palette);
 
-        if (isset($this->variantPresets[$pi]['variants'][$pv])) {
-            $image = $this->applyVariantPresetAdjustments($image, $pi, $pv);
-            $width = $image->getSize()->getWidth();
-            $height = $image->getSize()->getHeight();
-        } else {
-            $this->logger->notice(sprintf('Variant "%s" of preset "%s" is not configured', $pi, $pv), LogEnvironment::fromMethodName(__METHOD__));
+            // create imagine
+            if (isset($this->variantPresets[$pi]['variants'][$pv])) {
+                $image = $this->applyVariantPresetAdjustments($image, $pi, $pv);
+                $width = $image->getSize()->getWidth();
+                $height = $image->getSize()->getHeight();
+            } else {
+                $this->logger->notice(sprintf('Variant "%s" of preset "%s" is not configured', $pi, $pv), LogEnvironment::fromMethodName(__METHOD__));
+            }
+
+            $renderBorder = ($width >= 70 && $height >= 70);
+            $renderShape = ($width >= 200 && $height >= 100);
+            $renderText = ($width >= 50 && $height >= 30);
+            $renderPattern = ($width >= 20 && $height >= 20);
+
+            $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
+
+            if ($renderShape) {
+                $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
+            }
+
+            if ($renderBorder) {
+                $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
+            }
+
+            if ($renderText) {
+                $text = trim((string)$t) ?: sprintf('%s x %s', $width, $height);
+                $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
+            }
+
+            if ($renderPattern) {
+                $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height);
+            }
+
+            // build result
+            $this->response->setHeader('Cache-Control', 'max-age=883000000');
+            $this->response->setHeader('Content-type', 'image/' . $f);
+            return $image->get($f);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
+
+            // something went wrong we return the error image png
+            $this->response->setStatusCode(500);
+            $this->response->setHeader('Content-type', 'image/png');
+            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
         }
-
-        $renderBorder = ($width >= 70 && $height >= 70);
-        $renderShape = ($width >= 200 && $height >= 100);
-        $renderText = ($width >= 50 && $height >= 30);
-        $renderPattern = ($width >= 20 && $height >= 20);
-
-        $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
-
-        if ($renderShape) {
-            $this->renderShape($image, $foregroundColor, $backgroundColor, $width, $height);
-        }
-
-        if ($renderBorder) {
-            $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
-        }
-
-        if ($renderText) {
-            $text = trim((string)$t) ?: sprintf('%s x %s', $width, $height);
-            $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
-        }
-
-        if ($renderPattern) {
-            $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height);
-        }
-
-        // build result
-        $this->response->setHeader('Cache-Control', 'max-age=883000000');
-        $this->response->setHeader('Content-type', 'image/png');
-        return $image->get('png');
     }
 
     /**
