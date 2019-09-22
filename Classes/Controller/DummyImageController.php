@@ -2,7 +2,7 @@
 namespace Sitegeist\Kaleidoscope\Controller;
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Package\PackageManagerInterface;
+use Neos\Flow\Package\PackageManager;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Mvc\Controller\ActionController;
 
@@ -28,7 +28,7 @@ class DummyImageController extends ActionController
     protected $resourceManager;
 
     /**
-     * @var PackageManagerInterface
+     * @var PackageManager
      * @Flow\Inject
      */
     protected $packageManager;
