@@ -12,6 +12,7 @@ use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
+use Neos\Flow\Http\Component\SetHeaderComponent;
 
 class DummyImageController extends ActionController
 {
@@ -111,13 +112,13 @@ class DummyImageController extends ActionController
             }
 
             // build result
-            $this->response->setHeader('Cache-Control', 'max-age=883000000');
-            $this->response->setHeader('Content-type', 'image/' . $f);
+            $this->response->setComponentParameter(SetHeaderComponent::class, 'Cache-Control', 'max-age=883000000');
+            $this->response->setComponentParameter(SetHeaderComponent::class, 'Content-type', 'image/' . $f);
             return $image->get($f);
         } catch (\Exception $e) {
             // something went wrong we return the error image png
             $this->response->setStatusCode(500);
-            $this->response->setHeader('Content-type', 'image/png');
+            $this->response->setComponentParameter(SetHeaderComponent::class, 'Content-type', 'image/png');
             return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
         }
     }
@@ -245,8 +246,13 @@ class DummyImageController extends ActionController
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, $center = false): void
     {
         $initialFontSize = 10;
-        $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans/NotoSans-Regular.ttf";
-        $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
+        if (file_exists('resource://Neos.Neos/Public/Fonts/NotoSans/NotoSans-Regular.ttf')) {
+            $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans/NotoSans-Regular.ttf";
+            $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
+        } elseif (file_exists('resource://Neos.Neos/Public/Fonts/NotoSans-Regular.ttf')) {
+            $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans-Regular.ttf";
+            $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
+        }
 
         // scale text to fit the image
         $initialFontBox = $initialFont->box($text);
