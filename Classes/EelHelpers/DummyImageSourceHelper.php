@@ -101,7 +101,7 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
             $arguments['f'] = $this->targetFormat;
         }
 
-        if ($this->targetImageVariant['presetIdentifier'] && $this->targetImageVariant['presetVariantName']) {
+        if (isset($this->targetImageVariant['presetIdentifier'], $this->targetImageVariant['presetVariantName'])) {
             $arguments['pi'] = $this->targetImageVariant['presetIdentifier'];
             $arguments['pv'] = $this->targetImageVariant['presetVariantName'];
         }
