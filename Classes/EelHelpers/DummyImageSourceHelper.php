@@ -106,6 +106,6 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
             $arguments['pv'] = $this->targetImageVariant['presetVariantName'];
         }
 
-        return $this->baseUri . '?' . http_build_query ($arguments);
+        return $this->baseUri . '?' . http_build_query($arguments);
     }
 }

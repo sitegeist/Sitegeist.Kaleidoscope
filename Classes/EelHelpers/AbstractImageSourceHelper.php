@@ -81,7 +81,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      * @param string|null $format
      * @return ImageSourceHelperInterface
      */
-    public function setFormat(?string $format = null) : ImageSourceHelperInterface
+    public function setFormat(string $format = null): ImageSourceHelperInterface
     {
         $newSource = clone($this);
         $newSource->targetFormat = $format;
