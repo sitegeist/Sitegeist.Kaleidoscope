@@ -128,10 +128,16 @@ class DummyImageController extends ActionController
                 $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height);
             }
 
+            // render image
+            $result = $image->get($f);
+            if (!$result) {
+                throw new \Exception('Something went wrong without throwing an exception');
+            }
+
             // build result
             $this->response->setHeader('Cache-Control', 'max-age=883000000');
             $this->response->setHeader('Content-type', 'image/' . $f);
-            return $image->get($f);
+            return $result;
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
 
