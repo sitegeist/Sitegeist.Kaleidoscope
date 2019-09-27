@@ -102,6 +102,18 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
+     * DEPRECATED Apply definitions from a thumbnail preset to this image source
+     *
+     * @param string $name
+     * @deprecated use applyThumbnailPreset
+     * @return ImageSourceHelperInterface
+     */
+    public function applyPreset(string $name): ImageSourceHelperInterface
+    {
+        return $this->applyThumbnailPreset($name);
+    }
+
+    /**
      * Apply definitions from a thumbnail preset to this image source
      *
      * @param string $name
@@ -189,7 +201,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset'])) {
             return true;
         }
 

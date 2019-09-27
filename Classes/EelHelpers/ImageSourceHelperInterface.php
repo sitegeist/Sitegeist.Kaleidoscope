@@ -15,6 +15,13 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function setFormat(string $format = null) : ImageSourceHelperInterface;
 
+    /**
+     * @param string $name
+     * @deprecated use applyThumbnailPreset
+     * @return ImageSourceHelperInterface
+     */
+    public function applyPreset(string $name): ImageSourceHelperInterface;
+
     public function applyThumbnailPreset(string $name): ImageSourceHelperInterface;
 
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface;
