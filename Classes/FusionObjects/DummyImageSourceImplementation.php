@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
-use Neos\Flow\Annotations as Flow;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
+use Neos\Flow\Mvc\Routing\Exception\MissingActionNameException;
 use Sitegeist\Kaleidoscope\EelHelpers\DummyImageSourceHelper;
+use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 
 class DummyImageSourceImplementation extends AbstractImageSourceImplementation
 {
@@ -51,8 +53,9 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
      * Create helper and initialize with the default values
      *
      * @return ImageSourceHelperInterface|null
+     * @throws MissingActionNameException
      */
-    public function createHelper() : ?ImageSourceHelperInterface
+    public function createHelper(): ?ImageSourceHelperInterface
     {
         $uriBuilder = $this->runtime->getControllerContext()->getUriBuilder()->reset()->setCreateAbsoluteUri(true);
         $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
@@ -61,23 +64,23 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
 
         if ($baseWidth = $this->getBaseWidth()) {
             $helper->setBaseWidth($baseWidth);
-        };
+        }
 
         if ($baseHeight = $this->getBaseHeight()) {
             $helper->setBaseHeight($baseHeight);
-        };
+        }
 
         if ($backgroundColor = $this->getBackgroundColor()) {
             $helper->setBackgroundColor($backgroundColor);
-        };
+        }
 
         if ($foregroundColor = $this->getForegroundColor()) {
             $helper->setForegroundColor($foregroundColor);
-        };
+        }
 
         if ($text = $this->getText()) {
             $helper->setText($text);
-        };
+        }
 
         return $helper;
     }

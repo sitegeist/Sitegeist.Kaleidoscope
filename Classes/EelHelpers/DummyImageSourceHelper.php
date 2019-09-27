@@ -1,27 +1,37 @@
 <?php
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+declare(strict_types=1);
 
-use Neos\Flow\Annotations as Flow;
+namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 {
-    protected $baseWidth = 600;
-
-    protected $baseHeight = 400;
-
+    /**
+     * @var string
+     */
     protected $backgroundColor = '999';
 
+    /**
+     * @var string
+     */
     protected $foregroundColor = 'fff';
 
-    protected $text = null;
+    /**
+     * @var string
+     */
+    protected $text;
 
+    /**
+     * @var string
+     */
     protected $baseUri = '';
 
     /**
-     * @param ControllerContext $controllerContext
+     * @param string $baseUri
      */
     public function __construct(string $baseUri)
     {
+        $this->baseWidth = 600;
+        $this->baseHeight = 400;
         $this->baseUri = $baseUri;
     }
 
@@ -91,7 +101,7 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
             $arguments['f'] = $this->targetFormat;
         }
 
-        $uri = $this->baseUri . '?' . http_build_query ($arguments);
+        $uri = $this->baseUri . '?' . http_build_query($arguments);
         return $uri;
     }
 }

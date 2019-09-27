@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
@@ -12,12 +14,19 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
      */
     protected $resourceManager;
 
-    protected $path = null;
+    /**
+     * @var string
+     */
+    protected $path;
 
-    protected $package = null;
+    /**
+     * @var string
+     */
+    protected $package;
 
     /**
      * ResourceImageSourceHelper constructor.
+     *
      * @param string $package
      * @param string $path
      */

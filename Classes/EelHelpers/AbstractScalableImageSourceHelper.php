@@ -1,47 +1,48 @@
 <?php
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+declare(strict_types=1);
 
+namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
 {
     /**
      * @var int
      */
-    protected $baseWidth = null;
+    protected $baseWidth;
 
     /**
      * @var int
      */
-    protected $baseHeight = null;
+    protected $baseHeight;
 
     /**
      * @param int|null $targetWidth
-     * @param bool $preserveAspectRatio
+     * @param bool $preserveAspect
      * @return ImageSourceHelperInterface
      */
-    public function setWidth(int $targetWidth = null, bool $preserveAspect = false) : ImageSourceHelperInterface
+    public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceHelperInterface
     {
-        $newSource = clone($this);
+        $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
         if ($preserveAspect === true) {
             $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
-            $newSource->targetHeight = round($targetWidth / $aspect);
+            $newSource->targetHeight = (int)round($targetWidth / $aspect);
         }
         return $newSource;
     }
 
     /**
      * @param int|null $targetHeight
-     * @param bool $preserverAspectRatio
+     * @param bool $preserveAspect
      * @return ImageSourceHelperInterface
      */
-    public function setHeight(int $targetHeight = null, bool $preserveAspect = false) : ImageSourceHelperInterface
+    public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceHelperInterface
     {
-        $newSource = clone($this);
+        $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
         if ($preserveAspect === true) {
             $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
-            $newSource->targetWidth = round($targetHeight * $aspect);
+            $newSource->targetWidth = (int)round($targetHeight * $aspect);
         }
         return $newSource;
     }
@@ -52,16 +53,16 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
      */
     public function scale(float $factor): ImageSourceHelperInterface
     {
-        $scaledHelper = clone($this);
+        $scaledHelper = clone $this;
 
         if ($this->targetWidth && $this->targetHeight) {
-            $scaledHelper = $scaledHelper->setDimensions(round($factor * $this->targetWidth), round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setDimensions((int)round($factor * $this->targetWidth), (int)round($factor * $this->targetHeight));
         } elseif ($this->targetWidth) {
-            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->targetWidth));
+            $scaledHelper = $scaledHelper->setWidth((int)round($factor * $this->targetWidth));
         } elseif ($this->targetHeight) {
-            $scaledHelper = $scaledHelper->setHeight(round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setHeight((int)round($factor * $this->targetHeight));
         } else {
-            $scaledHelper = $scaledHelper->setWidth(round($factor * $this->baseWidth));
+            $scaledHelper = $scaledHelper->setWidth((int)round($factor * $this->baseWidth));
         }
 
         return $scaledHelper;
@@ -70,30 +71,33 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
     /**
      * @return int
      */
-    public function getCurrentWidth() : int
+    public function getCurrentWidth(): int
     {
         if ($this->targetWidth) {
             return $this->targetWidth;
-        } elseif ($this->targetHeight) {
-            return round($this->targetHeight * $this->baseWidth/ $this->baseHeight);
-        } else {
-            return $this->baseWidth;
         }
-    }
 
+        if ($this->targetHeight) {
+            return (int)round($this->targetHeight * $this->baseWidth / $this->baseHeight);
+        }
+
+        return $this->baseWidth;
+    }
 
     /**
      * @return int
      */
-    public function getCurrentHeight() : int
+    public function getCurrentHeight(): int
     {
         if ($this->targetHeight) {
             return $this->targetHeight;
-        } elseif ($this->targetWidth) {
-            return round($this->targetWidth *  $this->baseHeight / $this->baseWidth);
-        } else {
-            return $this->baseHeight;
         }
+
+        if ($this->targetWidth) {
+            return (int)round($this->targetWidth * $this->baseHeight / $this->baseWidth);
+        }
+
+        return $this->baseHeight;
     }
 
 }

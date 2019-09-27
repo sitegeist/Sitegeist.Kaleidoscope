@@ -1,12 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Mvc\ActionRequest;
+use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\ImageInterface;
+use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\Media\Domain\Service\ThumbnailService;
-use Neos\Media\Domain\Model\ThumbnailConfiguration;
-use Neos\Flow\Mvc\ActionRequest;
 
 class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 {
@@ -24,7 +27,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     protected $assetService;
 
     /**
-     * @var Image
+     * @var ImageInterface
      */
     protected $asset;
 
@@ -40,6 +43,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * AssetImageSourceHelper constructor.
+     *
      * @param ImageInterface $asset
      */
     public function __construct(ImageInterface $asset)
@@ -48,7 +52,6 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         $this->baseWidth = $this->asset->getWidth();
         $this->baseHeight = $this->asset->getHeight();
     }
-
 
     /**
      * @param bool $async
@@ -74,6 +77,10 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
      */
     public function src(): string
     {
+        if (!$this->asset instanceof AssetInterface) {
+            return '';
+        }
+
         $async = $this->request ? $this->async : false;
         $allowCropping = ($this->targetWidth && $this->targetHeight);
         $allowUpScaling = false;
@@ -101,6 +108,5 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 
         return $thumbnailData['src'];
     }
-
 
 }
