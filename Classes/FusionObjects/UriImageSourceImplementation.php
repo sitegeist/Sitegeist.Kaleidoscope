@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
-use Neos\Flow\Annotations as Flow;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
+use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
 
 class UriImageSourceImplementation extends AbstractFusionObject
@@ -21,7 +22,7 @@ class UriImageSourceImplementation extends AbstractFusionObject
      *
      * @return ImageSourceHelperInterface
      */
-    public function evaluate() : ImageSourceHelperInterface
+    public function evaluate(): ImageSourceHelperInterface
     {
         return new UriImageSourceHelper($this->getUri());
     }

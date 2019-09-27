@@ -2,7 +2,7 @@
 
 ## Responsive Images for Neos - with Atomic.Fusion & Monocle in mind
 
-This package implements responsive-images for Neos for beeing used via Fusion.
+This package implements responsive-images for Neos for being used via Fusion.
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
@@ -29,7 +29,7 @@ Sitegeist.Monocle living styleguide.
 Sitegeist.Kaleidoscope comes with four Fusion-ImageSources:
 
 - Sitegeist.Kaleidoscope:AssetImageSource: Images uploaded by Editors
-- Sitegeist.Kaleidoscope:DummyImageSource: Dummyimages created by a local service
+- Sitegeist.Kaleidoscope:DummyImageSource: Dummy images created by a local service
 - Sitegeist.Kaleidoscope:ResourceImageSource: Static resources from Packages
 - Sitegeist.Kaleidoscope:UriImageSource: any Url
 
@@ -44,7 +44,7 @@ by our employer http://www.sitegeist.de.*
 ## Installation
 
 Sitegeist.Kaleidoscope is available via packagist run `composer require sitegeist/kaleidoscope`.
-We use semantic-versioning so every breaking change will increase the major-version number.
+We use semantic versioning so every breaking change will increase the major-version number.
 
 ## Usage
 
@@ -266,8 +266,8 @@ Arguments:
 Arguments:
 - `baseWidth`: The default width for the image before scaling (default = 600)
 - `baseHeight`: The default height for the image before scaling (default = 400)
-- `backgroundColor`: The background color of the dummyimage (default = '999')
-- `foregroundColor`: The foreground color of the dummyimage (default = 'fff')
+- `backgroundColor`: The background color of the dummy image (default = '999')
+- `foregroundColor`: The foreground color of the dummy image (default = 'fff')
 - `text`: The text that is rendered on the image (default = null, show size)
 - `preset`, `width` and `height` are supported as explained above
 
@@ -345,7 +345,7 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
 ```
 
 In this example devices smaller than 800px will show a 400x400 square image,
-while larger devices will render a multires-source in the orginal image dimension.
+while larger devices will render a multires-source in the original image dimension.
 
 ## Contribution
 

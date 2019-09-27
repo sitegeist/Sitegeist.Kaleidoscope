@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Flow\Annotations as Flow;
@@ -50,7 +52,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             return null;
         }
 
-        if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes)) {
+        if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             return new UriImageSourceHelper($uri);
         }

@@ -13,7 +13,7 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
     format = null
 }
 
-//    this is only for testing of a large variant og dummy images
+//    this is only for testing of a large variant of dummy images
 //
 //prototype(Sitegeist.Kaleidoscope:DummyImageSource.Preview) < prototype(Neos.Fusion:Component) {
 //

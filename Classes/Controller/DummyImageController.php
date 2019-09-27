@@ -1,17 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace Sitegeist\Kaleidoscope\Controller;
 
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette;
+use Imagine\Image\Palette\Color\ColorInterface;
+use Imagine\Image\Point;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Flow\Package\PackageManager;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Flow\Mvc\Controller\ActionController;
-
-use Imagine\Image\ImagineInterface;
-use Imagine\Image\ImageInterface;
-use Imagine\Image\Palette\Color\ColorInterface;
-use Imagine\Image\Palette;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
 use Neos\Flow\Http\Component\SetHeaderComponent;
 
 class DummyImageController extends ActionController
@@ -43,8 +44,9 @@ class DummyImageController extends ActionController
      * @param string $fg
      * @param string $t
      * @param string $f
+     * @return string
      */
-    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png')
+    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
     {
         // limit input arguments
         if ($w > 9999) {
@@ -56,7 +58,7 @@ class DummyImageController extends ActionController
         }
 
         // limit input arguments
-        if ($w < 10 ) {
+        if ($w < 10) {
             $w = 10;
         }
 
@@ -64,7 +66,7 @@ class DummyImageController extends ActionController
             $h = 10;
         }
 
-        if (is_null($t)) {
+        if ($t === null) {
             $t = (string)$w . ' x ' . (string)$h;
         }
 
@@ -108,7 +110,7 @@ class DummyImageController extends ActionController
             }
 
             if ($renderPattern) {
-                $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height, $text);
+                $this->renderPattern($image, $renderShape ? $backgroundColor : $foregroundColor, $width, $height);
             }
 
             // render image
@@ -136,11 +138,11 @@ class DummyImageController extends ActionController
      * @param int $width
      * @param int $height
      */
-    protected function renderBackground(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor, int $width, int $height): void
+    protected function renderBackground(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
         $image->draw()->polygon(
             [
-                new Point(0,0),
+                new Point(0, 0),
                 new Point($width, 0),
                 new Point($width, $height),
                 new Point(0, $height)
@@ -149,8 +151,8 @@ class DummyImageController extends ActionController
             true,
             1
         );
-
     }
+
     /**
      * @param ImageInterface $image
      * @param ColorInterface $foregroundColor
@@ -158,7 +160,7 @@ class DummyImageController extends ActionController
      * @param int $width
      * @param int $height
      */
-    protected function renderShape(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor, int $width, int $height): void
+    protected function renderShape(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
         $imageAspectRatio = $width / $height;
         $baseShapeWidth = 600;
@@ -184,15 +186,15 @@ class DummyImageController extends ActionController
 
         // transform shape to center of the image
         $factor = ($imageAspectRatio > $baseShapeAspectRatio) ? (float)$height / (float)$baseShapeHeight : (float)$width / (float)$baseShapeWidth;
-        $xoffset = ($imageAspectRatio > $baseShapeAspectRatio) ? ($width - ($baseShapeWidth * $factor)) / 2.0 : 0.0;
-        $yoffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
+        $xOffset = ($imageAspectRatio > $baseShapeAspectRatio) ? ($width - ($baseShapeWidth * $factor)) / 2.0 : 0.0;
+        $yOffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
 
         /**
          * @var $transformedShape Point[]
          */
         $transformedShape = array_map(
-            function (Point $point) use ($factor, $xoffset, $yoffset) {
-                return new Point($point->getX() * $factor + $xoffset, $point->getY() * $factor + $yoffset);
+            static function (Point $point) use ($factor, $xOffset, $yOffset) {
+                return new Point($point->getX() * $factor + $xOffset, $point->getY() * $factor + $yOffset);
             },
             $baseShape
         );
@@ -200,8 +202,8 @@ class DummyImageController extends ActionController
         // adjust some points based on aspect ratio
         $transformedShape[0] = new Point(0, $transformedShape[0]->getY());
         $transformedShape[1] = new Point(0, 0);
-        $transformedShape[2] = new Point( $width, 0);
-        $transformedShape[3] = new Point( $width, $transformedShape[3]->getY());
+        $transformedShape[2] = new Point($width, 0);
+        $transformedShape[3] = new Point($width, $transformedShape[3]->getY());
 
         // draw shape
         $image->draw()->polygon(
@@ -219,7 +221,7 @@ class DummyImageController extends ActionController
      * @param int $width
      * @param int $height
      */
-    protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor,  ColorInterface $backgroundColor,int $width, int $height): void
+    protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
         $borderWidth = 10;
 
@@ -248,8 +250,9 @@ class DummyImageController extends ActionController
      * @param int $width
      * @param int $height
      * @param string $text
+     * @param bool $center
      */
-    protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, $center = false): void
+    protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
         $initialFontSize = 10;
         if (file_exists('resource://Neos.Neos/Public/Fonts/NotoSans/NotoSans-Regular.ttf')) {
@@ -270,16 +273,23 @@ class DummyImageController extends ActionController
         // render actual text
         $actualFont = $this->imagineService->font($fontFile, min([$correctedFontSizeByWidth, $correctedFontSizeByHeight]), $textColor);
         $actualFontBox = $actualFont->box($text);
-        $imageCenterPosition = new Point($width / 2 , $height / 2);
+        $imageCenterPosition = new Point($width / 2, $height / 2);
         $textCenterPosition = new Point\Center($actualFontBox);
         if ($center) {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), ($height * .5 - $actualFontBox->getHeight() * .5));
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), $height * .5 - $actualFontBox->getHeight() * .5);
         } else {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), ($height * .78 - $actualFontBox->getHeight() * .5));
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), $height * .78 - $actualFontBox->getHeight() * .5);
         }
         $image->draw()->text($text, $actualFont, $centeredTextPosition);
     }
 
+    /**
+     * @param ImageInterface $image
+     * @param ColorInterface $patternColor
+     * @param int $width
+     * @param int $height
+     * @return void
+     */
     protected function renderPattern(ImageInterface $image, ColorInterface $patternColor, int $width, int $height): void
     {
         $borderWidth = 5;
@@ -293,13 +303,12 @@ class DummyImageController extends ActionController
 
         for ($i = 0; $i < $patternSize; $i++) {
             for ($k = 0; $k < $patternSize; $k++) {
-
                 if ($k > $patternSize - $i || $i > $patternSize - $k) {
                     continue;
                 }
 
                 if (
-                    $i == $k ||
+                    $i === $k ||
                     ($i % 2 && $k % 2)
 
                 ) {
