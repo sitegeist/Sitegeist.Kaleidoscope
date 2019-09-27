@@ -11,6 +11,8 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function setDimensions(int $width = null, int $height = null) : ImageSourceHelperInterface;
 
+    public function setFormat(?string $format = null) : ImageSourceHelperInterface;
+
     public function applyPreset(string $name) : ImageSourceHelperInterface;
 
     public function src() : string;
