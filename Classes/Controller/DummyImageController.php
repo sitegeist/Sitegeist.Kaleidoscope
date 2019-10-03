@@ -12,14 +12,9 @@ use Imagine\Image\Point;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Package\Exception\UnknownPackageException;
 use Neos\Flow\Package\PackageManager;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Media\Domain\Model\Adjustment\ImageAdjustmentInterface;
-use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
-use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
-use Neos\Media\Exception\AssetVariantGeneratorException;
-use Neos\Media\Exception\ImageServiceException;
-use Neos\Utility\ObjectAccess;
 use Psr\Log\LoggerInterface;
 
 class DummyImageController extends ActionController
@@ -47,12 +42,6 @@ class DummyImageController extends ActionController
      * @var LoggerInterface
      */
     protected $logger;
-
-    /**
-     * @var array
-     * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
-     */
-    protected $variantPresets;
 
     /**
      * Get a dummy-image
@@ -95,15 +84,6 @@ class DummyImageController extends ActionController
             $image = $this->imagineService->create($imageBox);
             $image->usePalette($palette);
 
-            // create imagine
-            if (isset($this->variantPresets[$pi]['variants'][$pv])) {
-                $image = $this->applyVariantPresetAdjustments($image, $pi, $pv);
-                $width = $image->getSize()->getWidth();
-                $height = $image->getSize()->getHeight();
-            } else {
-                $this->logger->notice(sprintf('Variant "%s" of preset "%s" is not configured', $pi, $pv), LogEnvironment::fromMethodName(__METHOD__));
-            }
-
             $renderBorder = ($width >= 70 && $height >= 70);
             $renderShape = ($width >= 200 && $height >= 100);
             $renderText = ($width >= 50 && $height >= 30);
@@ -131,7 +111,7 @@ class DummyImageController extends ActionController
             // render image
             $result = $image->get($f);
             if (!$result) {
-                throw new \Exception('Something went wrong without throwing an exception');
+                throw new \RuntimeException('Something went wrong without throwing an exception');
             }
 
             // build result
@@ -146,42 +126,6 @@ class DummyImageController extends ActionController
             $this->response->setHeader('Content-type', 'image/png');
             return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
         }
-    }
-
-    /**
-     * @param ImageInterface $image
-     * @param string $pi
-     * @param string $pv
-     * @return ImageInterface
-     * @throws AssetVariantGeneratorException
-     * @throws ImageServiceException
-     */
-    protected function applyVariantPresetAdjustments(ImageInterface $image, string $pi, string $pv): ImageInterface
-    {
-        $assetVariantPreset = VariantPreset::fromConfiguration($this->variantPresets[$pi]);
-        foreach ($assetVariantPreset->variants()[$pv]->adjustments() as $adjustmentConfiguration) {
-            assert($adjustmentConfiguration instanceof Adjustment);
-            $adjustmentClassName = $adjustmentConfiguration->type();
-            if (!class_exists($adjustmentClassName)) {
-                throw new AssetVariantGeneratorException(sprintf('Unknown image variant adjustment type "%s".', $adjustmentClassName), 1568213194);
-            }
-            $adjustment = new $adjustmentClassName();
-            if (!$adjustment instanceof ImageAdjustmentInterface) {
-                throw new AssetVariantGeneratorException(sprintf('Image variant adjustment "%s" does not implement "%s".', $adjustmentClassName, ImageAdjustmentInterface::class), 1568213198);
-            }
-            foreach ($adjustmentConfiguration->options() as $key => $value) {
-                ObjectAccess::setProperty($adjustment, $key, $value);
-            }
-
-            if (!$adjustment instanceof ImageAdjustmentInterface) {
-                throw new ImageServiceException(sprintf('Could not apply the %s adjustment to image because it does not implement the ImageAdjustmentInterface.', get_class($adjustment)), 1381400362);
-            }
-            if ($adjustment->canBeApplied($image)) {
-                $image = $adjustment->applyToImage($image);
-            }
-        }
-
-        return $image;
     }
 
     /**
@@ -304,6 +248,7 @@ class DummyImageController extends ActionController
      * @param int $height
      * @param string $text
      * @param bool $center
+     * @throws UnknownPackageException
      */
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
