@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\AssetVariantInterface;
@@ -72,6 +73,34 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
+     * Use the variant generated from the given variant preset in this image source
+     *
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return ImageSourceHelperInterface
+     */
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    {
+        $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
+
+        if ($newSource->targetImageVariant !== []) {
+            $assetVariant = self::getAssetVariant($newSource->asset, $newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
+            if ($assetVariant instanceof ImageVariant) {
+                $newSource->asset = $assetVariant;
+                $newSource->baseWidth = $assetVariant->getWidth();
+                $newSource->baseHeight = $assetVariant->getHeight();
+            } else {
+                $this->logger->warning(
+                    sprintf('Variant "%s" of preset "%s" not available for image', $newSource->targetImageVariant['presetVariantName'], $newSource->targetImageVariant['presetIdentifier']),
+                    LogEnvironment::fromMethodName(__METHOD__)
+                );
+            }
+        }
+
+        return $newSource;
+    }
+
+    /**
      * @return string
      * @throws \Neos\Flow\Mvc\Routing\Exception\MissingActionNameException
      * @throws \Neos\Media\Exception\AssetServiceException
@@ -81,11 +110,6 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     {
         if (!$this->asset instanceof AssetInterface) {
             return '';
-        }
-
-        $assetVariant = null;
-        if ($this->asset instanceof VariantSupportInterface && $this->targetImageVariant !== []) {
-            $assetVariant = $this->getAssetVariant($this->asset, $this->targetImageVariant['presetIdentifier'], $this->targetImageVariant['presetVariantName']);
         }
 
         $async = $this->request ? $this->async : false;
@@ -104,7 +128,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         );
 
         $thumbnailData = $this->assetService->getThumbnailUriAndSizeForAsset(
-            $assetVariant ?? $this->asset,
+            $this->asset,
             $thumbnailConfiguration,
             $this->request
         );
@@ -123,7 +147,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
      * @return ImageVariant
      * @todo Remove when getVariant() is available in VariantSupportInterface
      */
-    private function getAssetVariant(VariantSupportInterface $asset, string $presetIdentifier, string $presetVariantName): ?ImageVariant
+    private static function getAssetVariant(VariantSupportInterface $asset, string $presetIdentifier, string $presetVariantName): ?ImageVariant
     {
         $variants = $asset->getVariants();
 
