@@ -84,7 +84,8 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {
-            $assetVariant = self::getAssetVariant($newSource->asset, $newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
+            $asset = ($newSource->asset instanceof ImageVariant) ? $newSource->asset->getOriginalAsset() : $newSource->asset;
+            $assetVariant = self::getAssetVariant($asset, $newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
             if ($assetVariant instanceof ImageVariant) {
                 $newSource->asset = $assetVariant;
                 $newSource->baseWidth = $assetVariant->getWidth();
