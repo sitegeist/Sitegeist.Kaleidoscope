@@ -155,12 +155,12 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 
             switch (true) {
                 case ($adjustment instanceof ResizeImageAdjustment):
-                    $imageBox = new Box($source->baseWidth, $$source->baseHeight);
+                    $imageBox = new Box($source->baseWidth, $source->baseHeight);
                     $image = $this->imagineService->create($imageBox);
                     if ($adjustment->canBeApplied($image)) {
                         $image = $adjustment->applyToImage($image);
-                        $source->baseWidth = $image->getSize()->getWidth();
-                        $source->baseHeight = $image->getSize()->getHeight();
+                        $source->baseWidth = (int)round($image->getSize()->getWidth());
+                        $source->baseHeight = (int)round($image->getSize()->getHeight());
                     }
                 break;
                 case ($adjustment instanceof CropImageAdjustment):
@@ -172,8 +172,8 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
                         $newHeight = $adjustment->getHeight();
                     }
 
-                    $source->baseWidth = $newWidth;
-                    $source->baseHeight = $newHeight;
+                    $source->baseWidth = (int)round($newWidth);
+                    $source->baseHeight = (int)round($newHeight);
                 break;
             }
         }
