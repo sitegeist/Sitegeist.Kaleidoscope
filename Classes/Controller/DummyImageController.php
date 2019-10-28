@@ -52,11 +52,9 @@ class DummyImageController extends ActionController
      * @param string $fg
      * @param string $t
      * @param string $f
-     * @param string $pi
-     * @param string $pv
      * @return string
      */
-    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png', string $pi = null, string $pv = null): string
+    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
     {
         // limit input arguments
         if ($w > 9999) {
