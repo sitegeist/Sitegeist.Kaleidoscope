@@ -91,10 +91,10 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
                 $newSource->baseWidth = $assetVariant->getWidth();
                 $newSource->baseHeight = $assetVariant->getHeight();
             } else {
-                $this->logger->warning(
-                    sprintf('Variant "%s" of preset "%s" not available for image', $newSource->targetImageVariant['presetVariantName'], $newSource->targetImageVariant['presetIdentifier']),
-                    LogEnvironment::fromMethodName(__METHOD__)
-                );
+                // if no alternate variant is found we estimate the target dimensions
+                $targetDimensions = $this->estimateDimensionsFromVariantPresetAdjustments($presetIdentifier, $presetVariantName);
+                $newSource->targetWidth = $targetDimensions->getWidth();
+                $newSource->targetHeight = $targetDimensions->getHeight();
             }
         }
 
