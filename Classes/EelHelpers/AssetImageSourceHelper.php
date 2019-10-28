@@ -93,8 +93,8 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
             } else {
                 // if no alternate variant is found we estimate the target dimensions
                 $targetDimensions = $this->estimateDimensionsFromVariantPresetAdjustments($presetIdentifier, $presetVariantName);
-                $newSource->targetWidth = $targetDimensions->getWidth();
-                $newSource->targetHeight = $targetDimensions->getHeight();
+                $newSource->baseWidth = $targetDimensions->getWidth();
+                $newSource->baseHeight = $targetDimensions->getHeight();
             }
         }
 
@@ -113,14 +113,17 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
             return '';
         }
 
+        $width = $this->getCurrentWidth();
+        $height = $this->getCurrentHeight();
+
         $async = $this->request ? $this->async : false;
-        $allowCropping = ($this->targetWidth && $this->targetHeight);
+        $allowCropping = true;
         $allowUpScaling = false;
         $thumbnailConfiguration = new ThumbnailConfiguration(
-            $this->targetWidth,
-            $this->targetWidth,
-            $this->targetHeight,
-            $this->targetHeight,
+            $width,
+            $width,
+            $height,
+            $height,
             $allowCropping,
             $allowUpScaling,
             $async,
