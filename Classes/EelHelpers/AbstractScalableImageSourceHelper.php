@@ -3,8 +3,24 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Neos\Flow\Annotations as Flow;
+use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
+use Neos\Media\Domain\Model\Adjustment\ImageAdjustmentInterface;
+use Neos\Media\Domain\Model\Adjustment\ResizeImageAdjustment;
+use Neos\Media\Domain\Model\Adjustment\CropImageAdjustment;
+use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
+use Neos\Utility\ObjectAccess;
+
 abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
 {
+    /**
+     * @var ImagineInterface
+     * @Flow\Inject
+     */
+    protected $imagineService;
+
     /**
      * @var int
      */
@@ -100,4 +116,74 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         return $this->baseHeight;
     }
 
+    /**
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return Box
+     */
+    protected function estimateDimensionsFromVariantPresetAdjustments(string $presetIdentifier, string $presetVariantName): Box
+    {
+        $imageBox = new Box(
+            $this->baseWidth,
+            $this->baseHeight
+        );
+
+        $assetVariantPreset = VariantPreset::fromConfiguration($this->variantPresets[$presetIdentifier]);
+        foreach ($assetVariantPreset->variants()[$presetVariantName]->adjustments() as $adjustmentConfiguration) {
+            $adjustment = $this->createAdjustment($adjustmentConfiguration);
+
+            switch (true) {
+                case ($adjustment instanceof ResizeImageAdjustment):
+                    $image = $this->imagineService->create($imageBox);
+                    if ($adjustment->canBeApplied($image)) {
+                        $image = $adjustment->applyToImage($image);
+                        return new Box(
+                            (int)round($image->getSize()->getWidth()),
+                            (int)round($image->getSize()->getHeight())
+                        );
+                    }
+                    break;
+                case ($adjustment instanceof CropImageAdjustment):
+                    $desiredAspectRatio = $adjustment->getAspectRatio();
+                    if ($desiredAspectRatio !== null) {
+                        [, , $newWidth, $newHeight] = CropImageAdjustment::calculateDimensionsByAspectRatio($this->baseWidth, $this->baseHeight, $desiredAspectRatio);
+                    } else {
+                        $newWidth = $adjustment->getWidth();
+                        $newHeight = $adjustment->getHeight();
+                    }
+                    return new Box(
+                        (int)round($newWidth),
+                        (int)round($newHeight)
+                    );
+                    break;
+            }
+        }
+
+        return $imageBox;
+    }
+
+    /**
+     * @param Adjustment $adjustmentConfiguration
+     * @return ImageAdjustmentInterface
+     */
+    protected function createAdjustment(Adjustment $adjustmentConfiguration): ImageAdjustmentInterface
+    {
+        $adjustmentClassName = $adjustmentConfiguration->type();
+        if (!class_exists($adjustmentClassName)) {
+            throw new \RuntimeException(sprintf('Unknown image variant adjustment type "%s".', $adjustmentClassName), 1568213194);
+        }
+        $adjustment = new $adjustmentClassName();
+        if (!$adjustment instanceof ImageAdjustmentInterface) {
+            throw new \RuntimeException(sprintf('Image variant adjustment "%s" does not implement "%s".', $adjustmentClassName, ImageAdjustmentInterface::class), 1568213198);
+        }
+        foreach ($adjustmentConfiguration->options() as $key => $value) {
+            ObjectAccess::setProperty($adjustment, $key, $value);
+        }
+
+        if (!$adjustment instanceof ImageAdjustmentInterface) {
+            throw new \RuntimeException(sprintf('Could not apply the %s adjustment to image because it does not implement the ImageAdjustmentInterface.', get_class($adjustment)), 1381400362);
+        }
+
+        return $adjustment;
+    }
 }

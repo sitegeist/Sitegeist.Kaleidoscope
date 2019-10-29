@@ -5,8 +5,9 @@ namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
+use Neos\Media\Domain\Model\ImageInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\AssetImageSourceHelper;
+use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
@@ -25,17 +26,17 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     ];
 
     /**
-     * @return mixed
+     * @return ImageInterface|null
      */
-    public function getAsset()
+    public function getAsset(): ?ImageInterface
     {
         return $this->fusionValue('asset');
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getAsync()
+    public function getAsync(): ?bool
     {
         return $this->fusionValue('async');
     }
@@ -45,10 +46,10 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
      *
      * @return ImageSourceHelperInterface|null
      */
-    public function createHelper() : ?ImageSourceHelperInterface
+    public function createHelper(): ?ImageSourceHelperInterface
     {
         $asset = $this->getAsset();
-        if (!$asset) {
+        if ($asset === null) {
             return null;
         }
 

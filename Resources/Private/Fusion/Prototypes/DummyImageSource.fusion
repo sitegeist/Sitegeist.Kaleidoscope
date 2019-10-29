@@ -7,7 +7,8 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
     foregroundColor = 'fff'
     text = null
 
-    preset = null
+    thumbnailPreset = null
+    variantPreset = null
     width = null
     height = null
     format = null

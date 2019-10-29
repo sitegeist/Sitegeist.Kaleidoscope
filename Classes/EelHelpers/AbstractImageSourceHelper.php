@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Utility\Arrays;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractImageSourceHelper
@@ -30,9 +32,26 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
     /**
      * @var array
+     */
+    protected $targetImageVariant = [];
+
+    /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var array
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
     protected $thumbnailPresets;
+
+    /**
+     * @var array
+     * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
+     */
+    protected $variantPresets;
 
     /**
      * @param int|null $targetWidth
@@ -83,27 +102,59 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * Apply definitions from a preset to this image source
+     * DEPRECATED Apply definitions from a thumbnail preset to this image source
      *
      * @param string $name
+     * @deprecated use applyThumbnailPreset
      * @return ImageSourceHelperInterface
      */
     public function applyPreset(string $name): ImageSourceHelperInterface
     {
+        return $this->applyThumbnailPreset($name);
+    }
+
+    /**
+     * Apply definitions from a thumbnail preset to this image source
+     *
+     * @param string $name
+     * @return ImageSourceHelperInterface
+     */
+    public function applyThumbnailPreset(string $name): ImageSourceHelperInterface
+    {
         $newSource = clone $this;
-        if ($this->thumbnailPresets && isset($this->thumbnailPresets[$name])) {
+        if (isset($this->thumbnailPresets[$name])) {
             $preset = $this->thumbnailPresets[$name];
             if ($width = $preset['width'] ?? null) {
-                $newSource->setWidth($width);
+                $newSource = $newSource->setWidth($width);
             } elseif ($width = $preset['maximumWidth'] ?? null) {
-                $newSource->setWidth($width);
+                $newSource = $newSource->setWidth($width);
             }
             if ($height = $preset['height'] ?? null) {
-                $newSource->setHeight($height);
+                $newSource = $newSource->setHeight($height);
             } elseif ($height = $preset['maximumHeight'] ?? null) {
-                $newSource->setHeight($height);
+                $newSource = $newSource->setHeight($height);
             }
+        } else {
+            $this->logger->warning(sprintf('Thumbnail preset "%s" is not configured', $name), LogEnvironment::fromMethodName(__METHOD__));
         }
+        return $newSource;
+    }
+
+    /**
+     * Use the variant generated from the given variant preset in this image source
+     *
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return ImageSourceHelperInterface
+     */
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    {
+        if (!isset($this->variantPresets[$presetIdentifier]['variants'][$presetVariantName])) {
+            $this->logger->warning(sprintf('Variant "%s" of preset "%s" is not configured', $presetVariantName, $presetIdentifier), LogEnvironment::fromMethodName(__METHOD__));
+        }
+
+        $newSource = clone $this;
+        $newSource->targetImageVariant = ['presetIdentifier' => $presetIdentifier, 'presetVariantName' => $presetVariantName];
         return $newSource;
     }
 
@@ -150,7 +201,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset'])) {
             return true;
         }
 
