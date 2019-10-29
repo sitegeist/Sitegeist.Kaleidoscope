@@ -76,6 +76,27 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
+     * Use the variant generated from the given variant preset in this image source
+     *
+     * @param string $presetIdentifier
+     * @param string $presetVariantName
+     * @return ImageSourceHelperInterface
+     */
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    {
+        /** @var DummyImageSourceHelper $newSource */
+        $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
+
+        if ($newSource->targetImageVariant !== []) {
+            $targetBox = $this->estimateDimensionsFromVariantPresetAdjustments($presetIdentifier, $presetVariantName);
+            $newSource->baseWidth = $targetBox->getWidth();
+            $newSource->baseHeight = $targetBox->getHeight();
+        }
+
+        return $newSource;
+    }
+
+    /**
      * @return string
      */
     public function src(): string
@@ -101,7 +122,7 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
             $arguments['f'] = $this->targetFormat;
         }
 
-        $uri = $this->baseUri . '?' . http_build_query($arguments);
-        return $uri;
+        return $this->baseUri . '?' . http_build_query($arguments);
     }
+
 }

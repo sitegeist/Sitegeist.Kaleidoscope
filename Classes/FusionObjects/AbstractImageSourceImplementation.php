@@ -9,17 +9,17 @@ use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 abstract class AbstractImageSourceImplementation extends AbstractFusionObject
 {
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getWidth()
+    public function getWidth(): ?int
     {
         return $this->fusionValue('width');
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getHeight()
+    public function getHeight(): ?int
     {
         return $this->fusionValue('height');
     }
@@ -33,11 +33,19 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getPreset()
+    public function getThumbnailPreset(): ?string
     {
-        return $this->fusionValue('preset');
+        return $this->fusionValue('thumbnailPreset') ?? $this->fusionValue('preset');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVariantPreset(): ?string
+    {
+        return $this->fusionValue('variantPreset');
     }
 
     /**
@@ -52,8 +60,13 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
             return $helper;
         }
 
-        if ($preset = $this->getPreset()) {
-            $helper = $helper->applyPreset($preset);
+        if ($thumbnailPreset = $this->getThumbnailPreset()) {
+            $helper = $helper->applyThumbnailPreset($thumbnailPreset);
+        }
+
+        if (($variantPreset = $this->getVariantPreset()) && (strpos($variantPreset, '::') !== false)) {
+            [$presetIdentifier, $presetVariantName] = explode('::', $variantPreset, 2);
+            $helper = $helper->useVariantPreset($presetIdentifier, $presetVariantName);
         }
 
         if ($width = $this->getWidth()) {

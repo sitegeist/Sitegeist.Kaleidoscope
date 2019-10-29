@@ -3,7 +3,8 @@ prototype(Sitegeist.Kaleidoscope:AssetImageSource) {
     asset = ${asset}
     async = true
 
-    preset = null
+    thumbnailPreset = null
+    variantPreset = null
     width = null
     height = null
     format = null

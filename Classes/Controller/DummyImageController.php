@@ -10,9 +10,12 @@ use Imagine\Image\Palette;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Package\Exception\UnknownPackageException;
 use Neos\Flow\Package\PackageManager;
 use Neos\Flow\ResourceManagement\ResourceManager;
+use Psr\Log\LoggerInterface;
 
 class DummyImageController extends ActionController
 {
@@ -35,6 +38,12 @@ class DummyImageController extends ActionController
     protected $packageManager;
 
     /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Get a dummy-image
      *
      * @param int $w
@@ -45,36 +54,25 @@ class DummyImageController extends ActionController
      * @param string $f
      * @return string
      */
-    public function imageAction (int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
+    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
     {
         // limit input arguments
         if ($w > 9999) {
             $w = 9999;
+        } elseif ($w < 10) {
+            $w = 10;
         }
 
         if ($h > 9999) {
             $h = 9999;
-        }
-
-        // limit input arguments
-        if ($w < 10) {
-            $w = 10;
-        }
-
-        if ($h < 10) {
+        } elseif ($h < 10) {
             $h = 10;
-        }
-
-        if ($t === null) {
-            $t = (string)$w . ' x ' . (string)$h;
         }
 
         $width = $w;
         $height = $h;
-        $text = $t;
 
         try {
-            // create imagine
             $palette = new Palette\RGB();
             $backgroundColor = $palette->color($bg);
             $foregroundColor = $palette->color($fg);
@@ -84,14 +82,9 @@ class DummyImageController extends ActionController
             $image = $this->imagineService->create($imageBox);
             $image->usePalette($palette);
 
-            // render border
             $renderBorder = ($width >= 70 && $height >= 70);
-
-            // render shape
             $renderShape = ($width >= 200 && $height >= 100);
-
             $renderText = ($width >= 50 && $height >= 30);
-
             $renderPattern = ($width >= 20 && $height >= 20);
 
             $this->renderBackground($image, $foregroundColor, $backgroundColor, $width, $height);
@@ -104,7 +97,8 @@ class DummyImageController extends ActionController
                 $this->renderBorder($image, $foregroundColor, $backgroundColor, $width, $height);
             }
 
-            if ($t && $renderText) {
+            if ($renderText) {
+                $text = trim((string)$t) ?: sprintf('%s x %s', $width, $height);
                 $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
             }
 
@@ -115,14 +109,16 @@ class DummyImageController extends ActionController
             // render image
             $result = $image->get($f);
             if (!$result) {
-                throw new \Exception('Something went wrong without throwing an exception');
+                throw new \RuntimeException('Something went wrong without throwing an exception');
             }
 
             // build result
             $this->response->setHeader('Cache-Control', 'max-age=883000000');
             $this->response->setHeader('Content-type', 'image/' . $f);
             return $result;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
+
             // something went wrong we return the error image png
             $this->response->setStatusCode(500);
             $this->response->setHeader('Content-type', 'image/png');
@@ -250,6 +246,7 @@ class DummyImageController extends ActionController
      * @param int $height
      * @param string $text
      * @param bool $center
+     * @throws UnknownPackageException
      */
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
