@@ -319,7 +319,7 @@ Render an `img`-tag with `src` and a `srcset` in multiple resolutions:
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <img
-            src={props.imageSource}
+            src={props.imageSource.src()}
             srcset={props.imageSource.srcset('1x, 1.5x, 2x')}
         />
     `
@@ -331,7 +331,7 @@ Render an `img`-tag with `src` plus `srcset` and `sizes`:
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <img
-            src={props.imageSource}
+            src={props.imageSource.src()}
             srcset={props.imageSource.srcset('400w, 600w, 800w')}
             sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
         />
@@ -343,9 +343,9 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <picture>
-            <source srcset={props.imageSource.setWidth(400).setHeight(400)} media="(max-width: 799px)" />
+            <source srcset={props.imageSource.setWidth(400).setHeight(400).src()} media="(max-width: 799px)" />
             <source srcset={props.imageSource.srcset('400w, 600w, 800w')} media="(min-width: 800px)" />
-            <img src={props.imageSource} />
+            <img src={props.imageSource.src()} />
         </picture>
     `
 ```
