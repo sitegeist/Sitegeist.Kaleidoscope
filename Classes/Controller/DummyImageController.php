@@ -98,7 +98,7 @@ class DummyImageController extends ActionController
             }
 
             if ($renderText) {
-                $text = trim((string)$t) ?: sprintf('%s x %s', $width, $height);
+                $text = trim((string)$t) ?: sprintf('%s×%s', $width, $height);
                 $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
             }
 
