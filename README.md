@@ -141,7 +141,7 @@ sources = Neos.Fusion:RawArray {
     }
 
     webp = Neos.Fusion:RawArray {
-        imageSource = {imageSource.setFormat('webp')} 
+        imageSource = ${imageSource.setFormat('webp')} 
         srcset = '320w, 480w, 800w'
         sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
         type = 'image/webp'
