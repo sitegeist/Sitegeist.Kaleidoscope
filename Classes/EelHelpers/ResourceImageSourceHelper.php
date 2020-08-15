@@ -30,7 +30,7 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
      * @param string $package
      * @param string $path
      */
-    public function __construct(string $package, string $path)
+    public function __construct(?string $package, string $path)
     {
         $this->package = $package;
         $this->path = $path;
@@ -38,6 +38,9 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
 
     public function src(): string
     {
-        return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);
+        if ($this->package) {
+            return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);
+        }
+        return $this->resourceManager->getPublicPackageResourceUriByPath($this->path);
     }
 }
