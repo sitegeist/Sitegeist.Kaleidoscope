@@ -4,7 +4,7 @@
 
 This package implements responsive-images for Neos for being used via Fusion.
 
-```
+```html
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
     width = 800
     height = 200
@@ -68,7 +68,7 @@ Props:
 
 #### Image with srcset in multiple resolutions:
 
-```
+```html
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 
 renderer = afx`
@@ -80,13 +80,13 @@ renderer = afx`
 ```
 will render as:
 
-```
+```html
 <img src="_baseurl_" srcset="_url_1_ 1x, _url_2_ 2x, _url_3_ 3x">
 ```
 
 #### Image with srcset in multiple sizes:
 
-```
+```html
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 
 renderer = afx`
@@ -100,7 +100,7 @@ renderer = afx`
 
 will render as:
 
-```
+```html
 <img
     src="_baseurl_"
     srcset="_url_1_ 320w, _url_2_ 400w, _url_3_ 600w, _url_4_ 800w, _url_5_ 1000w, _url_6_ 1200w, _url_7_ 1600w"
@@ -126,7 +126,7 @@ Props:
 - `title`: title attribute for the picture tag
 - `class`: class attribute for the picture tag
 
-```
+```html
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 sources = Neos.Fusion:RawArray {
     large = Neos.Fusion:RawArray {
@@ -162,7 +162,7 @@ renderer = afx`
 
 will render as:
 
-```
+```html
 <picture>
   <source
     srcset="_large_url_1_ 1x, _large_url_2_ 1.5x, _large_url_3_ 2x"
@@ -194,7 +194,7 @@ Props:
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
 
-```
+```html
 prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusion:Component) {
 
     #
@@ -224,7 +224,7 @@ which will be defined by the integration.
 
 The integration of the component above as content-element works like this:
 
-```
+```html
 prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:ContentComponent) {
     renderer = Vendor.Site:Component.ResponsiveKevisualImage {
         imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
@@ -315,7 +315,7 @@ by using the `Sitegeist.Kaleidoscope:AssetImageSource` or
 
 Render an `img`-tag with `src` and a `srcset` in multiple resolutions:
 
-```
+```html
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <img
@@ -327,7 +327,7 @@ Render an `img`-tag with `src` and a `srcset` in multiple resolutions:
 
 Render an `img`-tag with `src` plus `srcset` and `sizes`:
 
-```
+```html
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <img
@@ -339,7 +339,7 @@ Render an `img`-tag with `src` plus `srcset` and `sizes`:
 ```
 Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
 
-```
+```html
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <picture>
