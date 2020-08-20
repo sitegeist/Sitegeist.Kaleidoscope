@@ -56,6 +56,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                 srcset={props.srcset}
                 alt={props.alt}
                 title={props.title}
+                outputDimensionsAttributes={false}
             />
         </picture>
     `
