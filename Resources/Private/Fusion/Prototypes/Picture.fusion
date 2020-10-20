@@ -40,6 +40,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     content = ''
     dimensions = null
 
+    #
+    # put the values that shall be applied to sources automatically to the context
+    # to make them available to all props during evaluation
+    #
     @context {
         __imageSource = ${this.imageSource}
         __srcset = ${this.srcset}

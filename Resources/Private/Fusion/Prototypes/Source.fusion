@@ -12,8 +12,17 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     format = null
 
     renderer = Neos.Fusion:Component {
-        imageSource = ${props.format ? props.imageSource.setFormat(props.format) : props.imageSource}
+
+        # apply the format to the imageSource
+        imageSource = ${props.imageSource}
+        imageSource.@process.applyFormat = ${value.setFormat(props.format)}
+        imageSource.@process.applyFormat.@if.hasFormat = ${props.format}
+
+        # apply the format to the type
         type = ${props.format ? 'image/' + props.format : props.type}
+        type.@process.applyFormat = ${'image/' + props.format}
+        type.@process.applyFormat.@if.hasFormat = ${props.format}
+
         srcset = ${props.srcset}
         sizes = ${props.sizes}
         media = ${props.media}
