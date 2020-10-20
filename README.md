@@ -65,6 +65,7 @@ Props:
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the img tag
+- `dimensions`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
 
 #### Image with srcset in multiple resolutions:
 
@@ -122,9 +123,32 @@ Props:
    - `type`: the type attribute for this source
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
+- `formats`: image formats that will be rendered as sources of separate type (string or array) 
 - `alt`: alt-attribute for the picture tag
 - `title`: title attribute for the picture tag
 - `class`: class attribute for the picture tag
+- `dimensions`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
+  if not specified dimensions will be enabled automatically for pictures that only use the `formats` options.
+
+#### Picture multiple formats:
+
+The following code will render a picture with an img-tag and two additional
+source-tags for the formats webp and png in addition to the default img. 
+
+```
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+
+renderer = afx`
+    <Sitegeist.Kaleidoscope:Picture
+        imageSource={props.imageSource}
+        srcset="320w, 600w, 800w, 1200w, 1600w"
+        sizes="(min-width: 320px) 440px, 100vw"
+        formats="webp, png'
+        />
+`
+```
+
+#### Picture with multiple sources:
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource

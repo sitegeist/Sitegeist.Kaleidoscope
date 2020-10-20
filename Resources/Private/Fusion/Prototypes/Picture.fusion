@@ -33,15 +33,17 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     srcset = null
     sizes = null
     sources = null
+    formats = null
     alt = null
     title = null
     class = null
     content = ''
+    dimensions = null
 
     renderer = afx`
         <picture @if.has={props.imageSource} class={props.class}>
             {props.content}
-            <Neos.Fusion:Collection collection={props.sources} itemName="source" @children="itemRenderer" @if.has={props.sources}>
+            <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
                 <Sitegeist.Kaleidoscope:Source
                     imageSource={source.imageSource ? source.imageSource : props.imageSource}
                     type={source.type}
@@ -50,12 +52,27 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     sizes={source.sizes ? source.sizes : props.sizes}
                 />
             </Neos.Fusion:Collection>
+            <Neos.Fusion:Collection
+                @if.has={props.imageSource && props.formats}
+                collection={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
+                itemName="format"
+            >
+                <Sitegeist.Kaleidoscope:Source
+                    imageSource={props.imageSource.setFormat(String.trim(format))}
+                    type={'image/' + String.trim(format)}
+                    srcset={props.srcset}
+                    sizes={props.sizes}
+                />
+            </Neos.Fusion:Collection>
             <Sitegeist.Kaleidoscope:Image
                 imageSource={props.imageSource}
                 sizes={props.sizes}
                 srcset={props.srcset}
                 alt={props.alt}
                 title={props.title}
+                dimensions={props.formats && !props.content && !props.sources}
+                dimensions.@override.fromProps={props.dimensions}
+                dimensions.@override.fromProps.@if.isBoolean={Type.isBoolean(props.dimensions)}
             />
         </picture>
     `

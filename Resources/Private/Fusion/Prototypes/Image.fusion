@@ -45,6 +45,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     alt = null
     title = null
     class = null
+    dimensions = true
 
     renderer = afx`
         <img @if.has={props.imageSource}
@@ -56,6 +57,8 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
             class={props.class}
             alt={props.alt}
             title={props.title}
+            width={props.dimensions ? props.imageSource.currentWidth : null}
+            height={props.dimensions ? props.imageSource.currentHeight : null}
         />
     `
 }
