@@ -145,26 +145,6 @@ renderer = afx`
 `
 ```
 
-will render as:
-
-```
-<picture>
-  <source
-    srcset="_large_url_1_ 1x, _large_url_2_ 1.5x, _large_url_3_ 2x"
-    media="screen and (min-width: 1600px)"
-    />
-  <source
-    srcset="_small_url_1_ 320w, _small_url_2_ 480w, _small_url_3_ 800w, _small_url_4_ 1000w"
-    sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
-    media="screen and (max-width: 1599px)"
-    />
-  <source
-    srcset="_print_url_1_"
-    media="print"
-    />
-  <img src="_base_url_">
-</picture>
-```
 ### `Sitegeist.Kaleidoscope:Source`
 
 Render an `src`-tag with `srcset`, `sizes`, `type` and `media` attributes.
