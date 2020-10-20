@@ -78,11 +78,6 @@ renderer = afx`
         />
 `
 ```
-will render as:
-
-```
-<img src="_baseurl_" srcset="_url_1_ 1x, _url_2_ 2x, _url_3_ 3x">
-```
 
 #### Image with srcset in multiple sizes:
 
@@ -96,16 +91,6 @@ renderer = afx`
         sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
         />
 `
-```
-
-will render as:
-
-```
-<img
-    src="_baseurl_"
-    srcset="_url_1_ 320w, _url_2_ 400w, _url_3_ 600w, _url_4_ 800w, _url_5_ 1000w, _url_6_ 1200w, _url_7_ 1600w"
-    sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
-/>
 ```
 
 ### `Sitegeist.Kaleidoscope:Picture`
