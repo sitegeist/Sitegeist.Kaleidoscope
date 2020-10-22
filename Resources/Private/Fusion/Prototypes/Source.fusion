@@ -4,19 +4,24 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
     }
 
-    imageSource = ${__imageSource}
-    srcset = ${__srcset}
-    sizes = ${__sizes}
+    # reuse values put into context by picture
+    imageSource = ${__imageSource ? __imageSource : null}
+    srcset = ${__srcset  ? __srcset : null}
+    sizes = ${__sizes ? __sizes : null }
+    width = ${__width ? __width : null }
+    height = ${__height ? __height : null }
+    format = ${__format ? __format : null }
     type = null
     media = null
-    format = null
+
 
     renderer = Neos.Fusion:Component {
 
-        # apply the format to the imageSource
+        # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
-        imageSource.@process.applyFormat = ${value.setFormat(props.format)}
-        imageSource.@process.applyFormat.@if.hasFormat = ${props.format}
+        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
 
         # apply the format to the type
         type = ${props.format ? 'image/' + props.format : props.type}
@@ -29,6 +34,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
 
         renderer = afx`
             <source @if.has={props.imageSource}
+                src={props.imageSource.src()}
                 srcset={props.imageSource.srcset(props.srcset)}
                 srcset.@if.has={props.srcset}
                 sizes={props.sizes}

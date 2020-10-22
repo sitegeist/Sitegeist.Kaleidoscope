@@ -5,16 +5,15 @@
 This package implements responsive-images for Neos for being used via Fusion.
 
 ```
-imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
-    width = 800
-    height = 200
-}
+imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 
 renderer = afx`
     <Sitegeist.Kaleidoscope:Image
         imageSource={props.imageSource}
         srcset="320w, 400w, 600w, 800w, 1000w, 1200w, 1600w"
         sizes="(min-width: 800px) 1000px, (min-width: 480px) 800px, (min-width: 320px) 440px, 100vw"
+        width="400"
+        height="400"
     />
 `
 ```
@@ -62,6 +61,10 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
+- `loading`: (optional) loading attribute for the img tag 
+- `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
+- `width`: (optional) the base width, will be applied to the `imageSource`    
+- `height`: (optional) the base height, will be applied to the `imageSource`    
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the img tag
@@ -117,16 +120,21 @@ Props:
 - `imageSource`: the imageSource to render
 - `sources`: an array of source definitions that supports the following keys
    - `imageSource`: alternate image-source for art direction purpose
-   - `srcset`: media descriptors like '1.5x' or '600w' (string ot array)
-   - `sizes`: sizes attribute (string or array)
-   - `media`: the media attribute for this source
-   - `type`: the type attribute for this source
-   - `format`: the image-format for the source like `webp` or `png`, is applied to `imageSource` and `type`
+   - `srcset`: (optional) media descriptors like '1.5x' or '600w' (string ot array)
+   - `sizes`: (optional) sizes attribute (string or array)
+   - `media`: (optional) the media attribute for this source
+   - `type`: (optional) the type attribute for this source
+   - `format`: (optional) the image-format for the source like `webp` or `png`, is applied to `imageSource` and `type`
+   - `width`: (optional) the base width, will be applied to the `imageSource`    
+   - `height`: (optional) the base height, will be applied to the `imageSource`   
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `formats`: image formats that will be rendered as sources of separate type (string or array) 
-- `alt`: alt-attribute for the picture tag
-- `title`: title attribute for the picture tag
+- `formats`: image formats that will be rendered as sources of separate type (string or array)
+- `width`: (optional) the base width, will be applied to the `imageSource`
+- `height`: (optional) the base height, will be applied to the `imageSource`   
+- `loading`: (optional) loading attribute for the img tag 
+- `alt`: alt-attribute for the img tag
+- `title`: title attribute for the img tag
 - `class`: class attribute for the picture tag
 - `dimensions`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
   if not specified dimensions will be enabled automatically for pictures that only use the `formats` options.
@@ -190,7 +198,9 @@ Props:
 - `imageSource`: the imageSource to render (inherited from picture)
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array, inherited from picture)
 - `sizes`: (optional) sizes attribute (string or array, inherited from picture)
-- `format`: (optional) the image-format like `webp` or `png`, will be applied to `imageSource` and `type`   
+- `format`: (optional) the image-format like `webp` or `png`, will be applied to `imageSource` and `type`
+- `width`: (optional) the base width, will be applied to the `imageSource`    
+- `height`: (optional) the base height, will be applied to the `imageSource`    
 - `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.setFormat()`
 - `media`: (optional) the media query for the given source
 

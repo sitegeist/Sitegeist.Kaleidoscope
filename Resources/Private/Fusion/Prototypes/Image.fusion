@@ -45,20 +45,42 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     alt = null
     title = null
     class = null
+    loading = null
+    width = null
+    height = null
+    format = null
     dimensions = true
 
-    renderer = afx`
-        <img @if.has={props.imageSource}
-            src={props.imageSource}
-            srcset={props.imageSource.srcset(props.srcset)}
-            srcset.@if.has={props.srcset}
-            sizes={props.sizes}
-            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-            class={props.class}
-            alt={props.alt}
-            title={props.title}
-            width={props.dimensions ? props.imageSource.currentWidth : null}
-            height={props.dimensions ? props.imageSource.currentHeight : null}
-        />
-    `
+    renderer = Neos.Fusion:Component {
+
+        # apply format, width and height to the imageSource
+        imageSource = ${props.imageSource}
+        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+
+        srcset = ${props.srcset}
+        sizes = ${props.sizes}
+        loading = ${props.loading}
+        alt =  ${props.alt}
+        title = ${props.title}
+        class = ${props.class}
+        dimensions = ${props.dimensions}
+
+        renderer = afx`
+            <img @if.has={props.imageSource}
+                src={props.imageSource.src()}
+                srcset={props.imageSource.srcset(props.srcset)}
+                srcset.@if.has={props.srcset}
+                sizes={props.sizes}
+                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+                loading={props.loading}
+                class={props.class}
+                alt={props.alt}
+                title={props.title}
+                width={props.dimensions ? props.imageSource.currentWidth : null}
+                height={props.dimensions ? props.imageSource.currentHeight : null}
+            />
+        `
+    }
 }

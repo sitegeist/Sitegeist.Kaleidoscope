@@ -29,9 +29,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         }
     }
 
-    imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+    imageSource = null
     srcset = null
     sizes = null
+    loading = null
     sources = null
     formats = null
     alt = null
@@ -48,38 +49,62 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         __imageSource = ${this.imageSource}
         __srcset = ${this.srcset}
         __sizes = ${this.sizes}
+        __width = ${this.width}
+        __height = ${this.height}
+        __format = ${this.format}
     }
 
-    renderer = afx`
-        <picture @if.has={props.imageSource} class={props.class}>
-            {props.content}
-            <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
-                <Sitegeist.Kaleidoscope:Source
-                    imageSource={source.imageSource ? source.imageSource : props.imageSource}
-                    type={source.type}
-                    media={source.media}
-                    format={source.format}
-                    srcset={source.srcset ? source.srcset : props.srcset}
-                    sizes={source.sizes ? source.sizes : props.sizes}
+    renderer = Neos.Fusion:Component {
+
+        # apply format, width and height to the imageSource
+        imageSource = ${props.imageSource}
+        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+
+        srcset = ${props.srcset}
+        sizes = ${props.sizes}
+        loading = ${props.loading}
+        sources = ${props.sources}
+        formats = ${props.formats}
+        alt = ${props.alt}
+        title = ${props.title}
+        class = ${props.class}
+        content = ${props.content}
+        dimensions = ${props.dimensions}
+
+        renderer = afx`
+            <picture @if.has={props.imageSource} class={props.class}>
+                {props.content}
+                <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
+                    <Sitegeist.Kaleidoscope:Source
+                        imageSource={source.imageSource ? source.imageSource : props.imageSource}
+                        type={source.type}
+                        media={source.media}
+                        format={source.format}
+                        srcset={source.srcset ? source.srcset : props.srcset}
+                        sizes={source.sizes ? source.sizes : props.sizes}
+                    />
+                </Neos.Fusion:Collection>
+                <Neos.Fusion:Collection
+                    @if.has={props.imageSource && props.formats}
+                    collection={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
+                    itemName="format"
+                >
+                    <Sitegeist.Kaleidoscope:Source format={String.trim(format)} />
+                </Neos.Fusion:Collection>
+                <Sitegeist.Kaleidoscope:Image
+                    imageSource={props.imageSource}
+                    sizes={props.sizes}
+                    srcset={props.srcset}
+                    loading={props.loading}
+                    alt={props.alt}
+                    title={props.title}
+                    dimensions={props.formats && !props.content && !props.sources}
+                    dimensions.@override.fromProps={props.dimensions}
+                    dimensions.@override.fromProps.@if.isBoolean={Type.isBoolean(props.dimensions)}
                 />
-            </Neos.Fusion:Collection>
-            <Neos.Fusion:Collection
-                @if.has={props.imageSource && props.formats}
-                collection={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
-                itemName="format"
-            >
-                <Sitegeist.Kaleidoscope:Source format={String.trim(format)} />
-            </Neos.Fusion:Collection>
-            <Sitegeist.Kaleidoscope:Image
-                imageSource={props.imageSource}
-                sizes={props.sizes}
-                srcset={props.srcset}
-                alt={props.alt}
-                title={props.title}
-                dimensions={props.formats && !props.content && !props.sources}
-                dimensions.@override.fromProps={props.dimensions}
-                dimensions.@override.fromProps.@if.isBoolean={Type.isBoolean(props.dimensions)}
-            />
-        </picture>
-    `
+            </picture>
+        `
+    }
 }
