@@ -73,7 +73,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         title = ${props.title}
         class = ${props.class}
         content = ${props.content}
-        dimensions = ${props.dimensions}
+        dimensions = ${Type.isBoolean(props.dimensions) ? props.dimensions : (!props.content && !props.sources)}
 
         renderer = afx`
             <picture @if.has={props.imageSource} class={props.class}>
@@ -104,9 +104,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     loading={props.loading}
                     alt={props.alt}
                     title={props.title}
-                    dimensions={props.formats && !props.content && !props.sources}
-                    dimensions.@override.fromProps={props.dimensions}
-                    dimensions.@override.fromProps.@if.isBoolean={Type.isBoolean(props.dimensions)}
+                    dimensions={props.dimensions}
                 />
             </picture>
         `
