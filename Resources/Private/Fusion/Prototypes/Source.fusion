@@ -4,13 +4,18 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
     }
 
-    # reuse values put into context by picture
-    imageSource = ${__imageSource ? __imageSource : null}
-    srcset = ${__srcset  ? __srcset : null}
-    sizes = ${__sizes ? __sizes : null }
-    width = ${__width ? __width : null }
-    height = ${__height ? __height : null }
-    format = ${__format ? __format : null }
+    imageSource = null
+    imageSource.@process.applyFromPicture = ${!value ? __imageSource : value}
+    srcset = null
+    srcset.@process.applyFromPicture = ${!value ? __srcset : value}
+    sizes = null
+    sizes.@process.applyFromPicture = ${!value ? __sizes : value}
+    width = null
+    width.@process.applyFromPicture = ${!value ? __width : value}
+    height = null
+    height.@process.applyFromPicture = ${!value ? __height : value}
+    format = null
+    format.@process.applyFromPicture = ${!value ? __format : value}
     type = null
     media = null
 
