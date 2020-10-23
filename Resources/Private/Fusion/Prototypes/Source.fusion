@@ -5,19 +5,47 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     }
 
     imageSource = null
-    type = null
-    media = null
     srcset = null
     sizes = null
+    width = null
+    height = null
+    format = null
+    type = null
+    media = null
 
-    renderer = afx`
-        <source @if.has={props.imageSource}
-            srcset={props.imageSource.srcset(props.srcset)}
-            srcset.@if.has={props.srcset}
-            sizes={props.sizes}
-            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-            type={props.type}
-            media={props.media}
-        />
-    `
+    renderer = Neos.Fusion:Component {
+
+        @context {
+            imageSource = ${props.imageSource || __imageSource}
+            format = ${props.format || __format}
+            width = ${props.width || __width}
+            height = ${props.height || __height}
+            srcset = ${props.srcset || __srcset}
+            sizes = ${props.sizes || __sizes}
+        }
+
+        @if.hasImageSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+
+        imageSource = ${imageSource}
+        imageSource.@process.applyWidth = ${width ? value.setWidth(width) : value}
+        imageSource.@process.applyHeight = ${height ? value.setHeight(height) : value}
+        imageSource.@process.applyFormat = ${format ? value.setFormat(format) : value}
+
+        type = ${format ? 'image/' + format : props.type}
+        srcset = ${srcset}
+        sizes = ${srcset}
+        media = ${props.media}
+
+        renderer = afx`
+            <source @if.has={props.imageSource}
+                src={props.imageSource.src()}
+                srcset={props.imageSource.srcset(props.srcset)}
+                srcset.@if.has={props.srcset}
+                sizes={props.sizes}
+                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+                type={props.type}
+                media={props.media}
+            />
+        `
+    }
 }

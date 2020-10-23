@@ -45,17 +45,43 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     alt = null
     title = null
     class = null
+    loading = null
+    width = null
+    height = null
+    format = null
+    renderDimensionAttributes = true
 
-    renderer = afx`
-        <img @if.has={props.imageSource}
-            src={props.imageSource}
-            srcset={props.imageSource.srcset(props.srcset)}
-            srcset.@if.has={props.srcset}
-            sizes={props.sizes}
-            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-            class={props.class}
-            alt={props.alt}
-            title={props.title}
-        />
-    `
+    renderer = Neos.Fusion:Component {
+        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+
+        # apply format, width and height to the imageSource
+        imageSource = ${props.imageSource}
+        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+
+        srcset = ${props.srcset}
+        sizes = ${props.sizes}
+        loading = ${props.loading}
+        alt =  ${props.alt}
+        title = ${props.title}
+        class = ${props.class}
+        renderDimensionAttributes = ${props.renderDimensionAttributes}
+
+        renderer = afx`
+            <img
+                src={props.imageSource.src()}
+                srcset={props.imageSource.srcset(props.srcset)}
+                srcset.@if.has={props.srcset}
+                sizes={props.sizes}
+                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+                loading={props.loading}
+                class={props.class}
+                alt={props.alt}
+                title={props.title}
+                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
+                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
+            />
+        `
+    }
 }
