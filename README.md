@@ -68,7 +68,7 @@ Props:
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the img tag
-- `dimensions`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
+- `renderDimensionAttributes`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
 
 #### Image with srcset in multiple resolutions:
 
@@ -114,15 +114,15 @@ Props:
    - `height`: (optional) the base height, will be applied to the `imageSource`   
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `formats`: image formats that will be rendered as sources of separate type (string or array)
+- `formats`: (optional) image formats that will be rendered as sources of separate type (string or array)
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`   
 - `loading`: (optional) loading attribute for the img tag 
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the picture tag
-- `dimensions`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
-  if not specified dimensions will be enabled automatically for pictures that only use the `formats` options.
+- `renderDimensionAttributes`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
+  if not specified renderDimensionAttributes will be enabled automatically for pictures that only use the `formats` options.
 
 #### Picture multiple formats:
 

@@ -49,9 +49,10 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     width = null
     height = null
     format = null
-    dimensions = true
+    renderDimensionAttributes = true
 
     renderer = Neos.Fusion:Component {
+        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
@@ -65,10 +66,10 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
         alt =  ${props.alt}
         title = ${props.title}
         class = ${props.class}
-        dimensions = ${props.dimensions}
+        renderDimensionAttributes = ${props.renderDimensionAttributes}
 
         renderer = afx`
-            <img @if.has={props.imageSource}
+            <img
                 src={props.imageSource.src()}
                 srcset={props.imageSource.srcset(props.srcset)}
                 srcset.@if.has={props.srcset}
@@ -78,8 +79,8 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 class={props.class}
                 alt={props.alt}
                 title={props.title}
-                width={props.dimensions ? props.imageSource.currentWidth : null}
-                height={props.dimensions ? props.imageSource.currentHeight : null}
+                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
+                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
             />
         `
     }

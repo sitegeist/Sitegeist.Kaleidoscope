@@ -41,7 +41,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     title = null
     class = null
     content = ''
-    dimensions = null
+    renderDimensionAttributes = null
 
     #
     # put the values that shall be applied to sources automatically to the context
@@ -57,6 +57,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     }
 
     renderer = Neos.Fusion:Component {
+        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
@@ -73,10 +74,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         title = ${props.title}
         class = ${props.class}
         content = ${props.content}
-        dimensions = ${Type.isBoolean(props.dimensions) ? props.dimensions : (!props.content && !props.sources)}
+        renderDimensionAttributes = ${Type.isBoolean(props.renderDimensionAttributes) ? props.renderDimensionAttributes : (!props.content && !props.sources)}
 
         renderer = afx`
-            <picture @if.has={props.imageSource} class={props.class}>
+            <picture class={props.class}>
                 {props.content}
                 <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
                     <Sitegeist.Kaleidoscope:Source
@@ -104,7 +105,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     loading={props.loading}
                     alt={props.alt}
                     title={props.title}
-                    dimensions={props.dimensions}
+                    renderDimensionAttributes={props.renderDimensionAttributes}
                 />
             </picture>
         `
