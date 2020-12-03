@@ -153,6 +153,11 @@ imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 renderer = afx`
     <Sitegeist.Kaleidoscope:Picture imageSource={props.imageSource} >
         <Sitegeist.Kaleidoscope:Source 
+            format="webp"
+            srcset='320w, 480w, 800w'
+            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw' 
+            />
+        <Sitegeist.Kaleidoscope:Source 
             srcset="1x, 1.5x, 2x" 
             media="screen and (min-width: 1600px)"
             />
@@ -160,11 +165,6 @@ renderer = afx`
             srcset="320w, 480w, 800w"
             sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw"
             media="screen and (max-width: 1599px)"
-            />
-        <Sitegeist.Kaleidoscope:Source 
-            format="webp"
-            srcset='320w, 480w, 800w'
-            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw' 
             />
         <Sitegeist.Kaleidoscope:Source 
             imageSource={props.alternatePintImage} 
