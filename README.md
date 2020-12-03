@@ -163,8 +163,8 @@ renderer = afx`
             />
         <Sitegeist.Kaleidoscope:Source 
             format="webp"
-            srcset = '320w, 480w, 800w'
-            sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw' 
+            srcset='320w, 480w, 800w'
+            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw' 
             />
         <Sitegeist.Kaleidoscope:Source 
             imageSource={props.alternatePintImage} 
