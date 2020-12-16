@@ -42,7 +42,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     imageSource = null
     srcset = null
     sizes = null
-    alt = null
+    alt = ''
     title = null
     class = null
 
