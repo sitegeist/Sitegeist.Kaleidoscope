@@ -33,7 +33,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
 
         type = ${format ? 'image/' + format : props.type}
         srcset = ${srcset}
-        sizes = ${srcset}
+        sizes = ${sizes}
         media = ${props.media}
 
         renderer = afx`
