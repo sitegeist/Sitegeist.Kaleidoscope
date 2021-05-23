@@ -255,13 +255,8 @@ class DummyImageController extends ActionController
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
         $initialFontSize = 10;
-        if (file_exists('resource://Neos.Neos/Public/Fonts/NotoSans/NotoSans-Regular.ttf')) {
-            $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans/NotoSans-Regular.ttf";
-            $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
-        } elseif (file_exists('resource://Neos.Neos/Public/Fonts/NotoSans-Regular.ttf')) {
-            $fontFile = $this->packageManager->getPackage('Neos.Neos')->getPackagePath() . "Resources/Public/Fonts/NotoSans-Regular.ttf";
-            $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
-        }
+        $fontFile = $this->packageManager->getPackage('Sitegeist.Kaleidoscope')->getPackagePath() . "Resources/Private/Font/NotoSans-Regular.ttf";
+        $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
 
         // scale text to fit the image
         $initialFontBox = $initialFont->box($text);
