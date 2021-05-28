@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -10,6 +11,7 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
 {
     /**
      * @Flow\Inject
+     *
      * @var ResourceManager
      */
     protected $resourceManager;

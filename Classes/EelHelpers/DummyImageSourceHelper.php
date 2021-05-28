@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -76,10 +77,11 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
-     * Use the variant generated from the given variant preset in this image source
+     * Use the variant generated from the given variant preset in this image source.
      *
      * @param string $presetIdentifier
      * @param string $presetVariantName
+     *
      * @return ImageSourceHelperInterface
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
@@ -103,7 +105,7 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
     {
         $arguments = [
             'w' => $this->getCurrentWidth(),
-            'h' => $this->getCurrentHeight()
+            'h' => $this->getCurrentHeight(),
         ];
 
         if ($this->backgroundColor) {
@@ -122,7 +124,6 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
             $arguments['f'] = $this->targetFormat;
         }
 
-        return $this->baseUri . '?' . http_build_query($arguments);
+        return $this->baseUri.'?'.http_build_query($arguments);
     }
-
 }

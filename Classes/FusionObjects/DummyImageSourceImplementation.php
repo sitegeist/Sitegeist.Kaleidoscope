@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\FusionObjects;
@@ -50,10 +51,11 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
     }
 
     /**
-     * Create helper and initialize with the default values
+     * Create helper and initialize with the default values.
+     *
+     * @throws MissingActionNameException
      *
      * @return ImageSourceHelperInterface|null
-     * @throws MissingActionNameException
      */
     public function createHelper(): ?ImageSourceHelperInterface
     {

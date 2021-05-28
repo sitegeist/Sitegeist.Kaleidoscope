@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\AssetVariantInterface;
@@ -19,12 +19,14 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 {
     /**
      * @Flow\Inject
+     *
      * @var ThumbnailService
      */
     protected $thumbnailService;
 
     /**
      * @Flow\Inject
+     *
      * @var AssetService
      */
     protected $assetService;
@@ -73,10 +75,11 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
-     * Use the variant generated from the given variant preset in this image source
+     * Use the variant generated from the given variant preset in this image source.
      *
      * @param string $presetIdentifier
      * @param string $presetVariantName
+     *
      * @return ImageSourceHelperInterface
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
@@ -102,10 +105,11 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
-     * @return string
      * @throws \Neos\Flow\Mvc\Routing\Exception\MissingActionNameException
      * @throws \Neos\Media\Exception\AssetServiceException
      * @throws \Neos\Media\Exception\ThumbnailServiceException
+     *
+     * @return string
      */
     public function src(): string
     {
@@ -146,9 +150,11 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * @param VariantSupportInterface $asset
-     * @param string $presetIdentifier
-     * @param string $presetVariantName
+     * @param string                  $presetIdentifier
+     * @param string                  $presetVariantName
+     *
      * @return ImageVariant
+     *
      * @todo Remove when getVariant() is available in VariantSupportInterface
      */
     private static function getAssetVariant(VariantSupportInterface $asset, string $presetIdentifier, string $presetVariantName): ?ImageVariant
@@ -162,7 +168,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         $variants = array_filter(
             $variants,
             static function (AssetVariantInterface $variant) use ($presetIdentifier, $presetVariantName) {
-                return ($variant->getPresetIdentifier() === $presetIdentifier && $variant->getPresetVariantName() === $presetVariantName);
+                return $variant->getPresetIdentifier() === $presetIdentifier && $variant->getPresetVariantName() === $presetVariantName;
             }
         );
 

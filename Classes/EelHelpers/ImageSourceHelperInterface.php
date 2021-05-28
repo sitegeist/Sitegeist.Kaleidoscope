@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -13,11 +14,13 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function setDimensions(int $width = null, int $height = null): ImageSourceHelperInterface;
 
-    public function setFormat(string $format = null) : ImageSourceHelperInterface;
+    public function setFormat(string $format = null): ImageSourceHelperInterface;
 
     /**
      * @param string $name
+     *
      * @deprecated use applyThumbnailPreset
+     *
      * @return ImageSourceHelperInterface
      */
     public function applyPreset(string $name): ImageSourceHelperInterface;
