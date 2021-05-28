@@ -131,7 +131,7 @@ class DummyImageController extends ActionController
             $this->response->setStatusCode(500);
             $this->response->setContentType('image/png');
 
-            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
+            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png') ?: '';
         }
     }
 

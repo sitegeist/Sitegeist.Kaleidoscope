@@ -57,8 +57,11 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 
         if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
-
-            return new UriImageSourceHelper($uri);
+            if (is_string($uri)) {
+                return new UriImageSourceHelper($uri);
+            } else {
+                return null;
+            }
         }
 
         $helper = new AssetImageSourceHelper($asset);
