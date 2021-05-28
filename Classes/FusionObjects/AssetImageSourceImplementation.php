@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\FusionObjects;
@@ -14,6 +15,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 {
     /**
      * @Flow\Inject
+     *
      * @var ResourceManager
      */
     protected $resourceManager;
@@ -22,7 +24,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
      * @var array
      */
     protected $nonScalableMediaTypes = [
-        'image/svg+xml'
+        'image/svg+xml',
     ];
 
     /**
@@ -42,7 +44,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     }
 
     /**
-     * Create helper and initialize with the default values
+     * Create helper and initialize with the default values.
      *
      * @return ImageSourceHelperInterface|null
      */
@@ -55,11 +57,12 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 
         if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
+
             return new UriImageSourceHelper($uri);
         }
 
         $helper = new AssetImageSourceHelper($asset);
-        $helper->setAsync((bool)$this->getAsync());
+        $helper->setAsync((bool) $this->getAsync());
         $helper->setRequest($this->getRuntime()->getControllerContext()->getRequest());
 
         return $helper;

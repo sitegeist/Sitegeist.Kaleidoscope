@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -9,9 +10,7 @@ use Neos\Utility\Arrays;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractImageSourceHelper
- *
- * @package Sitegeist\Kaleidoscope\EelHelpers
+ * Class AbstractImageSourceHelper.
  */
 abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 {
@@ -37,6 +36,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
     /**
      * @Flow\Inject
+     *
      * @var LoggerInterface
      */
     protected $logger;
@@ -55,42 +55,49 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
     /**
      * @param int|null $targetWidth
-     * @param bool $preserveAspect
+     * @param bool     $preserveAspect
+     *
      * @return ImageSourceHelperInterface
      */
     public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
+
         return $newSource;
     }
 
     /**
      * @param int|null $targetHeight
-     * @param bool $preserveAspect
+     * @param bool     $preserveAspect
+     *
      * @return ImageSourceHelperInterface
      */
     public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
+
         return $newSource;
     }
 
     /**
      * @param string|null $format
+     *
      * @return ImageSourceHelperInterface
      */
     public function setFormat(string $format = null): ImageSourceHelperInterface
     {
-        $newSource = clone($this);
+        $newSource = clone $this;
         $newSource->targetFormat = $format;
+
         return $newSource;
     }
 
     /**
      * @param int|null $targetWidth
      * @param int|null $targetHeight
+     *
      * @return ImageSourceHelperInterface
      */
     public function setDimensions(int $targetWidth = null, int $targetHeight = null): ImageSourceHelperInterface
@@ -98,14 +105,17 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
         $newSource->targetHeight = $targetHeight;
+
         return $newSource;
     }
 
     /**
-     * DEPRECATED Apply definitions from a thumbnail preset to this image source
+     * DEPRECATED Apply definitions from a thumbnail preset to this image source.
      *
      * @param string $name
+     *
      * @deprecated use applyThumbnailPreset
+     *
      * @return ImageSourceHelperInterface
      */
     public function applyPreset(string $name): ImageSourceHelperInterface
@@ -114,9 +124,10 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * Apply definitions from a thumbnail preset to this image source
+     * Apply definitions from a thumbnail preset to this image source.
      *
      * @param string $name
+     *
      * @return ImageSourceHelperInterface
      */
     public function applyThumbnailPreset(string $name): ImageSourceHelperInterface
@@ -137,14 +148,16 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
         } else {
             $this->logger->warning(sprintf('Thumbnail preset "%s" is not configured', $name), LogEnvironment::fromMethodName(__METHOD__));
         }
+
         return $newSource;
     }
 
     /**
-     * Use the variant generated from the given variant preset in this image source
+     * Use the variant generated from the given variant preset in this image source.
      *
      * @param string $presetIdentifier
      * @param string $presetVariantName
+     *
      * @return ImageSourceHelperInterface
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
@@ -155,13 +168,15 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 
         $newSource = clone $this;
         $newSource->targetImageVariant = ['presetIdentifier' => $presetIdentifier, 'presetVariantName' => $presetVariantName];
+
         return $newSource;
     }
 
     /**
-     * Render sourceset Attribute for various media descriptors
+     * Render sourceset Attribute for various media descriptors.
      *
      * @param mixed $mediaDescriptors
+     *
      * @return string
      */
     public function srcset($mediaDescriptors): string
@@ -172,21 +187,22 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
             if (is_array($mediaDescriptors) || $mediaDescriptors instanceof \Traversable) {
                 $descriptors = $mediaDescriptors;
             } else {
-                $descriptors = Arrays::trimExplode(',', (string)$mediaDescriptors);
+                $descriptors = Arrays::trimExplode(',', (string) $mediaDescriptors);
             }
 
             foreach ($descriptors as $descriptor) {
                 if (preg_match('/^(?<width>[0-9]+)w$/u', $descriptor, $matches)) {
-                    $width = (int)$matches['width'];
+                    $width = (int) $matches['width'];
                     $scaleFactor = $width / $this->getCurrentWidth();
                     $scaled = $this->scale($scaleFactor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
+                    $srcsetArray[] = $scaled->src().' '.$width.'w';
                 } elseif (preg_match('/^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches)) {
-                    $factor = (float)$matches['factor'];
+                    $factor = (float) $matches['factor'];
                     $scaled = $this->scale($factor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
+                    $srcsetArray[] = $scaled->src().' '.$factor.'x';
                 }
             }
+
             return implode(', ', $srcsetArray);
         }
 
@@ -194,9 +210,10 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * Define which methods are available in the Eel context
+     * Define which methods are available in the Eel context.
      *
      * @param string $methodName
+     *
      * @return bool
      */
     public function allowsCallOfMethod($methodName)
@@ -209,7 +226,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * If the source is cast to string the default source is returned
+     * If the source is cast to string the default source is returned.
      *
      * @return string
      */

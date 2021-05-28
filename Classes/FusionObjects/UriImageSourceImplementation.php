@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\FusionObjects;
@@ -18,7 +19,7 @@ class UriImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
-     * Create helper and initialize with the default values
+     * Create helper and initialize with the default values.
      *
      * @return ImageSourceHelperInterface
      */

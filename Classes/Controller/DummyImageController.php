@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\Controller;
@@ -39,19 +40,21 @@ class DummyImageController extends ActionController
 
     /**
      * @Flow\Inject
+     *
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
-     * Get a dummy-image
+     * Get a dummy-image.
      *
-     * @param int $w
-     * @param int $h
+     * @param int    $w
+     * @param int    $h
      * @param string $bg
      * @param string $fg
      * @param string $t
      * @param string $f
+     *
      * @return string
      */
     public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
@@ -98,7 +101,7 @@ class DummyImageController extends ActionController
             }
 
             if ($renderText) {
-                $text = trim((string)$t) ?: sprintf('%s×%s', $width, $height);
+                $text = trim((string) $t) ?: sprintf('%s×%s', $width, $height);
                 $this->renderText($image, $foregroundColor, $width, $height, $text, $renderShape ? false : true);
             }
 
@@ -118,7 +121,8 @@ class DummyImageController extends ActionController
             } else {
                 $this->response->setComponentParameter(\Neos\Flow\Http\Component\SetHeaderComponent::class, 'Cache-Control', 'max-age=883000000');
             }
-            $this->response->setContentType('image/' . $f);
+            $this->response->setContentType('image/'.$f);
+
             return $result;
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
@@ -126,6 +130,7 @@ class DummyImageController extends ActionController
             // something went wrong we return the error image png
             $this->response->setStatusCode(500);
             $this->response->setContentType('image/png');
+
             return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
         }
     }
@@ -134,8 +139,8 @@ class DummyImageController extends ActionController
      * @param ImageInterface $image
      * @param ColorInterface $foregroundColor
      * @param ColorInterface $backgroundColor
-     * @param int $width
-     * @param int $height
+     * @param int            $width
+     * @param int            $height
      */
     protected function renderBackground(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
@@ -144,7 +149,7 @@ class DummyImageController extends ActionController
                 new Point(0, 0),
                 new Point($width, 0),
                 new Point($width, $height),
-                new Point(0, $height)
+                new Point(0, $height),
             ],
             $backgroundColor,
             true,
@@ -156,8 +161,8 @@ class DummyImageController extends ActionController
      * @param ImageInterface $image
      * @param ColorInterface $foregroundColor
      * @param ColorInterface $backgroundColor
-     * @param int $width
-     * @param int $height
+     * @param int            $width
+     * @param int            $height
      */
     protected function renderShape(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
@@ -184,7 +189,7 @@ class DummyImageController extends ActionController
         ];
 
         // transform shape to center of the image
-        $factor = ($imageAspectRatio > $baseShapeAspectRatio) ? (float)$height / (float)$baseShapeHeight : (float)$width / (float)$baseShapeWidth;
+        $factor = ($imageAspectRatio > $baseShapeAspectRatio) ? (float) $height / (float) $baseShapeHeight : (float) $width / (float) $baseShapeWidth;
         $xOffset = ($imageAspectRatio > $baseShapeAspectRatio) ? ($width - ($baseShapeWidth * $factor)) / 2.0 : 0.0;
         $yOffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
 
@@ -217,8 +222,8 @@ class DummyImageController extends ActionController
      * @param ImageInterface $image
      * @param ColorInterface $foregroundColor
      * @param ColorInterface $backgroundColor
-     * @param int $width
-     * @param int $height
+     * @param int            $width
+     * @param int            $height
      */
     protected function renderBorder(ImageInterface $image, ColorInterface $foregroundColor, ColorInterface $backgroundColor, int $width, int $height): void
     {
@@ -234,7 +239,7 @@ class DummyImageController extends ActionController
                     new Point($x1, $y1),
                     new Point($x2, $y1),
                     new Point($x2, $y2),
-                    new Point($x1, $y2)
+                    new Point($x1, $y2),
                 ],
                 ($i > $borderWidth / 2 ? $foregroundColor : $backgroundColor),
                 false,
@@ -246,16 +251,17 @@ class DummyImageController extends ActionController
     /**
      * @param ImageInterface $image
      * @param ColorInterface $textColor
-     * @param int $width
-     * @param int $height
-     * @param string $text
-     * @param bool $center
+     * @param int            $width
+     * @param int            $height
+     * @param string         $text
+     * @param bool           $center
+     *
      * @throws UnknownPackageException
      */
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
         $initialFontSize = 10;
-        $fontFile = $this->packageManager->getPackage('Sitegeist.Kaleidoscope')->getPackagePath() . "Resources/Private/Font/NotoSans-Regular.ttf";
+        $fontFile = $this->packageManager->getPackage('Sitegeist.Kaleidoscope')->getPackagePath().'Resources/Private/Font/NotoSans-Regular.ttf';
         $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
 
         // scale text to fit the image
@@ -281,8 +287,9 @@ class DummyImageController extends ActionController
     /**
      * @param ImageInterface $image
      * @param ColorInterface $patternColor
-     * @param int $width
-     * @param int $height
+     * @param int            $width
+     * @param int            $height
+     *
      * @return void
      */
     protected function renderPattern(ImageInterface $image, ColorInterface $patternColor, int $width, int $height): void

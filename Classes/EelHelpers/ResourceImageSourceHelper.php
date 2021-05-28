@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -10,6 +11,7 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
 {
     /**
      * @Flow\Inject
+     *
      * @var ResourceManager
      */
     protected $resourceManager;
@@ -41,6 +43,7 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
         if ($this->package) {
             return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);
         }
+
         return $this->resourceManager->getPublicPackageResourceUriByPath($this->path);
     }
 }

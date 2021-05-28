@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\FusionObjects;
@@ -49,7 +50,7 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
-     * Create helper and initialize width and height
+     * Create helper and initialize width and height.
      *
      * @return ImageSourceHelperInterface|null
      */
@@ -85,7 +86,7 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
-     * Create helper
+     * Create helper.
      *
      * @return ImageSourceHelperInterface|null
      */

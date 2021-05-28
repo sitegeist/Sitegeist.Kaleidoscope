@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
@@ -6,11 +7,11 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Neos\Flow\Annotations as Flow;
-use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
+use Neos\Media\Domain\Model\Adjustment\CropImageAdjustment;
 use Neos\Media\Domain\Model\Adjustment\ImageAdjustmentInterface;
 use Neos\Media\Domain\Model\Adjustment\ResizeImageAdjustment;
-use Neos\Media\Domain\Model\Adjustment\CropImageAdjustment;
 use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
+use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
 use Neos\Utility\ObjectAccess;
 
 abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
@@ -33,7 +34,8 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
 
     /**
      * @param int|null $targetWidth
-     * @param bool $preserveAspect
+     * @param bool     $preserveAspect
+     *
      * @return ImageSourceHelperInterface
      */
     public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceHelperInterface
@@ -42,14 +44,16 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         $newSource->targetWidth = $targetWidth;
         if ($preserveAspect === true) {
             $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
-            $newSource->targetHeight = (int)round($targetWidth / $aspect);
+            $newSource->targetHeight = (int) round($targetWidth / $aspect);
         }
+
         return $newSource;
     }
 
     /**
      * @param int|null $targetHeight
-     * @param bool $preserveAspect
+     * @param bool     $preserveAspect
+     *
      * @return ImageSourceHelperInterface
      */
     public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceHelperInterface
@@ -58,13 +62,15 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         $newSource->targetHeight = $targetHeight;
         if ($preserveAspect === true) {
             $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
-            $newSource->targetWidth = (int)round($targetHeight * $aspect);
+            $newSource->targetWidth = (int) round($targetHeight * $aspect);
         }
+
         return $newSource;
     }
 
     /**
      * @param float $factor
+     *
      * @return ImageSourceHelperInterface
      */
     public function scale(float $factor): ImageSourceHelperInterface
@@ -72,13 +78,13 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         $scaledHelper = clone $this;
 
         if ($this->targetWidth && $this->targetHeight) {
-            $scaledHelper = $scaledHelper->setDimensions((int)round($factor * $this->targetWidth), (int)round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setDimensions((int) round($factor * $this->targetWidth), (int) round($factor * $this->targetHeight));
         } elseif ($this->targetWidth) {
-            $scaledHelper = $scaledHelper->setWidth((int)round($factor * $this->targetWidth));
+            $scaledHelper = $scaledHelper->setWidth((int) round($factor * $this->targetWidth));
         } elseif ($this->targetHeight) {
-            $scaledHelper = $scaledHelper->setHeight((int)round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->setHeight((int) round($factor * $this->targetHeight));
         } else {
-            $scaledHelper = $scaledHelper->setWidth((int)round($factor * $this->baseWidth));
+            $scaledHelper = $scaledHelper->setWidth((int) round($factor * $this->baseWidth));
         }
 
         return $scaledHelper;
@@ -94,7 +100,7 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         }
 
         if ($this->targetHeight) {
-            return (int)round($this->targetHeight * $this->baseWidth / $this->baseHeight);
+            return (int) round($this->targetHeight * $this->baseWidth / $this->baseHeight);
         }
 
         return $this->baseWidth;
@@ -110,7 +116,7 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         }
 
         if ($this->targetWidth) {
-            return (int)round($this->targetWidth * $this->baseHeight / $this->baseWidth);
+            return (int) round($this->targetWidth * $this->baseHeight / $this->baseWidth);
         }
 
         return $this->baseHeight;
@@ -119,6 +125,7 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
     /**
      * @param string $presetIdentifier
      * @param string $presetVariantName
+     *
      * @return Box
      */
     protected function estimateDimensionsFromVariantPresetAdjustments(string $presetIdentifier, string $presetVariantName): Box
@@ -133,17 +140,18 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
             $adjustment = $this->createAdjustment($adjustmentConfiguration);
 
             switch (true) {
-                case ($adjustment instanceof ResizeImageAdjustment):
+                case $adjustment instanceof ResizeImageAdjustment:
                     $image = $this->imagineService->create($imageBox);
                     if ($adjustment->canBeApplied($image)) {
                         $image = $adjustment->applyToImage($image);
+
                         return new Box(
-                            (int)round($image->getSize()->getWidth()),
-                            (int)round($image->getSize()->getHeight())
+                            (int) round($image->getSize()->getWidth()),
+                            (int) round($image->getSize()->getHeight())
                         );
                     }
                     break;
-                case ($adjustment instanceof CropImageAdjustment):
+                case $adjustment instanceof CropImageAdjustment:
                     $desiredAspectRatio = $adjustment->getAspectRatio();
                     if ($desiredAspectRatio !== null) {
                         [, , $newWidth, $newHeight] = CropImageAdjustment::calculateDimensionsByAspectRatio($this->baseWidth, $this->baseHeight, $desiredAspectRatio);
@@ -151,9 +159,10 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
                         $newWidth = $adjustment->getWidth();
                         $newHeight = $adjustment->getHeight();
                     }
+
                     return new Box(
-                        (int)round($newWidth),
-                        (int)round($newHeight)
+                        (int) round($newWidth),
+                        (int) round($newHeight)
                     );
                     break;
             }
@@ -164,6 +173,7 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
 
     /**
      * @param Adjustment $adjustmentConfiguration
+     *
      * @return ImageAdjustmentInterface
      */
     protected function createAdjustment(Adjustment $adjustmentConfiguration): ImageAdjustmentInterface
