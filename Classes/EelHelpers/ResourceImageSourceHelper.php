@@ -30,7 +30,7 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
      * ResourceImageSourceHelper constructor.
      *
      * @param string|null $package
-     * @param string $path
+     * @param string      $path
      */
     public function __construct(?string $package, string $path)
     {

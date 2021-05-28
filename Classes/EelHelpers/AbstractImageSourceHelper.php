@@ -54,8 +54,8 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $variantPresets;
 
     /**
-     * @param int $targetWidth
-     * @param bool     $preserveAspect
+     * @param int  $targetWidth
+     * @param bool $preserveAspect
      *
      * @return ImageSourceHelperInterface
      */
@@ -68,8 +68,8 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * @param int $targetHeight
-     * @param bool     $preserveAspect
+     * @param int  $targetHeight
+     * @param bool $preserveAspect
      *
      * @return ImageSourceHelperInterface
      */

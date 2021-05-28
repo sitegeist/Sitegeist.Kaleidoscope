@@ -199,7 +199,7 @@ class DummyImageController extends ActionController
          */
         $transformedShape = array_map(
             static function (Point $point) use ($factor, $xOffset, $yOffset) {
-                return new Point((int)($point->getX() * $factor + $xOffset), (int)($point->getY() * $factor + $yOffset));
+                return new Point((int) ($point->getX() * $factor + $xOffset), (int) ($point->getY() * $factor + $yOffset));
             },
             $baseShape
         );
@@ -278,9 +278,9 @@ class DummyImageController extends ActionController
         $imageCenterPosition = new Point($width / 2, $height / 2);
         $textCenterPosition = new Point\Center($actualFontBox);
         if ($center) {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int)($height * .5 - $actualFontBox->getHeight() * .5));
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int) ($height * .5 - $actualFontBox->getHeight() * .5));
         } else {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int)($height * .78 - $actualFontBox->getHeight() * .5));
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int) ($height * .78 - $actualFontBox->getHeight() * .5));
         }
         /** @phpstan-ignore-next-line */
         $image->draw()->text($text, $actualFont, $centeredTextPosition);
