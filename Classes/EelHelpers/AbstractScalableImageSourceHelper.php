@@ -162,7 +162,6 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
                         (int) round($newWidth),
                         (int) round($newHeight)
                     );
-                    break;
             }
         }
 

@@ -42,7 +42,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     protected $async = false;
 
     /**
-     * @var ActionRequest
+     * @var ActionRequest|null
      */
     protected $request;
 
