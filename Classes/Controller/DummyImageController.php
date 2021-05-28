@@ -116,6 +116,7 @@ class DummyImageController extends ActionController
             }
 
             // build result
+            /** @phpstan-ignore-next-line */
             if (method_exists($this->response, 'setHttpHeader')) {
                 $this->response->setHttpHeader('Cache-Control', 'max-age=883000000');
             } elseif (method_exists($this->response, 'setComponentParameter') && class_exists('\Neos\Flow\Http\Component\SetHeaderComponent')) {
