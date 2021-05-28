@@ -15,17 +15,17 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
 {
     /**
-     * @var int
+     * @var int|null
      */
     protected $targetWidth;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $targetHeight;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $targetFormat;
 
@@ -54,12 +54,12 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $variantPresets;
 
     /**
-     * @param int|null $targetWidth
+     * @param int $targetWidth
      * @param bool     $preserveAspect
      *
      * @return ImageSourceHelperInterface
      */
-    public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceHelperInterface
+    public function setWidth(int $targetWidth, bool $preserveAspect = false): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
@@ -68,12 +68,12 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * @param int|null $targetHeight
+     * @param int $targetHeight
      * @param bool     $preserveAspect
      *
      * @return ImageSourceHelperInterface
      */
-    public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceHelperInterface
+    public function setHeight(int $targetHeight, bool $preserveAspect = false): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
@@ -82,11 +82,11 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * @param string|null $format
+     * @param string $format
      *
      * @return ImageSourceHelperInterface
      */
-    public function setFormat(string $format = null): ImageSourceHelperInterface
+    public function setFormat(string $format): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetFormat = $format;
@@ -95,12 +95,12 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
-     * @param int|null $targetWidth
-     * @param int|null $targetHeight
+     * @param int $targetWidth
+     * @param int $targetHeight
      *
      * @return ImageSourceHelperInterface
      */
-    public function setDimensions(int $targetWidth = null, int $targetHeight = null): ImageSourceHelperInterface
+    public function setDimensions(int $targetWidth, int $targetHeight): ImageSourceHelperInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
