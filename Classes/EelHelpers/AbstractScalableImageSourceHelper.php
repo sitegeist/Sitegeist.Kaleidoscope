@@ -145,10 +145,8 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
                     if ($adjustment->canBeApplied($image)) {
                         $image = $adjustment->applyToImage($image);
 
-                        return new Box(
-                            (int) round($image->getSize()->getWidth()),
-                            (int) round($image->getSize()->getHeight())
-                        );
+                        /** @phpstan-ignore-next-line */
+                        return new Box((int) round($image->getSize()->getWidth()), (int) round($image->getSize()->getHeight()));
                     }
                     break;
                 case $adjustment instanceof CropImageAdjustment:

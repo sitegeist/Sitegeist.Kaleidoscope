@@ -174,7 +174,7 @@ class DummyImageController extends ActionController
         $baseShapeAspectRatio = $baseShapeWidth / $baseShapeHeight;
 
         /**
-         * @var $baseShape Point[]
+         * @var Point[] $baseShape
          */
         $baseShape = [
             new Point(0, 250), // left ground
@@ -196,7 +196,7 @@ class DummyImageController extends ActionController
         $yOffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
 
         /**
-         * @var $transformedShape Point[]
+         * @var Point[] $transformedShape
          */
         $transformedShape = array_map(
             static function (Point $point) use ($factor, $xOffset, $yOffset) {

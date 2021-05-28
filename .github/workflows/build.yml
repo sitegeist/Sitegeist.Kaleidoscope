@@ -15,9 +15,6 @@ jobs:
             matrix:
                 php-versions: ['7.3', '7.4']
                 neos-versions: ['5.3', '7.0', '7.1']
-                include:
-                    - php-versions: '7.2'
-                      neos-versions: '4.3'
 
         runs-on: ubuntu-latest
 
