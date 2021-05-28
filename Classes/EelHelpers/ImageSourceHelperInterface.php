@@ -31,7 +31,7 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function src(): string;
 
-    public function srcset($mediaDescriptors): string;
+    public function srcset(string $mediaDescriptors): string;
 
     public function __toString(): string;
 }

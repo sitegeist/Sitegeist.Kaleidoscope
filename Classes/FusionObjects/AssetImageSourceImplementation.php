@@ -21,7 +21,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     protected $resourceManager;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $nonScalableMediaTypes = [
         'image/svg+xml',

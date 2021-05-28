@@ -16,6 +16,9 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
      */
     protected $resourceManager;
 
+    /**
+     * @var string
+     */
     protected $uri;
 
     /**

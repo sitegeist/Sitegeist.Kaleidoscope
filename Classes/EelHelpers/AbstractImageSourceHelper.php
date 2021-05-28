@@ -30,7 +30,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $targetFormat;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $targetImageVariant = [];
 
@@ -42,13 +42,13 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $logger;
 
     /**
-     * @var array
+     * @var array[]
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
     protected $thumbnailPresets;
 
     /**
-     * @var array
+     * @var array[]
      * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
      */
     protected $variantPresets;
