@@ -116,9 +116,11 @@ class DummyImageController extends ActionController
             }
 
             // build result
-            if (FLOW_VERSION_BRANCH == '5.3') {
+            if (method_exists($this->response, 'setHttpHeader')) {
+                $this->response->setHttpHeader('Cache-Control', 'max-age=883000000');
+            } elseif (method_exists($this->response, 'setHeader')) {
                 $this->response->setHeader('Cache-Control', 'max-age=883000000');
-            } else {
+            } elseif (method_exists($this->response, 'setComponentParameter') && class_exists('\Neos\Flow\Http\Component\SetHeaderComponent')) {
                 $this->response->setComponentParameter(\Neos\Flow\Http\Component\SetHeaderComponent::class, 'Cache-Control', 'max-age=883000000');
             }
             $this->response->setContentType('image/'.$f);
