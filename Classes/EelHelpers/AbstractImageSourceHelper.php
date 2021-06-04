@@ -54,6 +54,16 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     protected $variantPresets;
 
     /**
+     * @var string|null
+     */
+    protected $title;
+
+    /**
+     * @var string|null
+     */
+    protected $alt;
+
+    /**
      * @param int  $targetWidth
      * @param bool $preserveAspect
      *
@@ -210,6 +220,32 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
     }
 
     /**
+     * @param string|null $title
+     */
+    public function setTitle(?string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string|null $alt
+     */
+    public function setAlt(?string $alt): void
+    {
+        $this->alt = $alt;
+    }
+
+    public function title(): ?string
+    {
+        return $this->title;
+    }
+
+    public function alt(): ?string
+    {
+        return $this->alt;
+    }
+
+    /**
      * Define which methods are available in the Eel context.
      *
      * @param string $methodName
@@ -218,7 +254,7 @@ abstract class AbstractImageSourceHelper implements ImageSourceHelperInterface
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset'])) {
+        if (in_array($methodName, ['setWidth', 'setHeight', 'setDimensions', 'setFormat', 'applyPreset', 'applyThumbnailPreset', 'useVariantPreset', 'src', 'srcset', 'title', 'alt'])) {
             return true;
         }
 

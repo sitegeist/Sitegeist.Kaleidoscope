@@ -84,6 +84,14 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
             $helper->setText($text);
         }
 
+        if ($title = $this->getTitle()) {
+            $helper->setTitle($title);
+        }
+
+        if ($alt = $this->getAlt()) {
+            $helper->setAlt($alt);
+        }
+
         return $helper;
     }
 }

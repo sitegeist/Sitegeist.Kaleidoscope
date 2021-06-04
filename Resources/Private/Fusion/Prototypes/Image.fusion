@@ -3,10 +3,37 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     @styleguide {
         props {
             imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-            alt = 'Elva dressed as a fairy'
         }
 
         propSets {
+            altAndTitleFromSource {
+                imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                    alt = 'Alternate assigned to source'
+                    title = 'Title assigned to source'
+                }
+            }
+
+            overrideAltAndTitleFromProp {
+                alt = 'Alternate assigned as prop'
+                title = 'Title assigned as prop'
+            }
+
+            withResourceImageSource {
+                imageSource = Sitegeist.Kaleidoscope:ResourceImageSource {
+                    path = "resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png"
+                    alt = 'Alternate assigned to source'
+                    title = 'Title assigned to source'
+                }
+            }
+
+            withUriImageSource {
+                imageSource = Sitegeist.Kaleidoscope:UriImageSource {
+                    uri = "https://dummyimage.com/600x400/000/fff"
+                    alt = 'Alternate assigned to source'
+                    title = 'Title assigned to source'
+                }
+            }
+
             multires_array {
                 srcset = ${['1x', '1.5x', '2x']}
             }
@@ -42,7 +69,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     imageSource = null
     srcset = null
     sizes = null
-    alt = ''
+    alt = null
     title = null
     class = null
     loading = null
@@ -77,8 +104,8 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
                 loading={props.loading}
                 class={props.class}
-                alt={props.alt}
-                title={props.title}
+                alt={props.alt || props.imageSource.alt() || ''}
+                title={props.title || props.imageSource.title()}
                 width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
                 height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
             />

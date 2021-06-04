@@ -58,7 +58,15 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             if (is_string($uri)) {
-                return new UriImageSourceHelper($uri);
+                $helper = new UriImageSourceHelper($uri);
+                if ($title = $this->getTitle()) {
+                    $helper->setTitle($title);
+                }
+                if ($alt = $this->getAlt()) {
+                    $helper->setAlt($alt);
+                }
+
+                return $helper;
             } else {
                 return null;
             }
@@ -67,6 +75,14 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         $helper = new AssetImageSourceHelper($asset);
         $helper->setAsync((bool) $this->getAsync());
         $helper->setRequest($this->getRuntime()->getControllerContext()->getRequest());
+
+        if ($title = $this->getTitle()) {
+            $helper->setTitle($title);
+        }
+
+        if ($alt = $this->getAlt()) {
+            $helper->setAlt($alt);
+        }
 
         return $helper;
     }

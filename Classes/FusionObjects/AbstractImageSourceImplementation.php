@@ -50,6 +50,22 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->fusionValue('title');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlt(): ?string
+    {
+        return $this->fusionValue('alt');
+    }
+
+    /**
      * Create helper and initialize width and height.
      *
      * @return ImageSourceHelperInterface|null
