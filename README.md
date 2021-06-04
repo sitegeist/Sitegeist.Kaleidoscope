@@ -65,7 +65,7 @@ Props:
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`    
 - `height`: (optional) the base height, will be applied to the `imageSource`    
-- `alt`: alt-attribute for the img tag
+- `alt`: alt-attribute for the img tag (default "")
 - `title`: title attribute for the img tag
 - `class`: class attribute for the img tag
 - `renderDimensionAttributes`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
@@ -245,6 +245,8 @@ via fusion but can also applied on the returned object. This will override the f
 
 All ImageSources support the following fusion properties:
 
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
 - `thumbnailPreset`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
 - `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)
 - `width`: Set the intended width (default null)

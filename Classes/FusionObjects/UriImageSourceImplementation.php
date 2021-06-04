@@ -19,12 +19,42 @@ class UriImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->fusionValue('title');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlt(): ?string
+    {
+        return $this->fusionValue('alt');
+    }
+
+    /**
      * Create helper and initialize with the default values.
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceHelperInterface|null
      */
-    public function evaluate(): ImageSourceHelperInterface
+    public function evaluate(): ?ImageSourceHelperInterface
     {
-        return new UriImageSourceHelper($this->getUri());
+        if ($uri = $this->getUri()) {
+            $helper = new UriImageSourceHelper($uri);
+        } else {
+            return null;
+        }
+
+        if ($title = $this->getTitle()) {
+            $helper->setTitle($title);
+        }
+
+        if ($alt = $this->getAlt()) {
+            $helper->setAlt($alt);
+        }
+
+        return $helper;
     }
 }

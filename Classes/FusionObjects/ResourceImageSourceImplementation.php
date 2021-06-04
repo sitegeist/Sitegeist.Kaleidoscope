@@ -27,12 +27,42 @@ class ResourceImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->fusionValue('title');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlt(): ?string
+    {
+        return $this->fusionValue('alt');
+    }
+
+    /**
      * Create helper and initialize with the default values.
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceHelperInterface|null
      */
-    public function evaluate(): ImageSourceHelperInterface
+    public function evaluate(): ?ImageSourceHelperInterface
     {
-        return new ResourceImageSourceHelper($this->getPackage(), $this->getPath());
+        if ($path = $this->getPath()) {
+            $helper = new ResourceImageSourceHelper($this->getPackage(), $path);
+        } else {
+            return null;
+        }
+
+        if ($title = $this->getTitle()) {
+            $helper->setTitle($title);
+        }
+
+        if ($alt = $this->getAlt()) {
+            $helper->setAlt($alt);
+        }
+
+        return $helper;
     }
 }
