@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+      branches:
+        - 'master'
+  pull_request: ~
+
+jobs:
+    test:
+        name: "Test (PHP ${{ matrix.php-versions }}, Neos ${{ matrix.neos-versions }})"
+
+        strategy:
+            fail-fast: false
+            matrix:
+                php-versions: ['7.3', '7.4']
+                neos-versions: ['5.3', '7.0', '7.1']
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                  path: ${{ env.FLOW_FOLDER }}
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: mbstring, xml, json, zlib, iconv, intl, pdo_sqlite
+                  ini-values: date.timezone="Africa/Tunis", opcache.fast_shutdown=0, apc.enable_cli=on
+
+            - name: Set Neos Version
+              run: composer require neos/neos ^${{ matrix.neos-versions }} --no-progress --no-interaction
+
+            - name: Run Tests
+              run: composer test

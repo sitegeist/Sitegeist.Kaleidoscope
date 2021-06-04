@@ -7,7 +7,6 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Media\Domain\Model\AssetInterface;
-use Neos\Media\Domain\Model\AssetVariantInterface;
 use Neos\Media\Domain\Model\ImageInterface;
 use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
@@ -42,7 +41,7 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
     protected $async = false;
 
     /**
-     * @var ActionRequest
+     * @var ActionRequest|null
      */
     protected $request;
 
@@ -84,11 +83,18 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
     {
+        /**
+         * @var AssetImageSourceHelper $newSource
+         */
         $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {
             $asset = ($newSource->asset instanceof ImageVariant) ? $newSource->asset->getOriginalAsset() : $newSource->asset;
-            $assetVariant = self::getAssetVariant($asset, $newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
+            if ($asset instanceof VariantSupportInterface) {
+                $assetVariant = $asset->getVariant($newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
+            } else {
+                $assetVariant = null;
+            }
             if ($assetVariant instanceof ImageVariant) {
                 $newSource->asset = $assetVariant;
                 $newSource->baseWidth = $assetVariant->getWidth();
@@ -146,32 +152,5 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
         }
 
         return $thumbnailData['src'];
-    }
-
-    /**
-     * @param VariantSupportInterface $asset
-     * @param string                  $presetIdentifier
-     * @param string                  $presetVariantName
-     *
-     * @return ImageVariant
-     *
-     * @todo Remove when getVariant() is available in VariantSupportInterface
-     */
-    private static function getAssetVariant(VariantSupportInterface $asset, string $presetIdentifier, string $presetVariantName): ?ImageVariant
-    {
-        $variants = $asset->getVariants();
-
-        if ($variants === []) {
-            return null;
-        }
-
-        $variants = array_filter(
-            $variants,
-            static function (AssetVariantInterface $variant) use ($presetIdentifier, $presetVariantName) {
-                return $variant->getPresetIdentifier() === $presetIdentifier && $variant->getPresetVariantName() === $presetVariantName;
-            }
-        );
-
-        return $variants === [] ? null : current($variants);
     }
 }

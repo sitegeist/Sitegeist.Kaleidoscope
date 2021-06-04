@@ -8,13 +8,13 @@ use Neos\Eel\ProtectedContextAwareInterface;
 
 interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 {
-    public function setWidth(int $width = null, bool $preserveAspect = false): ImageSourceHelperInterface;
+    public function setWidth(int $width, bool $preserveAspect = false): ImageSourceHelperInterface;
 
-    public function setHeight(int $height = null, bool $preserveAspect = false): ImageSourceHelperInterface;
+    public function setHeight(int $height, bool $preserveAspect = false): ImageSourceHelperInterface;
 
-    public function setDimensions(int $width = null, int $height = null): ImageSourceHelperInterface;
+    public function setDimensions(int $width, int $height): ImageSourceHelperInterface;
 
-    public function setFormat(string $format = null): ImageSourceHelperInterface;
+    public function setFormat(string $format): ImageSourceHelperInterface;
 
     /**
      * @param string $name
@@ -31,7 +31,7 @@ interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
 
     public function src(): string;
 
-    public function srcset($mediaDescriptors): string;
+    public function srcset(string $mediaDescriptors): string;
 
     public function __toString(): string;
 }

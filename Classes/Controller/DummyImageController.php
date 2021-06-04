@@ -116,9 +116,10 @@ class DummyImageController extends ActionController
             }
 
             // build result
-            if (FLOW_VERSION_BRANCH == '5.3') {
-                $this->response->setHeader('Cache-Control', 'max-age=883000000');
-            } else {
+            /** @phpstan-ignore-next-line */
+            if (method_exists($this->response, 'setHttpHeader')) {
+                $this->response->setHttpHeader('Cache-Control', 'max-age=883000000');
+            } elseif (method_exists($this->response, 'setComponentParameter') && class_exists('\Neos\Flow\Http\Component\SetHeaderComponent')) {
                 $this->response->setComponentParameter(\Neos\Flow\Http\Component\SetHeaderComponent::class, 'Cache-Control', 'max-age=883000000');
             }
             $this->response->setContentType('image/'.$f);
@@ -131,7 +132,7 @@ class DummyImageController extends ActionController
             $this->response->setStatusCode(500);
             $this->response->setContentType('image/png');
 
-            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png');
+            return file_get_contents('resource://Sitegeist.Kaleidoscope/Public/Images/imageError.png') ?: '';
         }
     }
 
@@ -172,7 +173,7 @@ class DummyImageController extends ActionController
         $baseShapeAspectRatio = $baseShapeWidth / $baseShapeHeight;
 
         /**
-         * @var $baseShape Point[]
+         * @var Point[] $baseShape
          */
         $baseShape = [
             new Point(0, 250), // left ground
@@ -194,11 +195,11 @@ class DummyImageController extends ActionController
         $yOffset = ($imageAspectRatio < $baseShapeAspectRatio) ? ($height - ($baseShapeHeight * $factor)) / 2.0 : 0.0;
 
         /**
-         * @var $transformedShape Point[]
+         * @var Point[] $transformedShape
          */
         $transformedShape = array_map(
             static function (Point $point) use ($factor, $xOffset, $yOffset) {
-                return new Point($point->getX() * $factor + $xOffset, $point->getY() * $factor + $yOffset);
+                return new Point((int) ($point->getX() * $factor + $xOffset), (int) ($point->getY() * $factor + $yOffset));
             },
             $baseShape
         );
@@ -272,15 +273,16 @@ class DummyImageController extends ActionController
         $correctedFontSizeByHeight = $targetFontHeight * $initialFontSize / $initialFontBox->getHeight();
 
         // render actual text
-        $actualFont = $this->imagineService->font($fontFile, min([$correctedFontSizeByWidth, $correctedFontSizeByHeight]), $textColor);
+        $actualFont = $this->imagineService->font($fontFile, (int) min([$correctedFontSizeByWidth, $correctedFontSizeByHeight]), $textColor);
         $actualFontBox = $actualFont->box($text);
         $imageCenterPosition = new Point($width / 2, $height / 2);
         $textCenterPosition = new Point\Center($actualFontBox);
         if ($center) {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), $height * .5 - $actualFontBox->getHeight() * .5);
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int) ($height * .5 - $actualFontBox->getHeight() * .5));
         } else {
-            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), $height * .78 - $actualFontBox->getHeight() * .5);
+            $centeredTextPosition = new Point($imageCenterPosition->getX() - $textCenterPosition->getX(), (int) ($height * .78 - $actualFontBox->getHeight() * .5));
         }
+        /** @phpstan-ignore-next-line */
         $image->draw()->text($text, $actualFont, $centeredTextPosition);
     }
 

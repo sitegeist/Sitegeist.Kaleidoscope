@@ -69,7 +69,7 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
     }
 
     /**
-     * @param null $text
+     * @param string $text
      */
     public function setText($text): void
     {

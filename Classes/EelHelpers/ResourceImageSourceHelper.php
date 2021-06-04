@@ -22,15 +22,15 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
     protected $path;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $package;
 
     /**
      * ResourceImageSourceHelper constructor.
      *
-     * @param string $package
-     * @param string $path
+     * @param string|null $package
+     * @param string      $path
      */
     public function __construct(?string $package, string $path)
     {

@@ -4,10 +4,13 @@
     "name": "sitegeist/kaleidoscope",
     "license": "GPL-3.0-or-later",
     "require": {
-        "neos/neos": "^4.3 || ^5.0 || ^7.0 || dev-master",
+        "neos/neos": "^5.0 || ^7.0 || dev-master",
         "neos/fusion-afx": "^1.2 || ^7.0 || dev-master",
         "neos/media": "*",
         "neos/imagine": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.78"
     },
     "autoload": {
         "psr-4": {
@@ -18,5 +21,9 @@
         "neos": {
             "package-key": "Sitegeist.Kaleidoscope"
         }
+    },
+    "scripts": {
+        "test:stan": ["vendor/bin/phpstan analyse Classes"],
+        "test": ["composer install", "composer  test:stan"]
     }
 }
