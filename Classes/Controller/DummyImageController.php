@@ -6,7 +6,6 @@ namespace Sitegeist\Kaleidoscope\Controller;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
@@ -21,7 +20,6 @@ use Psr\Log\LoggerInterface;
 class DummyImageController extends ActionController
 {
     /**
-     * @var ImagineInterface
      * @Flow\Inject
      */
     protected $imagineService;
@@ -45,6 +43,16 @@ class DummyImageController extends ActionController
      */
     protected $logger;
 
+    /*
+     * Override the default Imagine driver from Neos.Imagine
+     * with a static Imagick instance,
+     * because Vips does not yet support draw
+     */
+    public function initializeObject()
+    {
+        $this->imagineService = new \Imagine\Imagick\Imagine();
+    }
+
     /**
      * Get a dummy-image.
      *
@@ -59,6 +67,11 @@ class DummyImageController extends ActionController
      */
     public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
     {
+        // Fallback to gif, because webp is not supported
+        if ($f === 'webp') {
+            $f = 'gif';
+        }
+
         // limit input arguments
         if ($w > 9999) {
             $w = 9999;
