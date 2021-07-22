@@ -45,6 +45,27 @@ by our employer http://www.sitegeist.de.*
 Sitegeist.Kaleidoscope is available via packagist run `composer require sitegeist/kaleidoscope`.
 We use semantic versioning so every breaking change will increase the major-version number.
 
+## Configuration
+
+Some image libraries have problems with WebP image formats. To avoid problems, a fallback image 
+format can be configured, which will be used for rendering if the requested format fails. The default value is `png`.
+
+```yaml
+Sitegeist:
+  Kaleidoscope:
+    fallbackFormat: 'png'
+```
+
+Moreover, as some image libraries (like Vips) also have problems with the generation of the dummy image, the driver can be overriden. 
+By default, this value is `false` and the default driver as configured in `Neos.Imagine` is used. 
+Possible values are `Gd`, `Imagick`, `Gmagick` or `Vips`.
+
+```yaml
+Sitegeist:
+  Kaleidoscope:
+    overrideImagineDriver: 'Imagick'
+```
+
 ## Usage
 
 ## Image/Picture FusionObjects

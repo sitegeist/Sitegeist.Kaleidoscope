@@ -6,6 +6,7 @@ namespace Sitegeist\Kaleidoscope\Controller;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
@@ -20,6 +21,7 @@ use Psr\Log\LoggerInterface;
 class DummyImageController extends ActionController
 {
     /**
+     * @var ImagineInterface
      * @Flow\Inject
      */
     protected $imagineService;
@@ -43,6 +45,13 @@ class DummyImageController extends ActionController
      */
     protected $logger;
 
+    /**
+     * @Flow\InjectConfiguration
+     *
+     * @var array
+     */
+    protected $settings;
+
     /*
      * Override the default Imagine driver from Neos.Imagine
      * with a static Imagick instance,
@@ -50,28 +59,27 @@ class DummyImageController extends ActionController
      */
     public function initializeObject()
     {
-        $this->imagineService = new \Imagine\Imagick\Imagine();
+        if (isset($this->settings['overrideImagineDriver']) && $this->settings['overrideImagineDriver'] !== false) {
+            $className = 'Imagine\\'.$this->settings['overrideImagineDriver']
+                .'\\Imagine';
+            $this->imagineService = new $className();
+        }
     }
 
     /**
      * Get a dummy-image.
      *
-     * @param int    $w
-     * @param int    $h
-     * @param string $bg
-     * @param string $fg
-     * @param string $t
-     * @param string $f
+     * @param int         $w
+     * @param int         $h
+     * @param string      $bg
+     * @param string      $fg
+     * @param string|null $t
+     * @param string      $f
      *
      * @return string
      */
     public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
     {
-        // Fallback to gif, because webp is not supported
-        if ($f === 'webp') {
-            $f = 'gif';
-        }
-
         // limit input arguments
         if ($w > 9999) {
             $w = 9999;
@@ -123,7 +131,12 @@ class DummyImageController extends ActionController
             }
 
             // render image
-            $result = $image->get($f);
+            try {
+                $result = $image->get($f);
+            } catch (\RuntimeException $e) {
+                // Render image as png if get() method fails
+                $result = $image->get($this->settings['fallbackFormat']);
+            }
             if (!$result) {
                 throw new \RuntimeException('Something went wrong without throwing an exception');
             }
