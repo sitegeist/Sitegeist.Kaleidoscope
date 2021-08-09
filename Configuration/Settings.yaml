@@ -12,5 +12,6 @@ Neos:
 
 Sitegeist:
   Kaleidoscope:
-    fallbackFormat: 'png'
-    overrideImagineDriver: false
+    dummyImage:
+      fallbackFormat: 'png'
+      overrideImagineDriver: false

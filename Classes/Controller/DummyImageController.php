@@ -59,9 +59,8 @@ class DummyImageController extends ActionController
      */
     public function initializeObject()
     {
-        if (isset($this->settings['overrideImagineDriver']) && $this->settings['overrideImagineDriver'] !== false) {
-            $className = 'Imagine\\'.$this->settings['overrideImagineDriver']
-                .'\\Imagine';
+        if (isset($this->settings['dummyImage']['overrideImagineDriver']) && $this->settings['dummyImage']['overrideImagineDriver'] !== false) {
+            $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'] .'\\Imagine';
             $this->imagineService = new $className();
         }
     }
@@ -135,7 +134,7 @@ class DummyImageController extends ActionController
                 $result = $image->get($f);
             } catch (\RuntimeException $e) {
                 // Render image as png if get() method fails
-                $result = $image->get($this->settings['fallbackFormat']);
+                $result = $image->get($this->settings['dummyImage']['fallbackFormat']);
             }
             if (!$result) {
                 throw new \RuntimeException('Something went wrong without throwing an exception');
