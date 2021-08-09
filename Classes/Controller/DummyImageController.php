@@ -60,7 +60,7 @@ class DummyImageController extends ActionController
     public function initializeObject()
     {
         if (isset($this->settings['dummyImage']['overrideImagineDriver']) && $this->settings['dummyImage']['overrideImagineDriver'] !== false) {
-            $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'] .'\\Imagine';
+            $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'].'\\Imagine';
             $this->imagineService = new $className();
         }
     }
