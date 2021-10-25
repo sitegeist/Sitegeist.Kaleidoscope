@@ -38,7 +38,6 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
 
         renderer = afx`
             <source @if.has={props.imageSource}
-                src={props.imageSource.src()}
                 srcset={props.imageSource.srcset(props.srcset)}
                 srcset.@if.has={props.srcset}
                 sizes={props.sizes}
