@@ -9,3 +9,9 @@ Neos:
       routes:
         'Sitegeist.Kaleidoscope':
           position: 'before Neos.Neos'
+
+Sitegeist:
+  Kaleidoscope:
+    dummyImage:
+      fallbackFormat: 'png'
+      overrideImagineDriver: false

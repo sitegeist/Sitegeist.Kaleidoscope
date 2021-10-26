@@ -46,14 +46,34 @@ class DummyImageController extends ActionController
     protected $logger;
 
     /**
+     * @Flow\InjectConfiguration
+     *
+     * @var array
+     */
+    protected $settings;
+
+    /*
+     * Override the default Imagine driver from Neos.Imagine
+     * with a static Imagick instance,
+     * because Vips does not yet support draw
+     */
+    public function initializeObject()
+    {
+        if (isset($this->settings['dummyImage']['overrideImagineDriver']) && $this->settings['dummyImage']['overrideImagineDriver'] !== false) {
+            $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'].'\\Imagine';
+            $this->imagineService = new $className();
+        }
+    }
+
+    /**
      * Get a dummy-image.
      *
-     * @param int    $w
-     * @param int    $h
-     * @param string $bg
-     * @param string $fg
-     * @param string $t
-     * @param string $f
+     * @param int         $w
+     * @param int         $h
+     * @param string      $bg
+     * @param string      $fg
+     * @param string|null $t
+     * @param string      $f
      *
      * @return string
      */
@@ -110,7 +130,12 @@ class DummyImageController extends ActionController
             }
 
             // render image
-            $result = $image->get($f);
+            try {
+                $result = $image->get($f);
+            } catch (\RuntimeException $e) {
+                // Render image as png if get() method fails
+                $result = $image->get($this->settings['dummyImage']['fallbackFormat']);
+            }
             if (!$result) {
                 throw new \RuntimeException('Something went wrong without throwing an exception');
             }
