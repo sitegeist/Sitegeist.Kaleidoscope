@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Sitegeist\\\\Kaleidoscope\\\\Controller\\\\DummyImageController\\:\\:\\$settings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Classes/Controller/DummyImageController.php
+
