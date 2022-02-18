@@ -1,6 +1,6 @@
 # Sitegeist.Kaleidoscope
 
-<img src="./Resources/Public/Images/Kaleidoscope-Logo.svg" width="200" height="200"/>
+<img src="./Resources/Public/Images/KaleidoscopePromoImage.svg" width="600" height="288"/>
 
 ## Responsive Images for Neos - with Atomic.Fusion & Monocle in mind
 
@@ -286,6 +286,9 @@ Arguments:
 - `variantPreset`: as explained above
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`
+
+<img src="./Resources/Public/Images/KaleidoscopeDummyImage.svg" width="600" height="425"/>
+
 
 Arguments:
 - `baseWidth`: The default width for the image before scaling (default = 600)
