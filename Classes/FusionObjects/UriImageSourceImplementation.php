@@ -42,19 +42,11 @@ class UriImageSourceImplementation extends AbstractFusionObject
     public function evaluate(): ?ImageSourceInterface
     {
         if ($uri = $this->getUri()) {
-            $helper = new UriImageSource($uri);
+            return (new UriImageSource($uri))
+                ->withTitle($this->getTitle())
+                ->withAlt($this->getAlt());
         } else {
             return null;
         }
-
-        if ($title = $this->getTitle()) {
-            $helper->setTitle($title);
-        }
-
-        if ($alt = $this->getAlt()) {
-            $helper->setAlt($alt);
-        }
-
-        return $helper;
     }
 }

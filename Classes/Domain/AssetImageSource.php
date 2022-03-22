@@ -50,15 +50,17 @@ class AssetImageSource extends AbstractScalableImageSource
      *
      * @param ImageInterface $asset
      */
-    public function __construct(ImageInterface $asset)
+    public function __construct(ImageInterface $asset, bool $async = true, ?ActionRequest $request = null)
     {
         $this->asset = $asset;
+        $this->request = $request;
+        $this->async = $async;
         $this->baseWidth = $this->asset->getWidth();
         $this->baseHeight = $this->asset->getHeight();
     }
 
     /**
-     * @param bool $async
+     * @deprecated use constructor
      */
     public function setAsync(bool $async): void
     {
@@ -66,7 +68,7 @@ class AssetImageSource extends AbstractScalableImageSource
     }
 
     /**
-     * @param ActionRequest $request
+     * @deprecated use constructor
      */
     public function setRequest(ActionRequest $request): void
     {
@@ -86,7 +88,7 @@ class AssetImageSource extends AbstractScalableImageSource
         /**
          * @var AssetImageSource $newSource
          */
-        $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
+        $newSource = parent::withVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {
             $asset = ($newSource->asset instanceof ImageVariant) ? $newSource->asset->getOriginalAsset() : $newSource->asset;

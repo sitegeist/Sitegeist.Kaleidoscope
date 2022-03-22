@@ -38,7 +38,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
      *
      * @return ImageSourceInterface
      */
-    public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
@@ -56,7 +56,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
      *
      * @return ImageSourceInterface
      */
-    public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
@@ -90,6 +90,9 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         return $scaledHelper;
     }
 
+    /**
+     * @deprecated use width()
+     */
     public function getCurrentWidth(): ?int
     {
         return $this->width();
@@ -108,6 +111,9 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         return $this->baseWidth;
     }
 
+    /**
+     * @deprecated use height()
+     */
     public function getCurrentHeight(): ?int
     {
         return $this->height();

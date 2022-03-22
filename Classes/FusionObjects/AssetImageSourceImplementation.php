@@ -60,10 +60,10 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             if (is_string($uri)) {
                 $helper = new UriImageSource($uri);
                 if ($title = $this->getTitle()) {
-                    $helper->setTitle($title);
+                    $helper = $helper->withTitle($title);
                 }
                 if ($alt = $this->getAlt()) {
-                    $helper->setAlt($alt);
+                    $helper = $helper->withAlt($alt);
                 }
 
                 return $helper;
@@ -72,17 +72,11 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             }
         }
 
-        $helper = new AssetImageSource($asset);
-        $helper->setAsync((bool) $this->getAsync());
-        $helper->setRequest($this->getRuntime()->getControllerContext()->getRequest());
-
-        if ($title = $this->getTitle()) {
-            $helper->setTitle($title);
-        }
-
-        if ($alt = $this->getAlt()) {
-            $helper->setAlt($alt);
-        }
+        $helper = new AssetImageSource(
+            $asset,
+            (bool) $this->getAsync(),
+            $this->getRuntime()->getControllerContext()->getRequest()
+        );
 
         return $helper;
     }

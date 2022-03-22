@@ -78,24 +78,32 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
         }
 
         if ($thumbnailPreset = $this->getThumbnailPreset()) {
-            $helper = $helper->applyThumbnailPreset($thumbnailPreset);
+            $helper = $helper->withThumbnailPreset($thumbnailPreset);
         }
 
         if (($variantPreset = $this->getVariantPreset()) && (strpos($variantPreset, '::') !== false)) {
             [$presetIdentifier, $presetVariantName] = explode('::', $variantPreset, 2);
-            $helper = $helper->useVariantPreset($presetIdentifier, $presetVariantName);
+            $helper = $helper->withVariantPreset($presetIdentifier, $presetVariantName);
         }
 
         if ($width = $this->getWidth()) {
-            $helper = $helper->setWidth($width);
+            $helper = $helper->withWidth($width);
         }
 
         if ($height = $this->getHeight()) {
-            $helper = $helper->setHeight($height);
+            $helper = $helper->withHeight($height);
         }
 
         if ($format = $this->getFormat()) {
-            $helper = $helper->setFormat($format);
+            $helper = $helper->withFormat($format);
+        }
+
+        if ($title = $this->getTitle()) {
+            $helper = $helper->withTitle($title);
+        }
+
+        if ($alt = $this->getAlt()) {
+            $helper = $helper->withAlt($alt);
         }
 
         return $helper;

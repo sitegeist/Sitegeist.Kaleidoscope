@@ -241,7 +241,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     }
 
     /**
-     * @param string|null $alt
+     * @deprecated use withAlt
      */
     public function setAlt(?string $alt): void
     {

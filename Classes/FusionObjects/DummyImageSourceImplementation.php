@@ -62,35 +62,16 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
         $uriBuilder = $this->runtime->getControllerContext()->getUriBuilder()->reset()->setCreateAbsoluteUri(true);
         $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
 
-        $helper = new DummyImageSource($baseUri);
-
-        if ($baseWidth = $this->getBaseWidth()) {
-            $helper->setBaseWidth($baseWidth);
-        }
-
-        if ($baseHeight = $this->getBaseHeight()) {
-            $helper->setBaseHeight($baseHeight);
-        }
-
-        if ($backgroundColor = $this->getBackgroundColor()) {
-            $helper->setBackgroundColor($backgroundColor);
-        }
-
-        if ($foregroundColor = $this->getForegroundColor()) {
-            $helper->setForegroundColor($foregroundColor);
-        }
-
-        if ($text = $this->getText()) {
-            $helper->setText($text);
-        }
-
-        if ($title = $this->getTitle()) {
-            $helper->setTitle($title);
-        }
-
-        if ($alt = $this->getAlt()) {
-            $helper->setAlt($alt);
-        }
+        $helper = (new DummyImageSource(
+                $baseUri,
+                $this->getBaseWidth(),
+                $this->getBaseHeight(),
+                $this->getBackgroundColor(),
+                $this->getForegroundColor(),
+                $this->getText()
+            ))
+            ->withTitle($this->getTitle())
+            ->withAlt($this->getAlt());
 
         return $helper;
     }

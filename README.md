@@ -228,7 +228,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     # Enforce the dimensions of the passed images by cropping to 1600 x 800
     #
     imageSource = null
-    imageSource.@process.enforeDimensions = ${value ? value.setWidth(1600).setHeight(900) : null}
+    imageSource.@process.enforeDimensions = ${value ? value.withWidth(1600).setHeight(900) : null}
 
     renderer = afx`
         <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} srcset="1x, 1.5x, 2x" />
@@ -287,17 +287,7 @@ render an image. ImageSource-Objects return Eel-Helpers that allow to
 enforcing the rendered dimensions later in the rendering process.
 
 Note: The settings for `width`, `height`, `thumbnailPreset` and `variantPreset` can be defined
-via fusion but can also applied on the returned object. This will override the fusion-settings.
-
-All ImageSources support the following fusion properties:
-
-- `alt`: The alt attribute if not specified otherwise (default null)
-- `title`: The title attribute if not specified otherwise (default null)
-- `thumbnailPreset`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
-- `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)**
-- `width`: Set the intended width (default null)
-- `height`: Set the intended height (default null)
-- `format`: Set the image output format, like webp (default null)
+via fusion but can also applied to the returned object which will override the fusion-settings.
 
 ### `Sitegeist.Kaleidoscope:AssetImageSource`
 
@@ -307,6 +297,9 @@ Arguments:
 - `async`: Defer image-rendering until the image is actually requested by the browser (default true)
 - `thumbnailPreset`: `width` and `height` are supported as explained above
 - `variantPreset`: as explained above
+- `format`: Set the image output format, like webp (default null)
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`
 
@@ -318,15 +311,16 @@ Arguments:
 - `text`: The text that is rendered on the image (default = null, show size)
 - `thumbnailPreset`: `width` and `height` are supported as explained above
 - `variantPreset`: as explained above
-
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
 
 ### `Sitegeist.Kaleidoscope:UriImageSource`
 
 Arguments:
 - `uri`: The uri that will be rendered
-- !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
-- !!! `variantPreset`: has no effect on this ImageSource
-
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
+- 
 ### `Sitegeist.Kaleidoscope:ResourceImageSource`
 
 Arguments:

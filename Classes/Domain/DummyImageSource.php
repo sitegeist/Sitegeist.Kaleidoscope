@@ -9,12 +9,12 @@ class DummyImageSource extends AbstractScalableImageSource
     /**
      * @var string
      */
-    protected $backgroundColor = '999';
+    protected $backgroundColor;
 
     /**
      * @var string
      */
-    protected $foregroundColor = 'fff';
+    protected $foregroundColor;
 
     /**
      * @var string
@@ -24,20 +24,23 @@ class DummyImageSource extends AbstractScalableImageSource
     /**
      * @var string
      */
-    protected $baseUri = '';
+    protected $baseUri;
 
     /**
      * @param string $baseUri
      */
-    public function __construct(string $baseUri)
+    public function __construct(string $baseUri, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null)
     {
-        $this->baseWidth = 600;
-        $this->baseHeight = 400;
         $this->baseUri = $baseUri;
+        $this->baseWidth = $baseWidth ?? 600;
+        $this->baseHeight = $baseHeight ?? 400;
+        $this->backgroundColor = $backgroundColor ?? '999';
+        $this->foregroundColor = $foregroundColor ?? 'fff';
+        $this->text = $text ?? '';
     }
 
     /**
-     * @param int $baseWidth
+     * @deprecated use constructor
      */
     public function setBaseWidth(int $baseWidth): void
     {
@@ -45,7 +48,7 @@ class DummyImageSource extends AbstractScalableImageSource
     }
 
     /**
-     * @param int $baseHeight
+     * @deprecated use constructor
      */
     public function setBaseHeight(int $baseHeight): void
     {
@@ -53,7 +56,7 @@ class DummyImageSource extends AbstractScalableImageSource
     }
 
     /**
-     * @param string $backgroundColor
+     * @deprecated use constructor
      */
     public function setBackgroundColor(string $backgroundColor): void
     {
@@ -61,7 +64,7 @@ class DummyImageSource extends AbstractScalableImageSource
     }
 
     /**
-     * @param string $foregroundColor
+     * @deprecated use constructor
      */
     public function setForegroundColor(string $foregroundColor): void
     {
@@ -69,9 +72,9 @@ class DummyImageSource extends AbstractScalableImageSource
     }
 
     /**
-     * @param string $text
+     * @deprecated use constructor
      */
-    public function setText($text): void
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
