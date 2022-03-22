@@ -82,7 +82,7 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `loading`: (optional) loading attribute for the img tag 
+- `loading`: (optional, default "lazy") loading attribute for the img tag 
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`    
 - `height`: (optional) the base height, will be applied to the `imageSource`    
@@ -138,7 +138,7 @@ Props:
 - `formats`: (optional) image formats that will be rendered as sources of separate type (string or array)
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`   
-- `loading`: (optional) loading attribute for the img tag 
+- `loading`: (optional, default "lazy") loading attribute for the img tag 
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the picture tag
@@ -247,6 +247,8 @@ prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:Content
     renderer = Vendor.Site:Component.ResponsiveKevisualImage {
         imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
             asset = ${q(node).property('image')}
+            title = ${q(node).property('title')}
+            alt = ${q(node).property('alternativeText')}
         }
     }
 }
@@ -254,6 +256,29 @@ prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:Content
 
 This shows that integration-code dos not need to know the required image dimensions or wich
 variants are needed. This frontend know-how is now encapsulated into the presentational-component.
+
+## Dynamically enable/disable the lazy rendering
+
+To optimize the initial load time lazy loading should be disabled for the first contents but be 
+enabled for others. This can be implemented by enabling the `lazy`ness in the ContentCase prototype 
+depending on whether or not the current node is the first content in the main collection.
+
+```
+renderer = Neos.Neos:ContentCollection {
+    nodePath = 'main'
+
+    // configure seperate iterator for main content 
+    content.iterationName = 'mainContentIterator'
+
+    // enable lazynes for first items
+    prototype(Sitegeist.Kaleidoscope:Image) {
+        loading = ${mainContentIterator.isFirst ? 'eager' : 'lazy'}
+    }
+    prototype(Sitegeist.Kaleidoscope:Picture) {
+        loading = ${mainContentIterator.isFirst ? 'eager' : 'lazy'}
+    }
+}
+```
 
 ## ImageSource FusionObjects
 
@@ -269,7 +294,7 @@ All ImageSources support the following fusion properties:
 - `alt`: The alt attribute if not specified otherwise (default null)
 - `title`: The title attribute if not specified otherwise (default null)
 - `thumbnailPreset`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
-- `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)
+- `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)**
 - `width`: Set the intended width (default null)
 - `height`: Set the intended height (default null)
 - `format`: Set the image output format, like webp (default null)
@@ -310,13 +335,31 @@ Arguments:
 - !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
 - !!! `variantPreset`: has no effect on this ImageSource
 
-## ImageSource EEl-Helpers
+## ImageSource Eel-Helpers
 
 The ImageSource-helpers are created by the fusion-objects above and are passed to a
 rendering component. The helpers allow to set or override the intended
 dimensions and to render the `src` and `srcset`-attributes.
 
-Methods of ImageSource-Helpers that are accessible via EEL:
+Methods of ImageSource-Helpers that are accessible via Eel:
+
+- `withWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if
+- `withHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
+- `withDimensions( integer, interger)`: Set the intended width and height
+- `withThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
+- `withVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
+- `withFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
+- `withAlt( ?string )`: Set the alt atttribute for the image tag
+- `withTitle( ?string )`: Set the title atttribute for the image tag
+
+- `src()`: Render a src attribute for the given ImageSource-object
+- `srcset( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
+- `width()`: The current width of the ImageSource if available
+- `height()`: The current height of the ImageSource if available 
+- `alt()`: The alt value of the ImageSource if available
+- `title()`: The title value of the ImageSource if available
+
+deprecated methods:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
@@ -324,8 +367,6 @@ Methods of ImageSource-Helpers that are accessible via EEL:
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
-- `src ()`: Render a src attribute for the given ImageSource-object
-- `srcset ( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 
 Note: The Eel-helpers cannot be created directly. They have to be created
 by using the `Sitegeist.Kaleidoscope:AssetImageSource` or
@@ -363,14 +404,14 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <picture>
-            <source srcset={props.imageSource.setWidth(400).setHeight(400).src()} media="(max-width: 799px)" />
+            <source srcset={props.imageSource.withDimensions(400, 400).srcset('200w, 400w')} media="(max-width: 799px)" />
             <source srcset={props.imageSource.srcset('400w, 600w, 800w')} media="(min-width: 800px)" />
             <img src={props.imageSource.src()} />
         </picture>
     `
 ```
 
-In this example devices smaller than 800px will show a 400x400 square image,
+In this example devices smaller than 800px will show a square image,
 while larger devices will render a multires-source in the original image dimension.
 
 ## Contribution

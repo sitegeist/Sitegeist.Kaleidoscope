@@ -7,9 +7,9 @@ namespace Sitegeist\Kaleidoscope\FusionObjects;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\ImageInterface;
-use Sitegeist\Kaleidoscope\EelHelpers\AssetImageSourceHelper;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
-use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
+use Sitegeist\Kaleidoscope\Domain\AssetImageSource;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
+use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 {
@@ -46,9 +46,9 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     /**
      * Create helper and initialize with the default values.
      *
-     * @return ImageSourceHelperInterface|null
+     * @return ImageSourceInterface|null
      */
-    public function createHelper(): ?ImageSourceHelperInterface
+    public function createHelper(): ?ImageSourceInterface
     {
         $asset = $this->getAsset();
         if ($asset === null) {
@@ -58,7 +58,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             if (is_string($uri)) {
-                $helper = new UriImageSourceHelper($uri);
+                $helper = new UriImageSource($uri);
                 if ($title = $this->getTitle()) {
                     $helper->setTitle($title);
                 }
@@ -72,7 +72,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             }
         }
 
-        $helper = new AssetImageSourceHelper($asset);
+        $helper = new AssetImageSource($asset);
         $helper->setAsync((bool) $this->getAsync());
         $helper->setRequest($this->getRuntime()->getControllerContext()->getRequest());
 

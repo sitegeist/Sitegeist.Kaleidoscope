@@ -1,7 +1,7 @@
 prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
 
     @propTypes {
-        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
     }
 
     imageSource = null
@@ -24,12 +24,12 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
             sizes = ${props.sizes || __sizes}
         }
 
-        @if.hasImageSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+        @if.hasImageSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
 
         imageSource = ${imageSource}
-        imageSource.@process.applyWidth = ${width ? value.setWidth(width) : value}
-        imageSource.@process.applyHeight = ${height ? value.setHeight(height) : value}
-        imageSource.@process.applyFormat = ${format ? value.setFormat(format) : value}
+        imageSource.@process.applyWidth = ${width ? value.withWidth(width) : value}
+        imageSource.@process.applyHeight = ${height ? value.withHeight(height) : value}
+        imageSource.@process.applyFormat = ${format ? value.withFormat(format) : value}
 
         type = ${format ? 'image/' + format : props.type}
         srcset = ${srcset}

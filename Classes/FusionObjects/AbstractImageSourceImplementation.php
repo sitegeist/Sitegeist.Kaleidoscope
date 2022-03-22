@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
 
 abstract class AbstractImageSourceImplementation extends AbstractFusionObject
 {
@@ -68,9 +68,9 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     /**
      * Create helper and initialize width and height.
      *
-     * @return ImageSourceHelperInterface|null
+     * @return ImageSourceInterface|null
      */
-    public function evaluate(): ?ImageSourceHelperInterface
+    public function evaluate(): ?ImageSourceInterface
     {
         $helper = $this->createHelper();
         if ($helper === null) {
@@ -104,7 +104,7 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     /**
      * Create helper.
      *
-     * @return ImageSourceHelperInterface|null
+     * @return ImageSourceInterface|null
      */
-    abstract protected function createHelper(): ?ImageSourceHelperInterface;
+    abstract protected function createHelper(): ?ImageSourceInterface;
 }

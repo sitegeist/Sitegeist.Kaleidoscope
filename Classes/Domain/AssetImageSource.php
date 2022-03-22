@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+namespace Sitegeist\Kaleidoscope\Domain;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
@@ -14,7 +14,7 @@ use Neos\Media\Domain\Model\VariantSupportInterface;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\Media\Domain\Service\ThumbnailService;
 
-class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
+class AssetImageSource extends AbstractScalableImageSource
 {
     /**
      * @Flow\Inject
@@ -79,12 +79,12 @@ class AssetImageSourceHelper extends AbstractScalableImageSourceHelper
      * @param string $presetIdentifier
      * @param string $presetVariantName
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceInterface
      */
-    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    public function withVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface
     {
         /**
-         * @var AssetImageSourceHelper $newSource
+         * @var AssetImageSource $newSource
          */
         $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+namespace Sitegeist\Kaleidoscope\Domain;
 
-class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
+class DummyImageSource extends AbstractScalableImageSource
 {
     /**
      * @var string
@@ -82,11 +82,11 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
      * @param string $presetIdentifier
      * @param string $presetVariantName
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceInterface
      */
-    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
+    public function withVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface
     {
-        /** @var DummyImageSourceHelper $newSource */
+        /** @var DummyImageSource $newSource */
         $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {

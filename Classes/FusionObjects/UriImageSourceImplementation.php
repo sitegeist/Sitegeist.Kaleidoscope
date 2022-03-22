@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
-use Sitegeist\Kaleidoscope\EelHelpers\UriImageSourceHelper;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
+use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
 class UriImageSourceImplementation extends AbstractFusionObject
 {
@@ -37,12 +37,12 @@ class UriImageSourceImplementation extends AbstractFusionObject
     /**
      * Create helper and initialize with the default values.
      *
-     * @return ImageSourceHelperInterface|null
+     * @return ImageSourceInterface|null
      */
-    public function evaluate(): ?ImageSourceHelperInterface
+    public function evaluate(): ?ImageSourceInterface
     {
         if ($uri = $this->getUri()) {
-            $helper = new UriImageSourceHelper($uri);
+            $helper = new UriImageSource($uri);
         } else {
             return null;
         }

@@ -48,7 +48,7 @@ class DummyImageController extends ActionController
     /**
      * @Flow\InjectConfiguration
      *
-     * @var array
+     * @var mixed[]
      */
     protected $settings;
 
@@ -57,7 +57,7 @@ class DummyImageController extends ActionController
      * with a static Imagick instance,
      * because Vips does not yet support draw
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         if (isset($this->settings['dummyImage']['overrideImagineDriver']) && $this->settings['dummyImage']['overrideImagineDriver'] !== false) {
             $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'].'\\Imagine';

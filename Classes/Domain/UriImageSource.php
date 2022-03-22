@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+namespace Sitegeist\Kaleidoscope\Domain;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 
-class UriImageSourceHelper extends AbstractImageSourceHelper
+class UriImageSource extends AbstractImageSource
 {
     /**
      * @Flow\Inject

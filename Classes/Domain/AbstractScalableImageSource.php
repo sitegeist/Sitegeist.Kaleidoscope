@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sitegeist\Kaleidoscope\EelHelpers;
+namespace Sitegeist\Kaleidoscope\Domain;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
@@ -14,7 +14,7 @@ use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
 use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
 use Neos\Utility\ObjectAccess;
 
-abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelper implements ScalableImageSourceHelperInterface
+abstract class AbstractScalableImageSource extends AbstractImageSource implements ScalableImageSourceInterface
 {
     /**
      * @var ImagineInterface
@@ -36,9 +36,9 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
      * @param int|null $targetWidth
      * @param bool     $preserveAspect
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceInterface
      */
-    public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceHelperInterface
+    public function setWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
@@ -54,9 +54,9 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
      * @param int|null $targetHeight
      * @param bool     $preserveAspect
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceInterface
      */
-    public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceHelperInterface
+    public function setHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
@@ -71,29 +71,31 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
     /**
      * @param float $factor
      *
-     * @return ImageSourceHelperInterface
+     * @return ImageSourceInterface
      */
-    public function scale(float $factor): ImageSourceHelperInterface
+    public function scale(float $factor): ImageSourceInterface
     {
         $scaledHelper = clone $this;
 
         if ($this->targetWidth && $this->targetHeight) {
-            $scaledHelper = $scaledHelper->setDimensions((int) round($factor * $this->targetWidth), (int) round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->withDimensions((int) round($factor * $this->targetWidth), (int) round($factor * $this->targetHeight));
         } elseif ($this->targetWidth) {
-            $scaledHelper = $scaledHelper->setWidth((int) round($factor * $this->targetWidth));
+            $scaledHelper = $scaledHelper->withWidth((int) round($factor * $this->targetWidth));
         } elseif ($this->targetHeight) {
-            $scaledHelper = $scaledHelper->setHeight((int) round($factor * $this->targetHeight));
+            $scaledHelper = $scaledHelper->withHeight((int) round($factor * $this->targetHeight));
         } else {
-            $scaledHelper = $scaledHelper->setWidth((int) round($factor * $this->baseWidth));
+            $scaledHelper = $scaledHelper->withWidth((int) round($factor * $this->baseWidth));
         }
 
         return $scaledHelper;
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrentWidth(): int
+    public function getCurrentWidth(): ?int
+    {
+        return $this->width();
+    }
+
+    public function width(): ?int
     {
         if ($this->targetWidth) {
             return $this->targetWidth;
@@ -106,10 +108,12 @@ abstract class AbstractScalableImageSourceHelper extends AbstractImageSourceHelp
         return $this->baseWidth;
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrentHeight(): int
+    public function getCurrentHeight(): ?int
+    {
+        return $this->height();
+    }
+
+    public function height(): ?int
     {
         if ($this->targetHeight) {
             return $this->targetHeight;
