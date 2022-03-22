@@ -63,13 +63,13 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
         $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
 
         $helper = (new DummyImageSource(
-                $baseUri,
-                $this->getBaseWidth(),
-                $this->getBaseHeight(),
-                $this->getBackgroundColor(),
-                $this->getForegroundColor(),
-                $this->getText()
-            ))
+            $baseUri,
+            $this->getBaseWidth(),
+            $this->getBaseHeight(),
+            $this->getBackgroundColor(),
+            $this->getForegroundColor(),
+            $this->getText()
+        ))
             ->withTitle($this->getTitle())
             ->withAlt($this->getAlt());
 
