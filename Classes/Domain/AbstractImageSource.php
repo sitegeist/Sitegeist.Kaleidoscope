@@ -9,11 +9,12 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Utility\Arrays;
 use Psr\Log\LoggerInterface;
+use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 
 /**
  * Class AbstractImageSourceHelper.
  */
-abstract class AbstractImageSource implements ImageSourceInterface, ProtectedContextAwareInterface
+abstract class AbstractImageSource implements ImageSourceInterface, ProtectedContextAwareInterface, ImageSourceHelperInterface
 {
     /**
      * @var int|null

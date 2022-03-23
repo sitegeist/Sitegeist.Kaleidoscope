@@ -13,8 +13,9 @@ use Neos\Media\Domain\Model\Adjustment\ResizeImageAdjustment;
 use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
 use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
 use Neos\Utility\ObjectAccess;
+use Sitegeist\Kaleidoscope\EelHelpers\ScalableImageSourceHelperInterface;
 
-abstract class AbstractScalableImageSource extends AbstractImageSource implements ScalableImageSourceInterface
+abstract class AbstractScalableImageSource extends AbstractImageSource implements ScalableImageSourceInterface, ScalableImageSourceHelperInterface
 {
     /**
      * @var ImagineInterface
