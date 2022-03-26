@@ -11,7 +11,6 @@ use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
  */
 interface ImageSourceHelperInterface extends ImageSourceInterface
 {
-
     /** deprecated methods with variing mutability */
 
     /**
@@ -58,5 +57,4 @@ interface ImageSourceHelperInterface extends ImageSourceInterface
      * @deprecated use withVariantPreset
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface;
-
 }
