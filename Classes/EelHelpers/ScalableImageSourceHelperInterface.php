@@ -11,4 +11,13 @@ use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface;
  */
 interface ScalableImageSourceHelperInterface extends ScalableImageSourceInterface
 {
+    /**
+     * @deprecated use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface->width
+     */
+    public function getCurrentWidth(): ?int;
+
+    /**
+     * @deprecated use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface->width
+     */
+    public function getCurrentHeight(): ?int;
 }

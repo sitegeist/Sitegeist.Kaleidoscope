@@ -152,14 +152,14 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
         if (isset($this->thumbnailPresets[$name])) {
             $preset = $this->thumbnailPresets[$name];
             if ($width = $preset['width'] ?? null) {
-                $newSource = $newSource->setWidth($width);
+                $newSource = $newSource->withWidth($width);
             } elseif ($width = $preset['maximumWidth'] ?? null) {
-                $newSource = $newSource->setWidth($width);
+                $newSource = $newSource->withWidth($width);
             }
             if ($height = $preset['height'] ?? null) {
-                $newSource = $newSource->setHeight($height);
+                $newSource = $newSource->withHeight($height);
             } elseif ($height = $preset['maximumHeight'] ?? null) {
-                $newSource = $newSource->setHeight($height);
+                $newSource = $newSource->withHeight($height);
             }
         } else {
             $this->logger->warning(sprintf('Thumbnail preset "%s" is not configured', $name), LogEnvironment::fromMethodName(__METHOD__));
@@ -209,7 +209,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
             foreach ($descriptors as $descriptor) {
                 if (preg_match('/^(?<width>[0-9]+)w$/u', $descriptor, $matches)) {
                     $width = (int) $matches['width'];
-                    $scaleFactor = $width / $this->getCurrentWidth();
+                    $scaleFactor = $width / $this->width();
                     $scaled = $this->scale($scaleFactor);
                     $srcsetArray[] = $scaled->src().' '.$width.'w';
                 } elseif (preg_match('/^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches)) {
