@@ -84,7 +84,7 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `loading`: (optional) loading attribute for the img tag 
+- `loading`: (optional, default "lazy") loading attribute for the img tag 
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`    
 - `height`: (optional) the base height, will be applied to the `imageSource`    
@@ -140,7 +140,7 @@ Props:
 - `formats`: (optional) image formats that will be rendered as sources of separate type (string or array)
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`   
-- `loading`: (optional) loading attribute for the img tag 
+- `loading`: (optional, default "lazy") loading attribute for the img tag 
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `class`: class attribute for the picture tag
@@ -249,6 +249,8 @@ prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:Content
     renderer = Vendor.Site:Component.ResponsiveKevisualImage {
         imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
             asset = ${q(node).property('image')}
+            title = ${q(node).property('title')}
+            alt = ${q(node).property('alternativeText')}
         }
     }
 }
@@ -256,6 +258,29 @@ prototype (Vendor.Site:Content.ResponsiveKevisual) < prototype(Neos.Neos:Content
 
 This shows that integration-code dos not need to know the required image dimensions or wich
 variants are needed. This frontend know-how is now encapsulated into the presentational-component.
+
+## Dynamically enable/disable the lazy rendering
+
+To optimize the initial load time lazy loading should be disabled for the first contents but be 
+enabled for others. This can be implemented by enabling the `lazy`ness in the ContentCase prototype 
+depending on whether or not the current node is the first content in the main collection.
+
+```
+renderer = Neos.Neos:ContentCollection {
+    nodePath = 'main'
+
+    // configure seperate iterator for main content 
+    content.iterationName = 'mainContentIterator'
+
+    // enable lazynes for first items
+    prototype(Sitegeist.Kaleidoscope:Image) {
+        loading = ${mainContentIterator.isFirst ? 'eager' : 'lazy'}
+    }
+    prototype(Sitegeist.Kaleidoscope:Picture) {
+        loading = ${mainContentIterator.isFirst ? 'eager' : 'lazy'}
+    }
+}
+```
 
 ## ImageSource FusionObjects
 
@@ -284,6 +309,9 @@ Arguments:
 - `async`: Defer image-rendering until the image is actually requested by the browser (default true)
 - `thumbnailPreset`: `width` and `height` are supported as explained above
 - `variantPreset`: as explained above
+- `format`: Set the image output format, like webp (default null)
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`
 
@@ -298,15 +326,16 @@ Arguments:
 - `text`: The text that is rendered on the image (default = null, show size)
 - `thumbnailPreset`: `width` and `height` are supported as explained above
 - `variantPreset`: as explained above
-
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
 
 ### `Sitegeist.Kaleidoscope:UriImageSource`
 
 Arguments:
 - `uri`: The uri that will be rendered
-- !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
-- !!! `variantPreset`: has no effect on this ImageSource
-
+- `alt`: The alt attribute if not specified otherwise (default null)
+- `title`: The title attribute if not specified otherwise (default null)
+- 
 ### `Sitegeist.Kaleidoscope:ResourceImageSource`
 
 Arguments:

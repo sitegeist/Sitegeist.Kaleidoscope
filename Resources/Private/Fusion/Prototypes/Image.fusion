@@ -72,7 +72,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     alt = null
     title = null
     class = null
-    loading = null
+    loading = 'lazy'
     width = null
     height = null
     format = null
