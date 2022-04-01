@@ -32,7 +32,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     imageSource = null
     srcset = null
     sizes = null
-    loading = null
+    loading = 'lazy'
     sources = null
     formats = null
     width = null
