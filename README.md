@@ -1,5 +1,7 @@
 # Sitegeist.Kaleidoscope
 
+<img src="./Resources/Public/Images/KaleidoscopePromoImage.svg" width="600" height="288"/>
+
 ## Responsive Images for Neos - with Atomic.Fusion & Monocle in mind
 
 This package implements responsive-images for Neos for being used via Fusion.
@@ -302,6 +304,9 @@ Arguments:
 - `title`: The title attribute if not specified otherwise (default null)
 
 ### `Sitegeist.Kaleidoscope:DummyImageSource`
+
+<img src="./Resources/Public/Images/KaleidoscopeDummyImage.svg" width="600" height="425"/>
+
 
 Arguments:
 - `baseWidth`: The default width for the image before scaling (default = 600)
