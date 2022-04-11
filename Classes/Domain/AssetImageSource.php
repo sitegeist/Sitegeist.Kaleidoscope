@@ -46,33 +46,20 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
-     * AssetImageSourceHelper constructor.
-     *
      * @param ImageInterface $asset
+     * @param string|null $title
+     * @param string|null $alt
+     * @param bool $async
+     * @param ActionRequest|null $request
      */
-    public function __construct(ImageInterface $asset, bool $async = true, ?ActionRequest $request = null)
+    public function __construct(ImageInterface $asset, ?string $title = null, ?string $alt = null, bool $async = true, ?ActionRequest $request = null)
     {
+        parent::__construct($title, $alt);
         $this->asset = $asset;
         $this->request = $request;
         $this->async = $async;
         $this->baseWidth = $this->asset->getWidth();
         $this->baseHeight = $this->asset->getHeight();
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setAsync(bool $async): void
-    {
-        $this->async = $async;
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setRequest(ActionRequest $request): void
-    {
-        $this->request = $request;
     }
 
     /**

@@ -28,55 +28,23 @@ class DummyImageSource extends AbstractScalableImageSource
 
     /**
      * @param string $baseUri
+     * @param string|null $title
+     * @param string|null $alt
+     * @param int|null $baseWidth
+     * @param int|null $baseHeight
+     * @param string|null $backgroundColor
+     * @param string|null $foregroundColor
+     * @param string|null $text
      */
-    public function __construct(string $baseUri, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null)
+    public function __construct(string $baseUri, ?string $title = null, ?string $alt = null, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null)
     {
+        parent::__construct($title, $alt);
         $this->baseUri = $baseUri;
         $this->baseWidth = $baseWidth ?? 600;
         $this->baseHeight = $baseHeight ?? 400;
         $this->backgroundColor = $backgroundColor ?? '999';
         $this->foregroundColor = $foregroundColor ?? 'fff';
         $this->text = $text ?? '';
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setBaseWidth(int $baseWidth): void
-    {
-        $this->baseWidth = $baseWidth;
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setBaseHeight(int $baseHeight): void
-    {
-        $this->baseHeight = $baseHeight;
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setBackgroundColor(string $backgroundColor): void
-    {
-        $this->backgroundColor = $backgroundColor;
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setForegroundColor(string $foregroundColor): void
-    {
-        $this->foregroundColor = $foregroundColor;
-    }
-
-    /**
-     * @deprecated use constructor
-     */
-    public function setText(string $text): void
-    {
-        $this->text = $text;
     }
 
     /**

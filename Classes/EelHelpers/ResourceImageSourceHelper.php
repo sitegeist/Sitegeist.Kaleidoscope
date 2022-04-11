@@ -11,4 +11,14 @@ use Sitegeist\Kaleidoscope\Domain\ResourceImageSource;
  */
 class ResourceImageSourceHelper extends ResourceImageSource
 {
+    /**
+     * ResourceImageSourceHelper constructor.
+     *
+     * @param string|null $package
+     * @param string      $path
+     */
+    public function __construct(?string $package, string $path)
+    {
+        parent::__construct($package, $path);
+    }
 }

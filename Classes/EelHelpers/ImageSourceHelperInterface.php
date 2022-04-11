@@ -9,7 +9,7 @@ use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
 /**
  * @deprecated use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
  */
-interface ImageSourceHelperInterface extends ImageSourceInterface
+interface ImageSourceHelperInterface
 {
     /** deprecated methods with variing mutability */
 

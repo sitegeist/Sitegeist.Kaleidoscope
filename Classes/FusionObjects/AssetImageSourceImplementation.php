@@ -36,11 +36,11 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getAsync(): ?bool
+    public function getAsync(): bool
     {
-        return $this->fusionValue('async');
+        return (bool)$this->fusionValue('async');
     }
 
     /**
@@ -58,15 +58,11 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             if (is_string($uri)) {
-                $helper = new UriImageSource($uri);
-                if ($title = $this->getTitle()) {
-                    $helper = $helper->withTitle($title);
-                }
-                if ($alt = $this->getAlt()) {
-                    $helper = $helper->withAlt($alt);
-                }
-
-                return $helper;
+                return new UriImageSource(
+                    $uri,
+                    $this->getTitle(),
+                    $this->getAlt()
+                );
             } else {
                 return null;
             }
@@ -74,7 +70,9 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
 
         $helper = new AssetImageSource(
             $asset,
-            (bool) $this->getAsync(),
+            $this->getTitle(),
+            $this->getAlt(),
+            $this->getAsync(),
             $this->getRuntime()->getControllerContext()->getRequest()
         );
 

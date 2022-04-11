@@ -22,12 +22,13 @@ class UriImageSource extends AbstractImageSource
     protected $uri;
 
     /**
-     * ResourceImageSourceHelper constructor.
-     *
      * @param string $uri
+     * @param string|null $title
+     * @param string|null $alt
      */
-    public function __construct(string $uri)
+    public function __construct(string $uri, ?string $title = null, ?string  $alt = null)
     {
+        parent::__construct($title, $alt);
         $this->uri = $uri;
     }
 

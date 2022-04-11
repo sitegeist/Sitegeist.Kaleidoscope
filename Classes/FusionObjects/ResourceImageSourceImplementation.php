@@ -48,9 +48,12 @@ class ResourceImageSourceImplementation extends AbstractFusionObject
     public function evaluate(): ?ImageSourceInterface
     {
         if ($path = $this->getPath()) {
-            return (new ResourceImageSource($this->getPackage(), $path))
-                ->withTitle($this->getTitle())
-                ->withAlt($this->getAlt());
+            return new ResourceImageSource(
+                $this->getPackage(),
+                $path,
+                $this->getTitle(),
+                $this->getAlt()
+            );
         } else {
             return null;
         }

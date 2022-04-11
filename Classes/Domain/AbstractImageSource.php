@@ -65,6 +65,12 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     protected $alt;
 
+    public function __construct(?string $title = null, ?string $alt = null)
+    {
+        $this->title = $title;
+        $this->alt = $alt;
+    }
+
     /**
      * @deprecated
      */
