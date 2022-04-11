@@ -27,11 +27,11 @@ class DummyImageSource extends AbstractScalableImageSource
     protected $baseUri;
 
     /**
-     * @param string $baseUri
+     * @param string      $baseUri
      * @param string|null $title
      * @param string|null $alt
-     * @param int|null $baseWidth
-     * @param int|null $baseHeight
+     * @param int|null    $baseWidth
+     * @param int|null    $baseHeight
      * @param string|null $backgroundColor
      * @param string|null $foregroundColor
      * @param string|null $text

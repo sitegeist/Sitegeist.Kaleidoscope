@@ -8,7 +8,6 @@ use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
 class UriImageSourceHelper extends UriImageSource
 {
-
     /**
      * ResourceImageSourceHelper constructor.
      *

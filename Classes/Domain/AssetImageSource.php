@@ -46,10 +46,10 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
-     * @param ImageInterface $asset
-     * @param string|null $title
-     * @param string|null $alt
-     * @param bool $async
+     * @param ImageInterface     $asset
+     * @param string|null        $title
+     * @param string|null        $alt
+     * @param bool               $async
      * @param ActionRequest|null $request
      */
     public function __construct(ImageInterface $asset, ?string $title = null, ?string $alt = null, bool $async = true, ?ActionRequest $request = null)

@@ -40,7 +40,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
      */
     public function getAsync(): bool
     {
-        return (bool)$this->fusionValue('async');
+        return (bool) $this->fusionValue('async');
     }
 
     /**

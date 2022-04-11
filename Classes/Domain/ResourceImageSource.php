@@ -28,11 +28,11 @@ class ResourceImageSource extends AbstractImageSource
 
     /**
      * @param string|null $package
-     * @param string $path
+     * @param string      $path
      * @param string|null $title
      * @param string|null $alt
      */
-    public function __construct(?string $package, string $path, ?string $title = null, ?string  $alt = null)
+    public function __construct(?string $package, string $path, ?string $title = null, ?string $alt = null)
     {
         parent::__construct($title, $alt);
         $this->package = $package;

@@ -11,7 +11,6 @@ use Sitegeist\Kaleidoscope\Domain\DummyImageSource;
  */
 class DummyImageSourceHelper extends DummyImageSource
 {
-
     /**
      * @param string $baseUri
      */
