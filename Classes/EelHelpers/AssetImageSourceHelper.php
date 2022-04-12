@@ -25,6 +25,7 @@ class AssetImageSourceHelper extends AssetImageSource
 
     /**
      * @param bool $async
+     * @deprecated use AssetImageSource->__construct
      */
     public function setAsync(bool $async): void
     {
@@ -33,6 +34,7 @@ class AssetImageSourceHelper extends AssetImageSource
 
     /**
      * @param ActionRequest $request
+     * @deprecated use AssetImageSource->__construct
      */
     public function setRequest(ActionRequest $request): void
     {

@@ -27,6 +27,7 @@ class DummyImageSourceHelper extends DummyImageSource
 
     /**
      * @param int $baseWidth
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBaseWidth(int $baseWidth): void
     {
@@ -35,6 +36,7 @@ class DummyImageSourceHelper extends DummyImageSource
 
     /**
      * @param int $baseHeight
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBaseHeight(int $baseHeight): void
     {
@@ -43,6 +45,7 @@ class DummyImageSourceHelper extends DummyImageSource
 
     /**
      * @param string $backgroundColor
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBackgroundColor(string $backgroundColor): void
     {
@@ -51,6 +54,7 @@ class DummyImageSourceHelper extends DummyImageSource
 
     /**
      * @param string $foregroundColor
+     * @deprecated use DummyImageSource->__construct
      */
     public function setForegroundColor(string $foregroundColor): void
     {
@@ -59,6 +63,7 @@ class DummyImageSourceHelper extends DummyImageSource
 
     /**
      * @param string $text
+     * @deprecated use DummyImageSource->__construct
      */
     public function setText($text): void
     {

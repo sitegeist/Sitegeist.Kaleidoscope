@@ -6,6 +6,9 @@ namespace Sitegeist\Kaleidoscope\EelHelpers;
 
 use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\UriImageSource;
+ */
 class UriImageSourceHelper extends UriImageSource
 {
     /**
