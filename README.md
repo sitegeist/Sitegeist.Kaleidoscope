@@ -209,7 +209,7 @@ Props:
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to `imageSource` and `type`
 - `width`: (optional) the base width, will be applied to the `imageSource`    
 - `height`: (optional) the base height, will be applied to the `imageSource`    
-- `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.setFormat()`
+- `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.withFormat()`
 - `media`: (optional) the media query for the given source
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the source-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically.
@@ -232,7 +232,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     # Enforce the dimensions of the passed images by cropping to 1600 x 800
     #
     imageSource = null
-    imageSource.@process.enforeDimensions = ${value ? value.withWidth(1600).setHeight(900) : null}
+    imageSource.@process.enforeDimensions = ${value ? value.withWidth(1600).withHeight(900) : null}
 
     renderer = afx`
         <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} srcset="1x, 1.5x, 2x" />
