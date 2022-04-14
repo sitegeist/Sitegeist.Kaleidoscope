@@ -24,6 +24,12 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     }
                     media = 'print'
                 }
+                4 = Neos.Fusion:RawArray {
+                    srcset = '400w, 800w, 1600w'
+                    media = 'screen and (min-width: 2600px)'
+                    width = 800
+                    height = 300
+                }
             }
             alt = 'Elva dressed as a fairy'
         }
@@ -41,7 +47,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     title = null
     class = null
     content = ''
-    renderDimensionAttributes = null
+    renderDimensionAttributes = true
 
     #
     # put the values that shall be applied to sources automatically to the context
@@ -74,7 +80,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         title = ${props.title}
         class = ${props.class}
         content = ${props.content}
-        renderDimensionAttributes = ${Type.isBoolean(props.renderDimensionAttributes) ? props.renderDimensionAttributes : (!props.content && !props.sources)}
+        renderDimensionAttributes = ${props.renderDimensionAttributes}
 
         renderer = afx`
             <picture class={props.class}>
@@ -89,6 +95,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                         height={source.height}
                         srcset={source.srcset ? source.srcset : props.srcset}
                         sizes={source.sizes ? source.sizes : props.sizes}
+                        renderDimensionAttributes={props.renderDimensionAttributes}
                     />
                 </Neos.Fusion:Collection>
                 <Neos.Fusion:Collection

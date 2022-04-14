@@ -211,6 +211,8 @@ Props:
 - `height`: (optional) the base height, will be applied to the `imageSource`    
 - `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.setFormat()`
 - `media`: (optional) the media query for the given source
+- `renderDimensionAttributes`: render dimension attributes (width/height) for the source-tag when the data is available from the imageSource
+  if not specified renderDimensionAttributes will be enabled automatically.
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
 
