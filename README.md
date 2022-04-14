@@ -232,7 +232,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     # Enforce the dimensions of the passed images by cropping to 1600 x 800
     #
     imageSource = null
-    imageSource.@process.enforeDimensions = ${value ? value.setWidth(1600).setHeight(900) : null}
+    imageSource.@process.enforeDimensions = ${value ? value.withWidth(1600).setHeight(900) : null}
 
     renderer = afx`
         <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} srcset="1x, 1.5x, 2x" />
@@ -291,17 +291,7 @@ render an image. ImageSource-Objects return Eel-Helpers that allow to
 enforcing the rendered dimensions later in the rendering process.
 
 Note: The settings for `width`, `height`, `thumbnailPreset` and `variantPreset` can be defined
-via fusion but can also applied on the returned object. This will override the fusion-settings.
-
-All ImageSources support the following fusion properties:
-
-- `alt`: The alt attribute if not specified otherwise (default null)
-- `title`: The title attribute if not specified otherwise (default null)
-- `thumbnailPreset`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets` (default null, settings below override the preset)
-- `variantPreset`: Select image variant via named variant preset, given as `IDENTIFIER::VARIANTNAME` keys from Settings `Neos.Media.variantPresets` (default null, settings below override the preset)
-- `width`: Set the intended width (default null)
-- `height`: Set the intended height (default null)
-- `format`: Set the image output format, like webp (default null)
+via fusion but can also applied to the returned object which will override the fusion-settings.
 
 ### `Sitegeist.Kaleidoscope:AssetImageSource`
 
@@ -346,13 +336,31 @@ Arguments:
 - !!! `thumbnailPreset`: `width` and `height` have no effect on this ImageSource
 - !!! `variantPreset`: has no effect on this ImageSource
 
-## ImageSource EEl-Helpers
+## ImageSource Eel-Helpers
 
 The ImageSource-helpers are created by the fusion-objects above and are passed to a
 rendering component. The helpers allow to set or override the intended
 dimensions and to render the `src` and `srcset`-attributes.
 
-Methods of ImageSource-Helpers that are accessible via EEL:
+Methods of ImageSource-Helpers that are accessible via Eel:
+
+- `withWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if
+- `withHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
+- `withDimensions( integer, interger)`: Set the intended width and height
+- `withThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
+- `withVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
+- `withFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
+- `withAlt( ?string )`: Set the alt atttribute for the image tag
+- `withTitle( ?string )`: Set the title atttribute for the image tag
+
+- `src()`: Render a src attribute for the given ImageSource-object
+- `srcset( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
+- `width()`: The current width of the ImageSource if available
+- `height()`: The current height of the ImageSource if available 
+- `alt()`: The alt value of the ImageSource if available
+- `title()`: The title value of the ImageSource if available
+
+deprecated methods:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
@@ -360,8 +368,6 @@ Methods of ImageSource-Helpers that are accessible via EEL:
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
-- `src ()`: Render a src attribute for the given ImageSource-object
-- `srcset ( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 
 Note: The Eel-helpers cannot be created directly. They have to be created
 by using the `Sitegeist.Kaleidoscope:AssetImageSource` or
@@ -399,14 +405,14 @@ Render a `picture`-tag with multiple `source`-children and an `img`-fallback :
     imageSource = Sitegeist.Kaleidoscope:DummyImageSource
     renderer = afx`
         <picture>
-            <source srcset={props.imageSource.setWidth(400).setHeight(400).src()} media="(max-width: 799px)" />
+            <source srcset={props.imageSource.withDimensions(400, 400).srcset('200w, 400w')} media="(max-width: 799px)" />
             <source srcset={props.imageSource.srcset('400w, 600w, 800w')} media="(min-width: 800px)" />
             <img src={props.imageSource.src()} />
         </picture>
     `
 ```
 
-In this example devices smaller than 800px will show a 400x400 square image,
+In this example devices smaller than 800px will show a square image,
 while larger devices will render a multires-source in the original image dimension.
 
 ## Contribution

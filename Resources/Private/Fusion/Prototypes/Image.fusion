@@ -13,6 +13,36 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 }
             }
 
+            imageSourceWithWidth {
+              imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                @process.adjust = ${value.withWidth(400)}
+              }
+            }
+
+            imageSourceWithHeight {
+              imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                @process.adjust = ${value.withHeight(400)}
+              }
+            }
+
+            imageSourceWithDimensions {
+              imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                @process.adjust = ${value.withDimensions(400, 400)}
+              }
+            }
+
+            imageSourceWithTitleAndAlt {
+              imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                @process.adjust = ${value.withAlt("Alternate assigned by eel").withTitle("Title assigned by eel")}
+              }
+            }
+
+            imageSourceWithFormat {
+              imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
+                @process.adjust = ${value.withFormat("png")}
+              }
+            }
+
             overrideAltAndTitleFromProp {
                 alt = 'Alternate assigned as prop'
                 title = 'Title assigned as prop'
@@ -63,7 +93,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     }
 
     @propTypes {
-        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
     }
 
     imageSource = null
@@ -79,13 +109,13 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     renderDimensionAttributes = true
 
     renderer = Neos.Fusion:Component {
-        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
-        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
-        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
-        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+        imageSource.@process.applyWidth = ${props.width ? value.withWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.withHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
 
         srcset = ${props.srcset}
         sizes = ${props.sizes}
@@ -106,8 +136,8 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 class={props.class}
                 alt={props.alt || props.imageSource.alt() || ''}
                 title={props.title || props.imageSource.title()}
-                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
-                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
+                width={props.renderDimensionAttributes ? props.imageSource.width() : null}
+                height={props.renderDimensionAttributes ? props.imageSource.height() : null}
             />
         `
     }

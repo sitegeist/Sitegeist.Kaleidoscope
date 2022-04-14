@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Flow\Mvc\Routing\Exception\MissingActionNameException;
-use Sitegeist\Kaleidoscope\EelHelpers\DummyImageSourceHelper;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
+use Sitegeist\Kaleidoscope\Domain\DummyImageSource;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
 
 class DummyImageSourceImplementation extends AbstractImageSourceImplementation
 {
@@ -55,43 +55,22 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
      *
      * @throws MissingActionNameException
      *
-     * @return ImageSourceHelperInterface|null
+     * @return ImageSourceInterface|null
      */
-    public function createHelper(): ?ImageSourceHelperInterface
+    public function createHelper(): ?ImageSourceInterface
     {
         $uriBuilder = $this->runtime->getControllerContext()->getUriBuilder()->reset()->setCreateAbsoluteUri(true);
         $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
 
-        $helper = new DummyImageSourceHelper($baseUri);
-
-        if ($baseWidth = $this->getBaseWidth()) {
-            $helper->setBaseWidth($baseWidth);
-        }
-
-        if ($baseHeight = $this->getBaseHeight()) {
-            $helper->setBaseHeight($baseHeight);
-        }
-
-        if ($backgroundColor = $this->getBackgroundColor()) {
-            $helper->setBackgroundColor($backgroundColor);
-        }
-
-        if ($foregroundColor = $this->getForegroundColor()) {
-            $helper->setForegroundColor($foregroundColor);
-        }
-
-        if ($text = $this->getText()) {
-            $helper->setText($text);
-        }
-
-        if ($title = $this->getTitle()) {
-            $helper->setTitle($title);
-        }
-
-        if ($alt = $this->getAlt()) {
-            $helper->setAlt($alt);
-        }
-
-        return $helper;
+        return new DummyImageSource(
+            $baseUri,
+            $this->getTitle(),
+            $this->getAlt(),
+            $this->getBaseWidth(),
+            $this->getBaseHeight(),
+            $this->getBackgroundColor(),
+            $this->getForegroundColor(),
+            $this->getText()
+        );
     }
 }

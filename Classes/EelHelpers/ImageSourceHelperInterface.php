@@ -4,38 +4,57 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
-use Neos\Eel\ProtectedContextAwareInterface;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
 
-interface ImageSourceHelperInterface extends ProtectedContextAwareInterface
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
+ */
+interface ImageSourceHelperInterface
 {
-    public function setWidth(int $width, bool $preserveAspect = false): ImageSourceHelperInterface;
-
-    public function setHeight(int $height, bool $preserveAspect = false): ImageSourceHelperInterface;
-
-    public function setDimensions(int $width, int $height): ImageSourceHelperInterface;
-
-    public function setFormat(string $format): ImageSourceHelperInterface;
+    /** deprecated methods with variing mutability */
 
     /**
-     * @param string $name
-     *
-     * @deprecated use applyThumbnailPreset
-     *
-     * @return ImageSourceHelperInterface
+     * @deprecated use withWidth
      */
-    public function applyPreset(string $name): ImageSourceHelperInterface;
+    public function setWidth(int $width, bool $preserveAspect = false): ImageSourceInterface;
 
-    public function applyThumbnailPreset(string $name): ImageSourceHelperInterface;
+    /**
+     * @deprecated use withHeight
+     */
+    public function setHeight(int $height, bool $preserveAspect = false): ImageSourceInterface;
 
-    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface;
+    /**
+     * @deprecated use withDimension
+     */
+    public function setDimensions(int $width, int $height): ImageSourceInterface;
 
-    public function src(): string;
+    /**
+     * @deprecated use withFormat
+     */
+    public function setFormat(string $format): ImageSourceInterface;
 
-    public function srcset(string $mediaDescriptors): string;
+    /**
+     * @deprecated use withTitle
+     */
+    public function setTitle(?string $title): void;
 
-    public function title(): ?string;
+    /**
+     * @deprecated use withAlt
+     */
+    public function setAlt(?string $alt): void;
 
-    public function alt(): ?string;
+    /**
+     * @deprecated use withThumbnailPreset
+     */
+    public function applyPreset(string $name): ImageSourceInterface;
 
-    public function __toString(): string;
+    /**
+     * @deprecated use withThumbnailPreset
+     */
+    public function applyThumbnailPreset(string $name): ImageSourceInterface;
+
+    /**
+     * @deprecated use withVariantPreset
+     */
+    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface;
 }

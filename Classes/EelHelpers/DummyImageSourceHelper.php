@@ -4,40 +4,31 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
-class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
+use Sitegeist\Kaleidoscope\Domain\DummyImageSource;
+
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\DummyImageSource;
+ */
+class DummyImageSourceHelper extends DummyImageSource
 {
-    /**
-     * @var string
-     */
-    protected $backgroundColor = '999';
-
-    /**
-     * @var string
-     */
-    protected $foregroundColor = 'fff';
-
-    /**
-     * @var string
-     */
-    protected $text;
-
-    /**
-     * @var string
-     */
-    protected $baseUri = '';
-
     /**
      * @param string $baseUri
      */
     public function __construct(string $baseUri)
     {
-        $this->baseWidth = 600;
-        $this->baseHeight = 400;
-        $this->baseUri = $baseUri;
+        parent::__construct(
+            $this->baseUri = $baseUri,
+            null,
+            null,
+            600,
+            400
+        );
     }
 
     /**
      * @param int $baseWidth
+     *
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBaseWidth(int $baseWidth): void
     {
@@ -46,6 +37,8 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * @param int $baseHeight
+     *
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBaseHeight(int $baseHeight): void
     {
@@ -54,6 +47,8 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * @param string $backgroundColor
+     *
+     * @deprecated use DummyImageSource->__construct
      */
     public function setBackgroundColor(string $backgroundColor): void
     {
@@ -62,6 +57,8 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * @param string $foregroundColor
+     *
+     * @deprecated use DummyImageSource->__construct
      */
     public function setForegroundColor(string $foregroundColor): void
     {
@@ -70,60 +67,11 @@ class DummyImageSourceHelper extends AbstractScalableImageSourceHelper
 
     /**
      * @param string $text
+     *
+     * @deprecated use DummyImageSource->__construct
      */
     public function setText($text): void
     {
         $this->text = $text;
-    }
-
-    /**
-     * Use the variant generated from the given variant preset in this image source.
-     *
-     * @param string $presetIdentifier
-     * @param string $presetVariantName
-     *
-     * @return ImageSourceHelperInterface
-     */
-    public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceHelperInterface
-    {
-        /** @var DummyImageSourceHelper $newSource */
-        $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
-
-        if ($newSource->targetImageVariant !== []) {
-            $targetBox = $this->estimateDimensionsFromVariantPresetAdjustments($presetIdentifier, $presetVariantName);
-            $newSource->baseWidth = $targetBox->getWidth();
-            $newSource->baseHeight = $targetBox->getHeight();
-        }
-
-        return $newSource;
-    }
-
-    /**
-     * @return string
-     */
-    public function src(): string
-    {
-        $arguments = [
-            'w' => $this->getCurrentWidth(),
-            'h' => $this->getCurrentHeight(),
-        ];
-
-        if ($this->backgroundColor) {
-            $arguments['bg'] = $this->backgroundColor;
-        }
-
-        if ($this->foregroundColor) {
-            $arguments['fg'] = $this->foregroundColor;
-        }
-
-        if ($this->text) {
-            $arguments['t'] = $this->text;
-        }
-
-        if ($this->targetFormat) {
-            $arguments['f'] = $this->targetFormat;
-        }
-
-        return $this->baseUri.'?'.http_build_query($arguments);
     }
 }

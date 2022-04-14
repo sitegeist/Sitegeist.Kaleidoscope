@@ -4,28 +4,13 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\ResourceManagement\ResourceManager;
+use Sitegeist\Kaleidoscope\Domain\ResourceImageSource;
 
-class ResourceImageSourceHelper extends AbstractImageSourceHelper
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\ResourceImageSource;
+ */
+class ResourceImageSourceHelper extends ResourceImageSource
 {
-    /**
-     * @Flow\Inject
-     *
-     * @var ResourceManager
-     */
-    protected $resourceManager;
-
-    /**
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var string|null
-     */
-    protected $package;
-
     /**
      * ResourceImageSourceHelper constructor.
      *
@@ -34,16 +19,6 @@ class ResourceImageSourceHelper extends AbstractImageSourceHelper
      */
     public function __construct(?string $package, string $path)
     {
-        $this->package = $package;
-        $this->path = $path;
-    }
-
-    public function src(): string
-    {
-        if ($this->package) {
-            return $this->resourceManager->getPublicPackageResourceUri($this->package, $this->path);
-        }
-
-        return $this->resourceManager->getPublicPackageResourceUriByPath($this->path);
+        parent::__construct($package, $path);
     }
 }

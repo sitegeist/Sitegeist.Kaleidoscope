@@ -4,23 +4,13 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\ResourceManagement\ResourceManager;
+use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
-class UriImageSourceHelper extends AbstractImageSourceHelper
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\UriImageSource;
+ */
+class UriImageSourceHelper extends UriImageSource
 {
-    /**
-     * @Flow\Inject
-     *
-     * @var ResourceManager
-     */
-    protected $resourceManager;
-
-    /**
-     * @var string
-     */
-    protected $uri;
-
     /**
      * ResourceImageSourceHelper constructor.
      *
@@ -28,14 +18,6 @@ class UriImageSourceHelper extends AbstractImageSourceHelper
      */
     public function __construct(string $uri)
     {
-        $this->uri = $uri;
-    }
-
-    /**
-     * @return string
-     */
-    public function src(): string
-    {
-        return $this->uri;
+        parent::__construct($uri);
     }
 }

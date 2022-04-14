@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\FusionObjects;
 
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
-use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
-use Sitegeist\Kaleidoscope\EelHelpers\ResourceImageSourceHelper;
+use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
+use Sitegeist\Kaleidoscope\Domain\ResourceImageSource;
 
 class ResourceImageSourceImplementation extends AbstractFusionObject
 {
@@ -44,25 +44,18 @@ class ResourceImageSourceImplementation extends AbstractFusionObject
 
     /**
      * Create helper and initialize with the default values.
-     *
-     * @return ImageSourceHelperInterface|null
      */
-    public function evaluate(): ?ImageSourceHelperInterface
+    public function evaluate(): ?ImageSourceInterface
     {
         if ($path = $this->getPath()) {
-            $helper = new ResourceImageSourceHelper($this->getPackage(), $path);
+            return new ResourceImageSource(
+                $this->getPackage(),
+                $path,
+                $this->getTitle(),
+                $this->getAlt()
+            );
         } else {
             return null;
         }
-
-        if ($title = $this->getTitle()) {
-            $helper->setTitle($title);
-        }
-
-        if ($alt = $this->getAlt()) {
-            $helper->setAlt($alt);
-        }
-
-        return $helper;
     }
 }

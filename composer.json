@@ -25,5 +25,10 @@
     "scripts": {
         "test:stan": ["vendor/bin/phpstan analyse Classes"],
         "test": ["composer install", "composer  test:stan"]
+    },
+    "config": {
+        "allow-plugins": {
+            "neos/composer-plugin": true
+        }
     }
 }

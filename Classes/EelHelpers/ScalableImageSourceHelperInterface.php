@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\EelHelpers;
 
-interface ScalableImageSourceHelperInterface extends ImageSourceHelperInterface
+use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface;
+
+/**
+ * @deprecated use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface;
+ */
+interface ScalableImageSourceHelperInterface extends ScalableImageSourceInterface
 {
-    public function scale(float $factor): ImageSourceHelperInterface;
+    /**
+     * @deprecated use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface->width
+     */
+    public function getCurrentWidth(): ?int;
 
-    public function getCurrentWidth(): int;
-
-    public function getCurrentHeight(): int;
+    /**
+     * @deprecated use Sitegeist\Kaleidoscope\Domain\ScalableImageSourceInterface->width
+     */
+    public function getCurrentHeight(): ?int;
 }
