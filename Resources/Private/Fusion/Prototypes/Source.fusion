@@ -12,6 +12,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     format = null
     type = null
     media = null
+    renderDimensionAttributes = true
 
     renderer = Neos.Fusion:Component {
 
@@ -35,6 +36,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         srcset = ${srcset}
         sizes = ${sizes}
         media = ${props.media}
+        renderDimensionAttributes = ${props.renderDimensionAttributes}
 
         renderer = afx`
             <source @if.has={props.imageSource}
@@ -44,6 +46,8 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
                 type={props.type}
                 media={props.media}
+                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
+                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
             />
         `
     }
