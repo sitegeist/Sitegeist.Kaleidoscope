@@ -33,6 +33,19 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
             }
             alt = 'Elva dressed as a fairy'
         }
+
+        propSets {
+          withAttributes {
+            attributes = Neos.Fusion:DataStructure {
+              data-foo="bar"
+              style="border: 5px solid green;"
+            }
+            imgAttributes = Neos.Fusion:DataStructure {
+              data-foo="baz"
+              style="border: 5px solid pink;"
+            }
+          }
+        }
     }
 
     imageSource = null
@@ -45,7 +58,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     height = null
     alt = ''
     title = null
+    // class is deprecated in favor of attributes.class
     class = null
+    attributes = Neos.Fusion:DataStructure
+    imgAttributes = Neos.Fusion:DataStructure
     content = ''
     renderDimensionAttributes = true
 
@@ -79,11 +95,13 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         alt = ${props.alt}
         title = ${props.title}
         class = ${props.class}
+        attributes = ${props.attributes}
+        imgAttributes = ${props.imgAttributes}
         content = ${props.content}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
 
         renderer = afx`
-            <picture class={props.class}>
+            <picture class={props.class} {...props.attributes}>
                 {props.content}
                 <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
                     <Sitegeist.Kaleidoscope:Source
@@ -112,6 +130,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     loading={props.loading}
                     alt={props.alt}
                     title={props.title}
+                    attributes={props.imgAttributes}
                     renderDimensionAttributes={props.renderDimensionAttributes}
                 />
             </picture>
