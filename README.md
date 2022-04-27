@@ -90,7 +90,8 @@ Props:
 - `height`: (optional) the base height, will be applied to the `imageSource`    
 - `alt`: alt-attribute for the img tag (default "")
 - `title`: title attribute for the img tag
-- `class`: class attribute for the img tag
+- `class`: class attribute for the img tag (deprecated in favor of attributes.class)
+- `attributes`: tag-attributes, will override any automatically rendered ones
 - `renderDimensionAttributes`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
 
 #### Image with srcset in multiple resolutions:
@@ -143,7 +144,9 @@ Props:
 - `loading`: (optional, default "lazy") loading attribute for the img tag 
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
-- `class`: class attribute for the picture tag
+- `attributes`: picture-tag-attributes, will override any automatically rendered ones
+- `imgAttributes`: img-tag-attributes, will override any automatically rendered ones
+- `class`: class attribute for the picture tag (deprecated in favor of attributes.class)
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically for pictures that only use the `formats` options.
 

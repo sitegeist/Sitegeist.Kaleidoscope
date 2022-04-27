@@ -64,6 +64,13 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 }
             }
 
+            withAttributes {
+              attributes = Neos.Fusion:DataStructure {
+                data-foo="bar"
+                style="border: 5px solid pink;"
+              }
+            }
+
             multires_array {
                 srcset = ${['1x', '1.5x', '2x']}
             }
@@ -101,11 +108,13 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     sizes = null
     alt = null
     title = null
+    // class is deprecated in favor of attributes.class
     class = null
     loading = 'lazy'
     width = null
     height = null
     format = null
+    attributes = Neos.Fusion:DataStructure
     renderDimensionAttributes = true
 
     renderer = Neos.Fusion:Component {
@@ -123,6 +132,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
         alt =  ${props.alt}
         title = ${props.title}
         class = ${props.class}
+        attributes = ${props.attributes}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
 
         renderer = afx`
@@ -138,6 +148,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 title={props.title || props.imageSource.title()}
                 width={props.renderDimensionAttributes ? props.imageSource.width() : null}
                 height={props.renderDimensionAttributes ? props.imageSource.height() : null}
+                {...props.attributes}
             />
         `
     }
