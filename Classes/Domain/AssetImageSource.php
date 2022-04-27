@@ -7,8 +7,8 @@ namespace Sitegeist\Kaleidoscope\Domain;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Media\Domain\Model\AssetInterface;
+use Neos\Media\Domain\Model\AssetVariantInterface;
 use Neos\Media\Domain\Model\ImageInterface;
-use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Media\Domain\Model\VariantSupportInterface;
 use Neos\Media\Domain\Service\AssetService;
@@ -78,13 +78,13 @@ class AssetImageSource extends AbstractScalableImageSource
         $newSource = parent::withVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {
-            $asset = ($newSource->asset instanceof ImageVariant) ? $newSource->asset->getOriginalAsset() : $newSource->asset;
+            $asset = ($newSource->asset instanceof AssetVariantInterface && $newSource->asset instanceof ImageInterface) ? $newSource->asset->getOriginalAsset() : $newSource->asset;
             if ($asset instanceof VariantSupportInterface) {
                 $assetVariant = $asset->getVariant($newSource->targetImageVariant['presetIdentifier'], $newSource->targetImageVariant['presetVariantName']);
             } else {
                 $assetVariant = null;
             }
-            if ($assetVariant instanceof ImageVariant) {
+            if ($assetVariant instanceof AssetVariantInterface && $assetVariant instanceof ImageInterface) {
                 $newSource->asset = $assetVariant;
                 $newSource->baseWidth = $assetVariant->getWidth();
                 $newSource->baseHeight = $assetVariant->getHeight();
