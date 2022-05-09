@@ -58,7 +58,7 @@ class DummyImageSource extends AbstractScalableImageSource
     public function withVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface
     {
         /** @var DummyImageSource $newSource */
-        $newSource = parent::useVariantPreset($presetIdentifier, $presetVariantName);
+        $newSource = parent::withVariantPreset($presetIdentifier, $presetVariantName);
 
         if ($newSource->targetImageVariant !== []) {
             $targetBox = $this->estimateDimensionsFromVariantPresetAdjustments($presetIdentifier, $presetVariantName);
