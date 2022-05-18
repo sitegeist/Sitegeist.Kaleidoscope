@@ -46,7 +46,7 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
-     * Runtime cache for the src uri for the asset
+     * Runtime cache for the src uri for the asset.
      *
      * @var string|null
      */
