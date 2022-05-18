@@ -46,6 +46,13 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
+     * Runtime cache for the src uri for the asset
+     *
+     * @var string|null
+     */
+    protected $srcCache = null;
+
+    /**
      * @param ImageInterface     $asset
      * @param string|null        $title
      * @param string|null        $alt
@@ -112,6 +119,10 @@ class AssetImageSource extends AbstractScalableImageSource
             return '';
         }
 
+        if ($this->srcCache !== null) {
+            return $this->srcCache;
+        }
+
         $width = $this->getCurrentWidth();
         $height = $this->getCurrentHeight();
 
@@ -136,10 +147,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $this->request
         );
 
-        if ($thumbnailData === null) {
-            return '';
-        }
-
-        return $thumbnailData['src'];
+        $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
+        return $this->srcCache;
     }
 }
