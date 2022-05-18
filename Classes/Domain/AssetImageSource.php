@@ -148,6 +148,7 @@ class AssetImageSource extends AbstractScalableImageSource
         );
 
         $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
+        
         return $this->srcCache;
     }
 }
