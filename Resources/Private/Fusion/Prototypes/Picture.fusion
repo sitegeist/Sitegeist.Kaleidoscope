@@ -121,7 +121,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     collection={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
                     itemName="format"
                 >
-                    <Sitegeist.Kaleidoscope:Source format={String.trim(format)} />
+                    <Sitegeist.Kaleidoscope:Source
+                        imageSource={props.imageSource}
+                        format={String.trim(format)}
+                    />
                 </Neos.Fusion:Collection>
                 <Sitegeist.Kaleidoscope:Image
                     imageSource={props.imageSource}
