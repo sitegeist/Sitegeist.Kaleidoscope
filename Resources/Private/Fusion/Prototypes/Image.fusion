@@ -96,6 +96,16 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
                 srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
                 sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
             }
+
+            nonScalabelSource {
+                imageSource = Sitegeist.Kaleidoscope:UriImageSource {
+                    uri = "https://dummyimage.com/600x400/000/fff"
+                    alt = 'Alternate assigned to source'
+                    title = 'Title assigned to source'
+                }
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+                sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            }
         }
     }
 
@@ -119,6 +129,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
 
     renderer = Neos.Fusion:Component {
         @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+        isScalableSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
@@ -139,8 +150,9 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
             <img
                 src={props.imageSource.src()}
                 srcset={props.imageSource.srcset(props.srcset)}
-                srcset.@if.has={props.srcset}
+                srcset.@if.isScalable={props.isScalableSource && props.srcset}
                 sizes={props.sizes}
+                sizes.@if.isScalable={props.isScalableSource && props.sizes}
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
                 loading={props.loading}
                 class={props.class}
