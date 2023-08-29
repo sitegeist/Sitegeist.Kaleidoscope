@@ -55,7 +55,8 @@ format can be configured, which will be used for rendering if the requested form
 ```yaml
 Sitegeist:
   Kaleidoscope:
-    fallbackFormat: 'png'
+    dummyImage:
+      fallbackFormat: 'png'
 ```
 
 Moreover, as some image libraries (like Vips) also have problems with the generation of the dummy image, the driver can be overriden. 
@@ -65,7 +66,8 @@ Possible values are `Gd`, `Imagick`, `Gmagick` or `Vips`.
 ```yaml
 Sitegeist:
   Kaleidoscope:
-    overrideImagineDriver: 'Imagick'
+    dummyImage:
+      overrideImagineDriver: 'Imagick'
 ```
 
 ## Usage
