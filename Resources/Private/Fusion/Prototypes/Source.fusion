@@ -26,6 +26,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         }
 
         @if.hasImageSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+        isScalableSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
 
         imageSource = ${imageSource}
         imageSource.@process.applyWidth = ${width ? value.withWidth(width) : value}
@@ -41,8 +42,9 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         renderer = afx`
             <source @if.has={props.imageSource}
                 srcset={props.imageSource.srcset(props.srcset)}
-                srcset.@if.has={props.srcset}
+                srcset.@if.isScalable={props.srcset && props.isScalableSource}
                 sizes={props.sizes}
+                srcset.@if.isScalable={props.sizes && props.isScalableSource}
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
                 type={props.type}
                 media={props.media}
