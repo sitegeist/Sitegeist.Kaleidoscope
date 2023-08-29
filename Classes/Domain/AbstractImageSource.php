@@ -45,12 +45,14 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
 
     /**
      * @var array[]
+     *
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
     protected $thumbnailPresets;
 
     /**
      * @var array[]
+     *
      * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
      */
     protected $variantPresets;
@@ -313,6 +315,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
                 'useVariantPreset',
 
                 'src',
+                'dataSrc',
                 'srcset',
                 'title',
                 'alt',

@@ -13,18 +13,15 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-versions: ['7.4', '8.0']
-                neos-versions: ['7.3']
+                php-versions: ['8.0', '8.1']
+                neos-versions: ['8.3']
                 include:
                   - php-versions: '7.3'
-                    neos-versions: '5.3'
-                  - php-versions: '7.3'
-                    neos-versions: '7.0'
-                  - php-versions: '7.3'
-                    neos-versions: '7.1'
-                  - php-versions: '7.3'
-                    neos-versions: '7.2'
-
+                    neos-versions: '7.3'
+                  - php-versions: '7.4'
+                    neos-versions: '7.3'
+                  - php-versions: '8.0'
+                    neos-versions: '8.0'
         runs-on: ubuntu-latest
 
         steps:

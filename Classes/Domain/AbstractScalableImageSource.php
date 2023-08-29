@@ -19,6 +19,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
 {
     /**
      * @var ImagineInterface
+     *
      * @Flow\Inject
      */
     protected $imagineService;
