@@ -51,7 +51,7 @@ class ResourceImageSource extends AbstractImageSource
     public function dataSrc(): string
     {
         if ($this->package) {
-            $content = file_get_contents('resource://'.$this->package.'/'.$this->path);
+            $content = file_get_contents('resource://' . $this->package . '/' . $this->path);
         } else {
             $content = file_get_contents($this->path);
         }
@@ -59,7 +59,7 @@ class ResourceImageSource extends AbstractImageSource
         if ($content) {
             $extension = pathinfo($this->path, PATHINFO_EXTENSION);
 
-            return 'data:image/'.$extension.';base64,'.base64_encode($content);
+            return 'data:image/' . $extension . ';base64,' . base64_encode($content);
         } else {
             return '';
         }

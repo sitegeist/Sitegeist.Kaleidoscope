@@ -10,7 +10,8 @@
         "neos/imagine": "*"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.78"
+        "phpstan/phpstan": "^1.8",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {
         "psr-4": {
@@ -23,8 +24,11 @@
         }
     },
     "scripts": {
-        "test:stan": ["vendor/bin/phpstan analyse Classes"],
-        "test": ["composer install", "composer  test:stan"]
+        "fix:style": "phpcbf --colors --standard=PSR12 Classes",
+        "test:style": "phpcs --colors -n --standard=PSR12 Classes",
+        "test:stan": "phpstan analyse Classes",
+        "cc": "phpstan clear cache",
+        "test": ["composer install", "composer test:style" , "composer test:stan"]
     },
     "config": {
         "allow-plugins": {
