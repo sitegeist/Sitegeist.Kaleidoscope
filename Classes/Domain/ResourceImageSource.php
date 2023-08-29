@@ -47,4 +47,21 @@ class ResourceImageSource extends AbstractImageSource
 
         return $this->resourceManager->getPublicPackageResourceUriByPath($this->path);
     }
+
+    public function dataSrc(): string
+    {
+        if ($this->package) {
+            $content = file_get_contents('resource://'.$this->package.'/'.$this->path);
+        } else {
+            $content = file_get_contents($this->path);
+        }
+
+        if ($content) {
+            $extension = pathinfo($this->path, PATHINFO_EXTENSION);
+
+            return 'data:image/'.$extension.';base64,'.base64_encode($content);
+        } else {
+            return '';
+        }
+    }
 }

@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace Sitegeist\Kaleidoscope\Domain;
 
+use Neos\Flow\Annotations as Flow;
+
 class DummyImageSource extends AbstractScalableImageSource
 {
+    /**
+     * @var DummyImageGenerator
+     *
+     * @Flow\Inject
+     */
+    protected $dummyImageGenerator;
+
     /**
      * @var string
      */
@@ -96,5 +105,23 @@ class DummyImageSource extends AbstractScalableImageSource
         }
 
         return $this->baseUri.'?'.http_build_query($arguments);
+    }
+
+    public function dataSrc(): string
+    {
+        $w = $this->getCurrentWidth() ?: 600;
+        $h = $this->getCurrentHeight() ?: 400;
+
+        $bg = $this->backgroundColor ?: '#000';
+        $fg = $this->foregroundColor ?: '#fff';
+        $t = $this->text ?: null;
+        $f = $this->targetFormat ?: 'png';
+
+        $dummyImage = $this->dummyImageGenerator->createDummyImage($w, $h, $bg, $fg, $t, $f);
+        if ($dummyImage) {
+            return 'data:image/'.$f.';base64,'.base64_encode($dummyImage->get($f));
+        }
+
+        return '';
     }
 }

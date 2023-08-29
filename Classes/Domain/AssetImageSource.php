@@ -142,4 +142,45 @@ class AssetImageSource extends AbstractScalableImageSource
 
         return $thumbnailData['src'];
     }
+
+    public function dataSrc(): string
+    {
+        if (!$this->asset instanceof AssetInterface) {
+            return '';
+        }
+
+        $width = $this->getCurrentWidth();
+        $height = $this->getCurrentHeight();
+
+        $async = false;
+        $allowCropping = true;
+        $allowUpScaling = false;
+        $thumbnailConfiguration = new ThumbnailConfiguration(
+            $width,
+            $width,
+            $height,
+            $height,
+            $allowCropping,
+            $allowUpScaling,
+            $async,
+            null,
+            $this->targetFormat
+        );
+
+        $thumbnailImage = $this->thumbnailService->getThumbnail($this->asset, $thumbnailConfiguration);
+
+        if ($thumbnailImage instanceof ImageInterface) {
+            if ($stream = $thumbnailImage->getResource()->getStream()) {
+                if (is_resource($stream)) {
+                    if ($content = stream_get_contents($stream)) {
+                        if (is_string($content)) {
+                            return 'data:image/png;base64,'.base64_encode($content);
+                        }
+                    }
+                }
+            }
+        }
+
+        return '';
+    }
 }

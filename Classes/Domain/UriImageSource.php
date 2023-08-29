@@ -39,4 +39,16 @@ class UriImageSource extends AbstractImageSource
     {
         return $this->uri;
     }
+
+    public function dataSrc(): string
+    {
+        $content = file_get_contents($this->uri);
+        if ($content) {
+            $extension = pathinfo($this->uri, PATHINFO_EXTENSION);
+
+            return 'data:image/'.$extension.';base64,'.base64_encode($content);
+        } else {
+            return '';
+        }
+    }
 }

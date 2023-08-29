@@ -25,6 +25,8 @@ interface ImageSourceInterface
 
     public function src(): string;
 
+    public function dataSrc(): string;
+
     public function srcset(string $mediaDescriptors): string;
 
     public function title(): ?string;
