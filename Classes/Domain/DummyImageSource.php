@@ -104,7 +104,7 @@ class DummyImageSource extends AbstractScalableImageSource
             $arguments['f'] = $this->targetFormat;
         }
 
-        return $this->baseUri.'?'.http_build_query($arguments);
+        return $this->baseUri . '?' . http_build_query($arguments);
     }
 
     public function dataSrc(): string
@@ -119,7 +119,7 @@ class DummyImageSource extends AbstractScalableImageSource
 
         $dummyImage = $this->dummyImageGenerator->createDummyImage($w, $h, $bg, $fg, $t, $f);
         if ($dummyImage) {
-            return 'data:image/'.$f.';base64,'.base64_encode($dummyImage->get($f));
+            return 'data:image/' . $f . ';base64,' . base64_encode($dummyImage->get($f));
         }
 
         return '';

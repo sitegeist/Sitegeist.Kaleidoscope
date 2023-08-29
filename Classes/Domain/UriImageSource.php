@@ -46,7 +46,7 @@ class UriImageSource extends AbstractImageSource
         if ($content) {
             $extension = pathinfo($this->uri, PATHINFO_EXTENSION);
 
-            return 'data:image/'.$extension.';base64,'.base64_encode($content);
+            return 'data:image/' . $extension . ';base64,' . base64_encode($content);
         } else {
             return '';
         }

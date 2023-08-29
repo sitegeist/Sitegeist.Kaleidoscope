@@ -174,7 +174,7 @@ class AssetImageSource extends AbstractScalableImageSource
                 if (is_resource($stream)) {
                     if ($content = stream_get_contents($stream)) {
                         if (is_string($content)) {
-                            return 'data:image/png;base64,'.base64_encode($content);
+                            return 'data:image/png;base64,' . base64_encode($content);
                         }
                     }
                 }

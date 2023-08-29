@@ -86,7 +86,7 @@ class DummyImageController extends ActionController
                 } elseif (method_exists($this->response, 'setComponentParameter') && class_exists('\Neos\Flow\Http\Component\SetHeaderComponent')) {
                     $this->response->setComponentParameter(\Neos\Flow\Http\Component\SetHeaderComponent::class, 'Cache-Control', 'max-age=883000000');
                 }
-                $this->response->setContentType('image/'.$f);
+                $this->response->setContentType('image/' . $f);
 
                 return $result;
             } else {

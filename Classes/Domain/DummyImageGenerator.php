@@ -45,8 +45,12 @@ class DummyImageGenerator
     public function initializeObject(): void
     {
         if (isset($this->settings['dummyImage']['overrideImagineDriver']) && $this->settings['dummyImage']['overrideImagineDriver'] !== false) {
-            $className = 'Imagine\\'.$this->settings['dummyImage']['overrideImagineDriver'].'\\Imagine';
-            $this->imagineService = new $className();
+            $className = 'Imagine\\' . $this->settings['dummyImage']['overrideImagineDriver'] . '\\Imagine';
+            if (is_a($className, ImagineInterface::class, true)) {
+                $this->imagineService = new $className();
+            } else {
+                throw new \Exception($className . ' does not implement the ImagineInterface');
+            }
         }
     }
 
@@ -246,7 +250,7 @@ class DummyImageGenerator
     protected function renderText(ImageInterface $image, ColorInterface $textColor, int $width, int $height, string $text, bool $center = false): void
     {
         $initialFontSize = 10;
-        $fontFile = $this->packageManager->getPackage('Sitegeist.Kaleidoscope')->getPackagePath().'Resources/Private/Font/NotoSans-Regular.ttf';
+        $fontFile = $this->packageManager->getPackage('Sitegeist.Kaleidoscope')->getPackagePath() . 'Resources/Private/Font/NotoSans-Regular.ttf';
         $initialFont = $this->imagineService->font($fontFile, $initialFontSize, $textColor);
 
         // scale text to fit the image
@@ -298,7 +302,6 @@ class DummyImageGenerator
                 if (
                     $i === $k ||
                     ($i % 2 && $k % 2)
-
                 ) {
                     $image->draw()->dot(new Point($borderWidth + $i, $borderWidth + $k), $patternColor);
                 }

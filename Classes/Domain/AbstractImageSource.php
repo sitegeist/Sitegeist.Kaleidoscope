@@ -44,14 +44,14 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     protected $logger;
 
     /**
-     * @var array[]
+     * @var mixed[]
      *
      * @Flow\InjectConfiguration(path="thumbnailPresets", package="Neos.Media")
      */
     protected $thumbnailPresets;
 
     /**
-     * @var array[]
+     * @var mixed[]
      *
      * @Flow\InjectConfiguration(path="variantPresets", package="Neos.Media")
      */
@@ -219,11 +219,11 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
                     $width = (int) $matches['width'];
                     $scaleFactor = $width / $this->width();
                     $scaled = $this->scale($scaleFactor);
-                    $srcsetArray[] = $scaled->src().' '.$width.'w';
+                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
                 } elseif (preg_match('/^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches)) {
                     $factor = (float) $matches['factor'];
                     $scaled = $this->scale($factor);
-                    $srcsetArray[] = $scaled->src().' '.$factor.'x';
+                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
                 }
             }
 
@@ -294,9 +294,10 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function allowsCallOfMethod($methodName)
     {
-        if (in_array(
-            $methodName,
-            [
+        if (
+            in_array(
+                $methodName,
+                [
                 'withAlt',
                 'withTitle',
                 'withDimensions',
@@ -321,8 +322,8 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
                 'alt',
                 'width',
                 'height',
-            ]
-        )
+                ]
+            )
         ) {
             return true;
         }
