@@ -9,9 +9,9 @@ use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Flow\Package\PackageManager;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Media\Domain\Model\ImageInterface;
 use Psr\Log\LoggerInterface;
 use Sitegeist\Kaleidoscope\Domain\DummyImageGenerator;
+use Imagine\Image\ImageInterface;
 
 class DummyImageController extends ActionController
 {
