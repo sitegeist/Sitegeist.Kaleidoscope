@@ -45,7 +45,11 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
         if ($preserveAspect === true) {
-            $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
+            if ($this->targetWidth && $this->targetHeight) {
+                $aspect = $this->targetWidth / $this->targetHeight;
+            } else {
+                $aspect = $this->baseWidth / $this->baseHeight;
+            }
             $newSource->targetHeight = (int) round($targetWidth / $aspect);
         }
 
@@ -63,7 +67,11 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
         if ($preserveAspect === true) {
-            $aspect = ($this->targetWidth ?: $this->baseWidth) / ($this->targetHeight ?: $this->baseHeight);
+            if ($this->targetWidth && $this->targetHeight) {
+                $aspect = $this->targetWidth / $this->targetHeight;
+            } else {
+                $aspect = $this->baseWidth / $this->baseHeight;
+            }
             $newSource->targetWidth = (int) round($targetHeight * $aspect);
         }
 
