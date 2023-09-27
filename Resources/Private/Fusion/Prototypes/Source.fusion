@@ -42,9 +42,8 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         renderer = afx`
             <source @if.has={props.imageSource}
                 srcset={props.imageSource.srcset(props.srcset)}
-                srcset.@if.isScalable={props.srcset && props.isScalableSource}
                 sizes={props.sizes}
-                srcset.@if.isScalable={props.sizes && props.isScalableSource}
+                sizes.@if.isScalable={props.sizes && props.isScalableSource}
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
                 type={props.type}
                 media={props.media}
