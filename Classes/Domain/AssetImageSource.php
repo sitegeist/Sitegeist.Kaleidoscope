@@ -117,7 +117,7 @@ class AssetImageSource extends AbstractScalableImageSource
 
         $async = $this->request ? $this->async : false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->allowUpScaling;
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,
@@ -154,7 +154,7 @@ class AssetImageSource extends AbstractScalableImageSource
 
         $async = false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->allowUpScaling;
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,

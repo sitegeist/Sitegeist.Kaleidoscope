@@ -7,12 +7,14 @@ namespace Sitegeist\Kaleidoscope\Domain;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Media\Domain\Model\Adjustment\CropImageAdjustment;
 use Neos\Media\Domain\Model\Adjustment\ImageAdjustmentInterface;
 use Neos\Media\Domain\Model\Adjustment\ResizeImageAdjustment;
 use Neos\Media\Domain\ValueObject\Configuration\Adjustment;
 use Neos\Media\Domain\ValueObject\Configuration\VariantPreset;
 use Neos\Utility\ObjectAccess;
+use Neos\Utility\Arrays;
 use Sitegeist\Kaleidoscope\EelHelpers\ScalableImageSourceHelperInterface;
 
 abstract class AbstractScalableImageSource extends AbstractImageSource implements ScalableImageSourceInterface, ScalableImageSourceHelperInterface
@@ -35,12 +37,17 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
     protected $baseHeight;
 
     /**
+     * @var bool
+     */
+    protected $allowUpScaling = false;
+
+    /**
      * @param int|null $targetWidth
      * @param bool     $preserveAspect
      *
-     * @return ImageSourceInterface
+     * @return ScalableImageSourceInterface
      */
-    public function withWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withWidth(int $targetWidth = null, bool $preserveAspect = false): ScalableImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
@@ -60,9 +67,9 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
      * @param int|null $targetHeight
      * @param bool     $preserveAspect
      *
-     * @return ImageSourceInterface
+     * @return ScalableImageSourceInterface
      */
-    public function withHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withHeight(int $targetHeight = null, bool $preserveAspect = false): ScalableImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
@@ -79,13 +86,31 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
     }
 
     /**
-     * @param float $factor
+     * @param int $targetWidth
+     * @param int $targetHeight
      *
-     * @return ImageSourceInterface
+     * @return ScalableImageSourceInterface
      */
-    public function scale(float $factor): ImageSourceInterface
+    public function withDimensions(int $targetWidth, int $targetHeight): ScalableImageSourceInterface
+    {
+        $newSource = clone $this;
+        $newSource->targetWidth = $targetWidth;
+        $newSource->targetHeight = $targetHeight;
+
+        return $newSource;
+    }
+
+
+    /**
+     * @param float $factor
+     * @param bool $allowUpScaling
+     *
+     * @return ScalableImageSourceInterface
+     */
+    public function scale(float $factor, bool $allowUpScaling = false): ScalableImageSourceInterface
     {
         $scaledHelper = clone $this;
+        $scaledHelper->allowUpScaling = $allowUpScaling;
 
         if ($this->targetWidth && $this->targetHeight) {
             $scaledHelper = $scaledHelper->withDimensions((int) round($factor * $this->targetWidth), (int) round($factor * $this->targetHeight));
@@ -212,5 +237,73 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         }
 
         return $adjustment;
+    }
+
+    /**
+     * Render srcset Attribute for various media descriptors.
+     *
+     * If upscaling is not allowed and the width is greater than the base width,
+     * use the base width.
+     *
+     * @param $mediaDescriptors
+     * @param bool $allowUpScaling
+     *
+     * @return string
+     */
+    public function srcset($mediaDescriptors, bool $allowUpScaling = false): string
+    {
+        $srcsetArray = [];
+
+        if (is_array($mediaDescriptors) || $mediaDescriptors instanceof \Traversable) {
+            $descriptors = $mediaDescriptors;
+        } else {
+            $descriptors = Arrays::trimExplode(',', (string)$mediaDescriptors);
+        }
+
+        $srcsetType = null;
+        $maxScaleFactor = min($this->baseWidth / $this->targetWidth, $this->baseHeight / $this->targetHeight);
+
+        foreach ($descriptors as $descriptor) {
+            $hasDescriptor = preg_match('/^(?<width>[0-9]+)w$|^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches);
+
+            if (!$hasDescriptor) {
+                $this->logger->warning(sprintf('Invalid media descriptor "%s". Missing type "x" or "w"', $descriptor), LogEnvironment::fromMethodName(__METHOD__));
+                continue;
+            }
+
+            if (!$srcsetType) {
+                $srcsetType = isset($matches['width']) ? 'width' : 'factor';
+            } elseif (($srcsetType === 'width' && isset($matches['factor'])) || ($srcsetType === 'factor' && isset($matches['width']))) {
+                $this->logger->warning(sprintf('Mixed media descriptors are not valid: [%s]', implode(', ', is_array($descriptors) ? $descriptors : iterator_to_array($descriptors))), LogEnvironment::fromMethodName(__METHOD__));
+                break;
+            }
+
+            if ($srcsetType === 'width') {
+                $width = (int)$matches['width'];
+                $scaleFactor = $width / $this->width();
+                if (!$allowUpScaling && ($width / $this->baseWidth > 1)) {
+                    $srcsetArray[] = $this->src() . ' ' . $this->baseWidth . 'w';
+                } else {
+                    $scaled = $this->scale($scaleFactor, $allowUpScaling);
+                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
+                }
+            } elseif ($srcsetType === 'factor') {
+                $factor = (float)$matches['factor'];
+                if (
+                    !$allowUpScaling && (
+                        ($this->targetHeight && ($maxScaleFactor < $factor)) ||
+                        ($this->targetWidth && ($maxScaleFactor < $factor))
+                    )
+                ) {
+                    $scaled = $this->scale($maxScaleFactor, $allowUpScaling);
+                    $srcsetArray[] = $scaled->src() . ' ' . $maxScaleFactor . 'x';
+                } else {
+                    $scaled = $this->scale($factor, $allowUpScaling);
+                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
+                }
+            }
+        }
+
+        return implode(', ', array_unique($srcsetArray));
     }
 }

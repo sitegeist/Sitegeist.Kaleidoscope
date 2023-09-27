@@ -64,6 +64,8 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     imgAttributes = Neos.Fusion:DataStructure
     content = ''
     renderDimensionAttributes = true
+    allowSrcsetUpScaling = false
+    preserveAspect = true
 
     #
     # put the values that shall be applied to sources automatically to the context
@@ -83,9 +85,10 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
-        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
-        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
-        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+        imageSource.@process.applyDimensions = ${(props.width && props.height) ? value.withDimensions(props.width, props.height) : value}
+        imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width, props.preserveAspect) : value}
+        imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height, props.preserveAspect) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
 
         srcset = ${props.srcset}
         sizes = ${props.sizes}
@@ -99,6 +102,8 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         imgAttributes = ${props.imgAttributes}
         content = ${props.content}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
+        allowSrcsetUpscaling = ${props.allowSrcsetUpscaling}
+        preserveAspect = ${props.preserveAspect}
 
         renderer = afx`
             <picture class={props.class} {...props.attributes}>
@@ -114,6 +119,8 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                         srcset={source.srcset ? source.srcset : props.srcset}
                         sizes={source.sizes ? source.sizes : props.sizes}
                         renderDimensionAttributes={props.renderDimensionAttributes}
+                        allowSrcsetUpScaling={props.allowSrcsetUpScaling}
+                        preserveAspect={props.preserveAspect}
                     />
                 </Neos.Fusion:Collection>
                 <Neos.Fusion:Collection
@@ -135,6 +142,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     title={props.title}
                     attributes={props.imgAttributes}
                     renderDimensionAttributes={props.renderDimensionAttributes}
+                    preserveAspect={props.preserveAspect}
                 />
             </picture>
         `
