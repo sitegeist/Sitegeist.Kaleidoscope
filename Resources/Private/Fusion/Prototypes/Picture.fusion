@@ -3,12 +3,12 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     @styleguide {
         props {
             imageSource = Sitegeist.Kaleidoscope:DummyImageSource
-            sources = Neos.Fusion:RawArray {
-                1 = Neos.Fusion:RawArray {
+            sources = Neos.Fusion:DataStructure {
+                1 = Neos.Fusion:DataStructure {
                     srcset = '1x, 1.5x, 2x'
                     media = 'screen and (min-width: 1600px)'
                 }
-                2 = Neos.Fusion:RawArray {
+                2 = Neos.Fusion:DataStructure {
                     imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
                         text = "im am in webp format"
                         format = 'webp'
@@ -18,13 +18,13 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                     type = 'image/webp'
                     media = 'screen and (max-width: 1599px)'
                 }
-                3 = Neos.Fusion:RawArray {
+                3 = Neos.Fusion:DataStructure {
                     imageSource = Sitegeist.Kaleidoscope:DummyImageSource {
                         text = "im am here for printing"
                     }
                     media = 'print'
                 }
-                4 = Neos.Fusion:RawArray {
+                4 = Neos.Fusion:DataStructure {
                     srcset = '400w, 800w, 1600w'
                     media = 'screen and (min-width: 2600px)'
                     width = 800
