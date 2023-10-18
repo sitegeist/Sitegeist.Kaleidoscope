@@ -29,7 +29,7 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
 //        <table>
 //            <thead>
 //                <th></th>
-//                <Neos.Fusion:Loop items={props.dimensions} itemName="width" @children="itemRenderer">
+//                <Neos.Fusion:Loop items={props.dimensions} itemName="width">
 //                    <th>W {width}</th>
 //                </Neos.Fusion:Loop>
 //            </thead>
@@ -37,7 +37,7 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
 //                <Neos.Fusion:Loop items={props.dimensions} itemName="height" @children="itemRenderer">
 //                    <tr>
 //                        <th>H {height}</th>
-//                        <Neos.Fusion:Loop items={props.dimensions} itemName="width" @children="itemRenderer">
+//                        <Neos.Fusion:Loop items={props.dimensions} itemName="width">
 //                            <td>
 //                                <img src={props.imageSource.setWidth(width).setHeight(height)} width={width} height={height} />
 //                            </td>
