@@ -49,7 +49,7 @@ We use semantic versioning so every breaking change will increase the major-vers
 
 ## Configuration
 
-Some image libraries have problems with WebP image formats. To avoid problems, a fallback image 
+Some image libraries have problems with WebP image formats. To avoid problems, a fallback image
 format can be configured, which will be used for rendering if the requested format fails. The default value is `png`.
 
 ```yaml
@@ -59,8 +59,8 @@ Sitegeist:
       fallbackFormat: 'png'
 ```
 
-Moreover, as some image libraries (like Vips) also have problems with the generation of the dummy image, the driver can be overriden. 
-By default, this value is `false` and the default driver as configured in `Neos.Imagine` is used. 
+Moreover, as some image libraries (like Vips) also have problems with the generation of the dummy image, the driver can be overriden.
+By default, this value is `false` and the default driver as configured in `Neos.Imagine` is used.
 Possible values are `Gd`, `Imagick`, `Gmagick` or `Vips`.
 
 ```yaml
@@ -86,10 +86,10 @@ Props:
 - `imageSource`: the imageSource to render
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
-- `loading`: (optional, default "lazy") loading attribute for the img tag 
+- `loading`: (optional, default "lazy") loading attribute for the img tag
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
-- `width`: (optional) the base width, will be applied to the `imageSource`    
-- `height`: (optional) the base height, will be applied to the `imageSource`    
+- `width`: (optional) the base width, will be applied to the `imageSource`
+- `height`: (optional) the base height, will be applied to the `imageSource`
 - `alt`: alt-attribute for the img tag (default "")
 - `title`: title attribute for the img tag
 - `class`: class attribute for the img tag (deprecated in favor of attributes.class)
@@ -124,7 +124,7 @@ renderer = afx`
 ```
 
 ### `Sitegeist.Kaleidoscope:Picture`
-`
+
 Render a `picture`-tag with various sources.
 
 Props:
@@ -136,14 +136,14 @@ Props:
    - `media`: (optional) the media attribute for this source
    - `type`: (optional) the type attribute for this source
    - `format`: (optional) the image-format for the source like `webp` or `png`, is applied to `imageSource` and `type`
-   - `width`: (optional) the base width, will be applied to the `imageSource`    
-   - `height`: (optional) the base height, will be applied to the `imageSource`   
+   - `width`: (optional) the base width, will be applied to the `imageSource`
+   - `height`: (optional) the base height, will be applied to the `imageSource`
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
 - `formats`: (optional) image formats that will be rendered as sources of separate type (string or array)
 - `width`: (optional) the base width, will be applied to the `imageSource`
-- `height`: (optional) the base height, will be applied to the `imageSource`   
-- `loading`: (optional, default "lazy") loading attribute for the img tag 
+- `height`: (optional) the base height, will be applied to the `imageSource`
+- `loading`: (optional, default "lazy") loading attribute for the img tag
 - `alt`: alt-attribute for the img tag
 - `title`: title attribute for the img tag
 - `attributes`: picture-tag-attributes, will override any automatically rendered ones
@@ -155,7 +155,7 @@ Props:
 #### Picture multiple formats:
 
 The following code will render a picture with an img-tag and two additional
-source-tags for the formats webp and png in addition to the default img. 
+source-tags for the formats webp and png in addition to the default img.
 
 ```
 imageSource = Sitegeist.Kaleidoscope:DummyImageSource
@@ -180,23 +180,23 @@ imageSource = Sitegeist.Kaleidoscope:DummyImageSource
 
 renderer = afx`
     <Sitegeist.Kaleidoscope:Picture imageSource={props.imageSource} >
-        <Sitegeist.Kaleidoscope:Source 
+        <Sitegeist.Kaleidoscope:Source
             format="webp"
             srcset='320w, 480w, 800w'
-            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw' 
+            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw'
             />
-        <Sitegeist.Kaleidoscope:Source 
-            srcset="1x, 1.5x, 2x" 
+        <Sitegeist.Kaleidoscope:Source
+            srcset="1x, 1.5x, 2x"
             media="screen and (min-width: 1600px)"
             />
-        <Sitegeist.Kaleidoscope:Source 
+        <Sitegeist.Kaleidoscope:Source
             srcset="320w, 480w, 800w"
             sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 100vw"
             media="screen and (max-width: 1599px)"
             />
-        <Sitegeist.Kaleidoscope:Source 
-            imageSource={props.alternatePintImage} 
-            media="print" 
+        <Sitegeist.Kaleidoscope:Source
+            imageSource={props.alternatePintImage}
+            media="print"
             />
     </Sitegeist.Kaleidoscope:Picture>
 `
@@ -212,8 +212,8 @@ Props:
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array, inherited from picture)
 - `sizes`: (optional) sizes attribute (string or array, inherited from picture)
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to `imageSource` and `type`
-- `width`: (optional) the base width, will be applied to the `imageSource`    
-- `height`: (optional) the base height, will be applied to the `imageSource`    
+- `width`: (optional) the base width, will be applied to the `imageSource`
+- `height`: (optional) the base height, will be applied to the `imageSource`
 - `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.withFormat()`
 - `media`: (optional) the media query for the given source
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the source-tag when the data is available from the imageSource
@@ -268,15 +268,15 @@ variants are needed. This frontend know-how is now encapsulated into the present
 
 ## Dynamically enable/disable the lazy rendering
 
-To optimize the initial load time lazy loading should be disabled for the first contents but be 
-enabled for others. This can be implemented by enabling the `lazy`ness in the ContentCase prototype 
+To optimize the initial load time lazy loading should be disabled for the first contents but be
+enabled for others. This can be implemented by enabling the `lazy`ness in the ContentCase prototype
 depending on whether or not the current node is the first content in the main collection.
 
 ```
 renderer = Neos.Neos:ContentCollection {
     nodePath = 'main'
 
-    // configure seperate iterator for main content 
+    // configure seperate iterator for main content
     content.iterationName = 'mainContentIterator'
 
     // enable lazynes for first items
@@ -332,7 +332,7 @@ Arguments:
 - `uri`: The uri that will be rendered
 - `alt`: The alt attribute if not specified otherwise (default null)
 - `title`: The title attribute if not specified otherwise (default null)
-- 
+-
 ### `Sitegeist.Kaleidoscope:ResourceImageSource`
 
 Arguments:
@@ -361,7 +361,7 @@ Methods of ImageSource-Helpers that are accessible via Eel:
 - `src()`: Render a src attribute for the given ImageSource-object
 - `srcset( array of descriptors )`: render a srcset attribute for the ImageSource with given media descriptors like `2.x` or `800w`
 - `width()`: The current width of the ImageSource if available
-- `height()`: The current height of the ImageSource if available 
+- `height()`: The current height of the ImageSource if available
 - `alt()`: The alt value of the ImageSource if available
 - `title()`: The title value of the ImageSource if available
 
@@ -369,7 +369,7 @@ deprecated methods:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
-- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if 
+- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`

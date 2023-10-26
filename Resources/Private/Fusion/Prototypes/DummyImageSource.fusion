@@ -29,21 +29,21 @@ prototype(Sitegeist.Kaleidoscope:DummyImageSource) {
 //        <table>
 //            <thead>
 //                <th></th>
-//                <Neos.Fusion:Collection collection={props.dimensions} itemName="width" @children="itemRenderer">
+//                <Neos.Fusion:Loop items={props.dimensions} itemName="width">
 //                    <th>W {width}</th>
-//                </Neos.Fusion:Collection>
+//                </Neos.Fusion:Loop>
 //            </thead>
 //            <tbody>
-//                <Neos.Fusion:Collection collection={props.dimensions} itemName="height" @children="itemRenderer">
+//                <Neos.Fusion:Loop items={props.dimensions} itemName="height" @children="itemRenderer">
 //                    <tr>
 //                        <th>H {height}</th>
-//                        <Neos.Fusion:Collection collection={props.dimensions} itemName="width" @children="itemRenderer">
+//                        <Neos.Fusion:Loop items={props.dimensions} itemName="width">
 //                            <td>
 //                                <img src={props.imageSource.setWidth(width).setHeight(height)} width={width} height={height} />
 //                            </td>
-//                        </Neos.Fusion:Collection>
+//                        </Neos.Fusion:Loop>
 //                    </tr>
-//                </Neos.Fusion:Collection>
+//                </Neos.Fusion:Loop>
 //            </tbody>
 //        </table>
 //    `
