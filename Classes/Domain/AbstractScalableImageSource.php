@@ -261,7 +261,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         }
 
         $srcsetType = null;
-        $maxScaleFactor = min($this->baseWidth / $this->targetWidth, $this->baseHeight / $this->targetHeight);
+        $maxScaleFactor = min($this->baseWidth / $this->width(), $this->baseHeight / $this->height());
 
         foreach ($descriptors as $descriptor) {
             $hasDescriptor = preg_match('/^(?<width>[0-9]+)w$|^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches);
