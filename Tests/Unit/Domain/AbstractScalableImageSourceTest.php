@@ -46,7 +46,7 @@ class AbstractScalableImageSourceTest extends BaseTestCase
         $dummy = $this->getDummyImageSource(400, 400);
         $this->assertEquals(
             'https://example.com?w=200&h=200&bg=999&fg=fff&t=Test 200w, https://example.com?w=400&h=400&bg=999&fg=fff&t=Test 400w, https://example.com?w=600&h=600&bg=999&fg=fff&t=Test 600w',
-            $dummy->srcset('200w, 400w, 600w', allowUpScaling: true)
+            $dummy->srcset('200w, 400w, 600w', true)
         );
     }
 
