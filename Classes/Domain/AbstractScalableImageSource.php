@@ -264,7 +264,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
         $maxScaleFactor = min($this->baseWidth / $this->width(), $this->baseHeight / $this->height());
 
         foreach ($descriptors as $descriptor) {
-            $hasDescriptor = preg_match('/^(?<width>[0-9]+)w$|^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches);
+            $hasDescriptor = preg_match('/^(?<width>[0-9]+)w$|^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches, PREG_UNMATCHED_AS_NULL);
 
             if (!$hasDescriptor) {
                 $this->logger->warning(sprintf('Invalid media descriptor "%s". Missing type "x" or "w"', $descriptor), LogEnvironment::fromMethodName(__METHOD__));
@@ -275,7 +275,7 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
                 $srcsetType = isset($matches['width']) ? 'width' : 'factor';
             } elseif (($srcsetType === 'width' && isset($matches['factor'])) || ($srcsetType === 'factor' && isset($matches['width']))) {
                 $this->logger->warning(sprintf('Mixed media descriptors are not valid: [%s]', implode(', ', is_array($descriptors) ? $descriptors : iterator_to_array($descriptors))), LogEnvironment::fromMethodName(__METHOD__));
-                break;
+                continue;
             }
 
             if ($srcsetType === 'width') {
