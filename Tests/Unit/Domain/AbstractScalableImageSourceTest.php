@@ -38,23 +38,22 @@ class AbstractScalableImageSourceTest extends BaseTestCase
         $dummy = new DummyImageSource('https://example.com', 'Test', 'Test', 400, 400, '999', 'fff', 'Test');
         $this->assertEquals(
             'https://example.com?w=200&h=200&bg=999&fg=fff&t=Test 200w, https://example.com?w=400&h=400&bg=999&fg=fff&t=Test 400w, https://example.com?w=600&h=600&bg=999&fg=fff&t=Test 600w',
-            $dummy->srcset('200w, 400w, 600w')
+            $dummy->srcset('200w, 400w, 600w', allowUpScaling: true)
         );
     }
 
     /**
      * If the actual image is smaller than the requested size, then the image should be returned in its original size.
      * @test
-     * @todo
      */
-    #public function srcsetWithWidthShouldOutputOnlyAvailableSources()
-    #{
-    #    $dummy = new DummyImageSource('https://example.com', 'Test', 'Test', 500, 500, '999', 'fff', 'Test');
-    #    $this->assertEquals(
-    #        'https://example.com?w=200&h=200&bg=999&fg=fff&t=Test 200w, https://example.com?w=400&h=400&bg=999&fg=fff&t=Test 400w, https://example.com?w=500&h=500&bg=999&fg=fff&t=Test 500w',
-    #        $dummy->srcset('200w, 400w, 600w')
-    #    );
-    #}
+    public function srcsetWithWidthShouldOutputOnlyAvailableSources()
+    {
+        $dummy = new DummyImageSource('https://example.com', 'Test', 'Test', 500, 500, '999', 'fff', 'Test');
+        $this->assertEquals(
+            'https://example.com?w=200&h=200&bg=999&fg=fff&t=Test 200w, https://example.com?w=400&h=400&bg=999&fg=fff&t=Test 400w, https://example.com?w=500&h=500&bg=999&fg=fff&t=Test 500w',
+            $dummy->srcset('200w, 400w, 600w')
+        );
+    }
 
     /**
      * @test
@@ -72,15 +71,14 @@ class AbstractScalableImageSourceTest extends BaseTestCase
     /**
      * If the actual image is smaller than the requested size, then the image should be returned in its original size.
      * @test
-     * @todo
      */
-    #public function srcsetWithRatioShouldOutputOnlyAvailableSources()
-    #{
-    #    $dummy = new DummyImageSource('https://example.com', 'Test', 'Test', 30, 12, '999', 'fff', 'Test');
-    #    $copy = $dummy->withWidth(20, true);
-    #    $this->assertEquals(
-    #        'https://example.com?w=20&h=8&bg=999&fg=fff&t=Test 1x, https://example.com?w=30&h=12&bg=999&fg=fff&t=Test 1.5x',
-    #        $copy->srcset('1x, 2x')
-    #    );
-    #}
+    public function srcsetWithRatioShouldOutputOnlyAvailableSources()
+    {
+        $dummy = new DummyImageSource('https://example.com', 'Test', 'Test', 30, 12, '999', 'fff', 'Test');
+        $copy = $dummy->withWidth(20, true);
+        $this->assertEquals(
+            'https://example.com?w=20&h=8&bg=999&fg=fff&t=Test 1x, https://example.com?w=30&h=12&bg=999&fg=fff&t=Test 1.5x',
+            $copy->srcset('1x, 2x')
+        );
+    }
 }
