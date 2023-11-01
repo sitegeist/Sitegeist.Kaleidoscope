@@ -78,65 +78,52 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         __format = ${this.format}
     }
 
-    renderer = Neos.Fusion:Component {
-        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
-
+    @private {
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
-        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
-        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
-        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+        imageSource.@if.has = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+        imageSource.@process.applyDimensions = ${(props.width && props.height) ? value.withDimensions(props.width, props.height) : value}
+        imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
+    }
 
-        srcset = ${props.srcset}
-        sizes = ${props.sizes}
-        loading = ${props.loading}
-        sources = ${props.sources}
-        formats = ${props.formats}
-        alt = ${props.alt}
-        title = ${props.title}
-        class = ${props.class}
-        attributes = ${props.attributes}
-        imgAttributes = ${props.imgAttributes}
-        content = ${props.content}
-        renderDimensionAttributes = ${props.renderDimensionAttributes}
-
-        renderer = afx`
-            <picture class={props.class} {...props.attributes}>
-                {props.content}
-                <Neos.Fusion:Loop items={props.sources} itemName="source" @if.has={props.sources}>
-                    <Sitegeist.Kaleidoscope:Source
-                        imageSource={source.imageSource ? source.imageSource : props.imageSource}
-                        type={source.type}
-                        media={source.media}
-                        format={source.format}
-                        width={source.width}
-                        height={source.height}
-                        srcset={source.srcset ? source.srcset : props.srcset}
-                        sizes={source.sizes ? source.sizes : props.sizes}
-                        renderDimensionAttributes={props.renderDimensionAttributes}
-                    />
-                </Neos.Fusion:Loop>
-                <Neos.Fusion:Loop
-                    @if.has={props.imageSource && props.formats}
-                    items={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
-                    itemName="format"
-                >
-                    <Sitegeist.Kaleidoscope:Source
-                        imageSource={props.imageSource}
-                        format={String.trim(format)}
-                    />
-                </Neos.Fusion:Loop>
-                <Sitegeist.Kaleidoscope:Image
-                    imageSource={props.imageSource}
-                    sizes={props.sizes}
-                    srcset={props.srcset}
-                    loading={props.loading}
-                    alt={props.alt}
-                    title={props.title}
-                    attributes={props.imgAttributes}
+    renderer = afx`
+        <picture class={props.class} {...props.attributes} @if.has={private.imageSource}>
+            {props.content}
+            <Neos.Fusion:Loop items={props.sources} itemName="source" @if.has={props.sources}>
+                <Sitegeist.Kaleidoscope:Source
+                    imageSource={source.imageSource ? source.imageSource : private.imageSource}
+                    type={source.type}
+                    media={source.media}
+                    format={source.format}
+                    width={source.width}
+                    height={source.height}
+                    srcset={source.srcset ? source.srcset : props.srcset}
+                    sizes={source.sizes ? source.sizes : props.sizes}
                     renderDimensionAttributes={props.renderDimensionAttributes}
                 />
-            </picture>
-        `
-    }
+            </Neos.Fusion:Loop>
+            <Neos.Fusion:Loop
+                @if.has={private.imageSource && props.formats}
+                items={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
+                itemName="format"
+            >
+                <Sitegeist.Kaleidoscope:Source
+                    imageSource={private.imageSource}
+                    format={String.trim(format)}
+                />
+            </Neos.Fusion:Loop>
+            <Sitegeist.Kaleidoscope:Image
+                imageSource={private.imageSource}
+                sizes={props.sizes}
+                srcset={props.srcset}
+                loading={props.loading}
+                alt={props.alt}
+                title={props.title}
+                attributes={props.imgAttributes}
+                renderDimensionAttributes={props.renderDimensionAttributes}
+            />
+        </picture>
+    `
 }
