@@ -50,7 +50,7 @@ class AssetImageSource extends AbstractScalableImageSource
      *
      * @var string|null
      */
-    protected $srcCache = null;
+    private $srcCache = null;
 
     /**
      * @param ImageInterface     $asset
@@ -150,5 +150,10 @@ class AssetImageSource extends AbstractScalableImageSource
         $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
 
         return $this->srcCache;
+    }
+
+    public function __clone(): void
+    {
+        $this->srcCache = null;
     }
 }
