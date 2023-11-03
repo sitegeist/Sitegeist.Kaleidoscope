@@ -5,51 +5,50 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     }
 
     imageSource = null
+    imageSource.@process.contextFallback = ${value || __imageSource}
+
     srcset = null
+    srcset.@process.contextFallback = ${value || __srcset}
+
     sizes = null
+    sizes.@process.contextFallback = ${value || __sizes}
+
     width = null
+    width.@process.contextFallback = ${value || __width}
+
     height = null
+    height.@process.contextFallback = ${value || __height}
+
     format = null
+    format.@process.contextFallback = ${value || __format}
+
     type = null
     media = null
     renderDimensionAttributes = true
 
-    renderer = Neos.Fusion:Component {
+    @private {
+        isScalableSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
 
-        @context {
-            imageSource = ${props.imageSource || __imageSource}
-            format = ${props.format || __format}
-            width = ${props.width || __width}
-            height = ${props.height || __height}
-            srcset = ${props.srcset || __srcset}
-            sizes = ${props.sizes || __sizes}
-        }
-
-        @if.hasImageSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
-        isScalableSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
-
-        imageSource = ${imageSource}
-        imageSource.@process.applyWidth = ${width ? value.withWidth(width) : value}
-        imageSource.@process.applyHeight = ${height ? value.withHeight(height) : value}
+        imageSource = ${props.imageSource}
+        imageSource.@if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+        imageSource.@process.applyDimensions = ${(width && height) ? value.withDimensions(width, height) : value}
+        imageSource.@process.applyWidth = ${(width && !height) ? value.withWidth(width) : value}
+        imageSource.@process.applyHeight = ${(height && !width) ? value.withHeight(height) : value}
         imageSource.@process.applyFormat = ${format ? value.withFormat(format) : value}
 
-        type = ${format ? 'image/' + format : props.type}
-        srcset = ${srcset}
-        sizes = ${sizes}
-        media = ${props.media}
-        renderDimensionAttributes = ${props.renderDimensionAttributes}
-
-        renderer = afx`
-            <source @if.has={props.imageSource}
-                srcset={props.imageSource.srcset(props.srcset)}
-                sizes={props.sizes}
-                sizes.@if.isScalable={props.sizes && props.isScalableSource}
-                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-                type={props.type}
-                media={props.media}
-                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
-                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
-            />
-        `
+        type = ${props.format ? 'image/' + props.format : props.type}
     }
+
+    renderer = afx`
+        <source @if.has={private.imageSource}
+            srcset={private.imageSource.srcset(props.srcset)}
+            sizes={props.sizes}
+            sizes.@if.isScalable={props.sizes && private.isScalableSource}
+            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+            type={private.type}
+            media={props.media}
+            width={props.renderDimensionAttributes ? private.imageSource.currentWidth : null}
+            height={props.renderDimensionAttributes ? private.imageSource.currentHeight : null}
+        />
+    `
 }
