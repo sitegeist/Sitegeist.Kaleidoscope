@@ -6,5 +6,5 @@ namespace Sitegeist\Kaleidoscope\Domain;
 
 interface ScalableImageSourceInterface extends ImageSourceInterface
 {
-    public function scale(float $factor): ImageSourceInterface;
+    public function scale(float $factor, bool $allowUpScaling = false): ImageSourceInterface;
 }

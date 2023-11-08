@@ -13,6 +13,8 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     type = null
     media = null
     renderDimensionAttributes = true
+    allowSrcsetUpScaling = false
+    preserveAspect = true
 
     renderer = Neos.Fusion:Component {
 
@@ -29,19 +31,21 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         isScalableSource = ${imageSource && Type.instance(imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
 
         imageSource = ${imageSource}
-        imageSource.@process.applyWidth = ${width ? value.withWidth(width) : value}
-        imageSource.@process.applyHeight = ${height ? value.withHeight(height) : value}
-        imageSource.@process.applyFormat = ${format ? value.withFormat(format) : value}
+        imageSource.@process.applyDimensions = ${(props.width && props.height) ? value.withDimensions(props.width, props.height) : value}
+        imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width, props.preserveAspect) : value}
+        imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height, props.preserveAspect) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
 
         type = ${format ? 'image/' + format : props.type}
         srcset = ${srcset}
         sizes = ${sizes}
         media = ${props.media}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
+        allowSrcsetUpScaling = ${props.allowSrcsetUpScaling}
 
         renderer = afx`
             <source @if.has={props.imageSource}
-                srcset={props.imageSource.srcset(props.srcset)}
+                srcset={props.imageSource.srcset(props.srcset, props.allowSrcsetUpScaling)}
                 sizes={props.sizes}
                 sizes.@if.isScalable={props.sizes && props.isScalableSource}
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}

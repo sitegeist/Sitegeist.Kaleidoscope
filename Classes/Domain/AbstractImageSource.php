@@ -7,7 +7,6 @@ namespace Sitegeist\Kaleidoscope\Domain;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
-use Neos\Utility\Arrays;
 use Psr\Log\LoggerInterface;
 use Sitegeist\Kaleidoscope\EelHelpers\ImageSourceHelperInterface;
 
@@ -197,39 +196,15 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     }
 
     /**
-     * Render sourceset Attribute for various media descriptors.
+     * Render sourceset Attribute non-scalable media.
      *
      * @param mixed $mediaDescriptors
+     * @param bool $allowUpScaling
      *
      * @return string
      */
-    public function srcset($mediaDescriptors): string
+    public function srcset($mediaDescriptors, bool $allowUpScaling = false): string
     {
-        if ($this instanceof ScalableImageSourceInterface) {
-            $srcsetArray = [];
-
-            if (is_array($mediaDescriptors) || $mediaDescriptors instanceof \Traversable) {
-                $descriptors = $mediaDescriptors;
-            } else {
-                $descriptors = Arrays::trimExplode(',', (string) $mediaDescriptors);
-            }
-
-            foreach ($descriptors as $descriptor) {
-                if (preg_match('/^(?<width>[0-9]+)w$/u', $descriptor, $matches)) {
-                    $width = (int) $matches['width'];
-                    $scaleFactor = $width / $this->width();
-                    $scaled = $this->scale($scaleFactor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
-                } elseif (preg_match('/^(?<factor>[0-9\\.]+)x$/u', $descriptor, $matches)) {
-                    $factor = (float) $matches['factor'];
-                    $scaled = $this->scale($factor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
-                }
-            }
-
-            return implode(', ', $srcsetArray);
-        }
-
         return $this->src();
     }
 
