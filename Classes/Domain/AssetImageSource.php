@@ -137,7 +137,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 
@@ -177,7 +177,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 
