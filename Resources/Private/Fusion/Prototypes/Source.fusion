@@ -10,6 +10,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     width = null
     height = null
     format = null
+    quality = null
     type = null
     media = null
     renderDimensionAttributes = true
@@ -19,6 +20,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         @context {
             imageSource = ${props.imageSource || __imageSource}
             format = ${props.format || __format}
+            quality = ${props.quality || __quality}
             width = ${props.width || __width}
             height = ${props.height || __height}
             srcset = ${props.srcset || __srcset}
@@ -32,6 +34,7 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         imageSource.@process.applyWidth = ${width ? value.withWidth(width) : value}
         imageSource.@process.applyHeight = ${height ? value.withHeight(height) : value}
         imageSource.@process.applyFormat = ${format ? value.withFormat(format) : value}
+        imageSource.@process.applyQuality = ${quality ? value.withQuality(quality) : value}
 
         type = ${format ? 'image/' + format : props.type}
         srcset = ${srcset}

@@ -124,6 +124,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     width = null
     height = null
     format = null
+    quality = null
     attributes = Neos.Fusion:DataStructure
     renderDimensionAttributes = true
 
@@ -136,6 +137,7 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
         imageSource.@process.applyWidth = ${props.width ? value.withWidth(props.width) : value}
         imageSource.@process.applyHeight = ${props.height ? value.withHeight(props.height) : value}
         imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
+        imageSource.@process.applyQuality = ${props.quality ? value.withQuality(props.quality) : value}
 
         srcset = ${props.srcset}
         sizes = ${props.sizes}

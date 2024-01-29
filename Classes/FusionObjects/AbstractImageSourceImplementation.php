@@ -26,6 +26,14 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
     }
 
     /**
+     * @return int|null
+     */
+    public function getQuality(): ?int
+    {
+        return $this->fusionValue('quality');
+    }
+
+    /**
      * @return string|null
      */
     public function getFormat(): ?string
@@ -92,6 +100,10 @@ abstract class AbstractImageSourceImplementation extends AbstractFusionObject
 
         if ($height = $this->getHeight()) {
             $helper = $helper->withHeight($height);
+        }
+
+        if ($quality = $this->getQuality()) {
+            $helper = $helper->withQuality($quality);
         }
 
         if ($format = $this->getFormat()) {
