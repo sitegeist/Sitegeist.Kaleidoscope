@@ -36,6 +36,11 @@ class DummyImageSource extends AbstractScalableImageSource
     protected $baseUri;
 
     /**
+     * @var bool
+     */
+    private $allowUpScaling;
+
+    /**
      * @param string      $baseUri
      * @param string|null $title
      * @param string|null $alt
@@ -45,7 +50,7 @@ class DummyImageSource extends AbstractScalableImageSource
      * @param string|null $foregroundColor
      * @param string|null $text
      */
-    public function __construct(string $baseUri, ?string $title = null, ?string $alt = null, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null)
+    public function __construct(string $baseUri, ?string $title = null, ?string $alt = null, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null, bool $allowUpScaling = true)
     {
         parent::__construct($title, $alt);
         $this->baseUri = $baseUri;
@@ -54,6 +59,12 @@ class DummyImageSource extends AbstractScalableImageSource
         $this->backgroundColor = $backgroundColor ?? '999';
         $this->foregroundColor = $foregroundColor ?? 'fff';
         $this->text = $text ?? '';
+        $this->allowUpScaling = $allowUpScaling;
+    }
+
+    public function supportsUpscaling(): bool
+    {
+        return $this->allowUpScaling;
     }
 
     /**

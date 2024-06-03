@@ -14,7 +14,6 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     type = null
     media = null
     renderDimensionAttributes = true
-    allowSrcsetUpScaling = false
     preserveAspect = true
 
     renderer = Neos.Fusion:Component {
@@ -44,11 +43,10 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
         sizes = ${sizes}
         media = ${props.media}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
-        allowSrcsetUpScaling = ${props.allowSrcsetUpScaling}
 
         renderer = afx`
             <source @if.has={props.imageSource}
-                srcset={props.imageSource.srcset(props.srcset, props.allowSrcsetUpScaling)}
+                srcset={props.imageSource.srcset(props.srcset)}
                 sizes={props.sizes}
                 sizes.@if.isScalable={props.sizes && props.isScalableSource}
                 sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}

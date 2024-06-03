@@ -65,7 +65,6 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     imgAttributes = Neos.Fusion:DataStructure
     content = ''
     renderDimensionAttributes = true
-    allowSrcsetUpScaling = false
     preserveAspect = true
 
     #
@@ -105,7 +104,6 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         imgAttributes = ${props.imgAttributes}
         content = ${props.content}
         renderDimensionAttributes = ${props.renderDimensionAttributes}
-        allowSrcsetUpscaling = ${props.allowSrcsetUpscaling}
         preserveAspect = ${props.preserveAspect}
 
         renderer = afx`
@@ -123,7 +121,6 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                         srcset={source.srcset ? source.srcset : props.srcset}
                         sizes={source.sizes ? source.sizes : props.sizes}
                         renderDimensionAttributes={props.renderDimensionAttributes}
-                        allowSrcsetUpScaling={props.allowSrcsetUpScaling}
                         preserveAspect={props.preserveAspect}
                     />
                 </Neos.Fusion:Loop>

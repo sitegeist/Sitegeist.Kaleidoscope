@@ -37,11 +37,6 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
     protected $baseHeight;
 
     /**
-     * @var bool
-     */
-    protected $allowUpScaling = false;
-
-    /**
      * @param int|null $targetWidth
      * @param bool     $preserveAspect
      *
@@ -103,14 +98,12 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
 
     /**
      * @param float $factor
-     * @param bool $allowUpScaling
      *
      * @return ScalableImageSourceInterface
      */
-    public function scale(float $factor, bool $allowUpScaling = false): ScalableImageSourceInterface
+    public function scale(float $factor): ScalableImageSourceInterface
     {
         $scaledHelper = clone $this;
-        $scaledHelper->allowUpScaling = $allowUpScaling;
 
         if ($this->targetWidth && $this->targetHeight) {
             $scaledHelper = $scaledHelper->withDimensions((int) round($factor * $this->targetWidth), (int) round($factor * $this->targetHeight));
@@ -246,11 +239,10 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
      * use the base width.
      *
      * @param $mediaDescriptors
-     * @param bool $allowUpScaling
      *
      * @return string
      */
-    public function srcset($mediaDescriptors, bool $allowUpScaling = false): string
+    public function srcset($mediaDescriptors): string
     {
         $srcsetArray = [];
 
@@ -281,24 +273,24 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
             if ($srcsetType === 'width') {
                 $width = (int)$matches['width'];
                 $scaleFactor = $width / $this->width();
-                if (!$allowUpScaling && ($width / $this->baseWidth > 1)) {
+                if (!$this->supportsUpscaling() && ($width / $this->baseWidth > 1)) {
                     $srcsetArray[] = $this->src() . ' ' . $this->baseWidth . 'w';
                 } else {
-                    $scaled = $this->scale($scaleFactor, $allowUpScaling);
+                    $scaled = $this->scale($scaleFactor);
                     $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
                 }
             } elseif ($srcsetType === 'factor') {
                 $factor = (float)$matches['factor'];
                 if (
-                    !$allowUpScaling && (
+                    !$this->supportsUpscaling() && (
                         ($this->targetHeight && ($maxScaleFactor < $factor)) ||
                         ($this->targetWidth && ($maxScaleFactor < $factor))
                     )
                 ) {
-                    $scaled = $this->scale($maxScaleFactor, $allowUpScaling);
+                    $scaled = $this->scale($maxScaleFactor);
                     $srcsetArray[] = $scaled->src() . ' ' . $maxScaleFactor . 'x';
                 } else {
-                    $scaled = $this->scale($factor, $allowUpScaling);
+                    $scaled = $this->scale($factor);
                     $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
                 }
             }

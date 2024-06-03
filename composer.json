@@ -4,7 +4,6 @@
     "name": "sitegeist/kaleidoscope",
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": "^7.4 || ^8.0",
         "neos/neos": "^7.0 || ^8.0 || ^9.0 || dev-master",
         "neos/fusion-afx": "^7.0 || ^8.0 || ^9.0 || dev-master",
         "neos/media": "*",

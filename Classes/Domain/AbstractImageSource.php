@@ -220,11 +220,10 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      * Render sourceset Attribute non-scalable media.
      *
      * @param mixed $mediaDescriptors
-     * @param bool $allowUpScaling
      *
      * @return string
      */
-    public function srcset($mediaDescriptors, bool $allowUpScaling = false): string
+    public function srcset($mediaDescriptors): string
     {
         return $this->src();
     }
