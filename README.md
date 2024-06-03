@@ -88,6 +88,7 @@ Props:
 - `sizes`: sizes attribute of the default image (string ot array)
 - `loading`: (optional, default "lazy") loading attribute for the img tag
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to the `imageSource`
+- `quality`: (optional) the image quality from 0 to 100, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`
 - `alt`: alt-attribute for the img tag (default "")
@@ -136,11 +137,13 @@ Props:
    - `media`: (optional) the media attribute for this source
    - `type`: (optional) the type attribute for this source
    - `format`: (optional) the image-format for the source like `webp` or `png`, is applied to `imageSource` and `type`
+   - `quality`: (optional) the image quality from 0 to 100, will be applied to the `imageSource`
    - `width`: (optional) the base width, will be applied to the `imageSource`
    - `height`: (optional) the base height, will be applied to the `imageSource`
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array)
 - `sizes`: sizes attribute of the default image (string ot array)
 - `formats`: (optional) image formats that will be rendered as sources of separate type (string or array)
+- `quality`: (optional) the image quality from 0 to 100, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`
 - `loading`: (optional, default "lazy") loading attribute for the img tag
@@ -212,6 +215,7 @@ Props:
 - `srcset`: media descriptors like '1.5x' or '600w' of the default image (string ot array, inherited from picture)
 - `sizes`: (optional) sizes attribute (string or array, inherited from picture)
 - `format`: (optional) the image-format like `webp` or `png`, will be applied to `imageSource` and `type`
+- `quality`: (optional) the image quality from 0 to 100, will be applied to the `imageSource`
 - `width`: (optional) the base width, will be applied to the `imageSource`
 - `height`: (optional) the base height, will be applied to the `imageSource`
 - `type`: (optional) the type attribute for the source like `image/png` or `image/webp`, the actual format is enforced via `imageSource.withFormat()`
@@ -307,6 +311,7 @@ Arguments:
 - `thumbnailPreset`: `width` and `height` are supported as explained above
 - `variantPreset`: as explained above
 - `format`: Set the image output format, like webp (default null)
+- `quality`: Set the image quality from 0 to 100 (default null)
 - `alt`: The alt attribute if not specified otherwise (default null)
 - `title`: The title attribute if not specified otherwise (default null)
 
@@ -355,6 +360,7 @@ Methods of ImageSource-Helpers that are accessible via Eel:
 - `withThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `withVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
 - `withFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
+- `withQuality( integer )`: Set the image quality from 0 to 100
 - `withAlt( ?string )`: Set the alt atttribute for the image tag
 - `withTitle( ?string )`: Set the title atttribute for the image tag
 
@@ -373,6 +379,7 @@ deprecated methods:
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
+- `setQuality( integer )`: Set the image quality from 0 to 100
 
 Note: The Eel-helpers cannot be created directly. They have to be created
 by using the `Sitegeist.Kaleidoscope:AssetImageSource` or

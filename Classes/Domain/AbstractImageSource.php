@@ -26,6 +26,11 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     protected $targetHeight;
 
     /**
+     * @var int|null
+     */
+    protected $targetQuality;
+
+    /**
      * @var string|null
      */
     protected $targetFormat;
@@ -100,6 +105,22 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
+
+        return $newSource;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function setQuality(int $quality): ImageSourceInterface
+    {
+        return $this->withQuality($quality);
+    }
+
+    public function withQuality(int $quality): ImageSourceInterface
+    {
+        $newSource = clone $this;
+        $newSource->targetQuality = $quality;
 
         return $newSource;
     }
@@ -277,6 +298,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
                 'withTitle',
                 'withDimensions',
                 'withFormat',
+                'withQuality',
                 'withWidth',
                 'withHeight',
                 'withThumbnailPreset',
@@ -286,6 +308,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
                 'setHeight',
                 'setDimensions',
                 'setFormat',
+                'setQuality',
                 'applyPreset',
                 'applyThumbnailPreset',
                 'useVariantPreset',

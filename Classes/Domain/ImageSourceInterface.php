@@ -19,6 +19,8 @@ interface ImageSourceInterface
 
     public function withHeight(int $targetHeight, bool $preserveAspect = false): ImageSourceInterface;
 
+    public function withQuality(int $targetQuality): ImageSourceInterface;
+
     public function withThumbnailPreset(string $format): ImageSourceInterface;
 
     public function withVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface;

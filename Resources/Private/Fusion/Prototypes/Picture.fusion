@@ -54,6 +54,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     loading = 'lazy'
     sources = null
     formats = null
+    quality = null
     width = null
     height = null
     alt = ''
@@ -78,6 +79,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         __width = ${this.width}
         __height = ${this.height}
         __format = ${this.format}
+        __quality = ${this.quality}
     }
 
     renderer = Neos.Fusion:Component {
@@ -89,6 +91,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width, props.preserveAspect) : value}
         imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height, props.preserveAspect) : value}
         imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
+        imageSource.@process.applyQuality = ${props.quality ? value.setQuality(props.quality) : value}
 
         srcset = ${props.srcset}
         sizes = ${props.sizes}
@@ -116,6 +119,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                         format={source.format}
                         width={source.width}
                         height={source.height}
+                        quality={source.quality}
                         srcset={source.srcset ? source.srcset : props.srcset}
                         sizes={source.sizes ? source.sizes : props.sizes}
                         renderDimensionAttributes={props.renderDimensionAttributes}

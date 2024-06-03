@@ -46,6 +46,13 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
+     * Runtime cache for the src uri for the asset.
+     *
+     * @var string|null
+     */
+    private $srcCache = null;
+
+    /**
      * @param ImageInterface     $asset
      * @param string|null        $title
      * @param string|null        $alt
@@ -112,6 +119,10 @@ class AssetImageSource extends AbstractScalableImageSource
             return '';
         }
 
+        if ($this->srcCache !== null) {
+            return $this->srcCache;
+        }
+
         $width = $this->getCurrentWidth();
         $height = $this->getCurrentHeight();
 
@@ -126,7 +137,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 
@@ -136,11 +147,14 @@ class AssetImageSource extends AbstractScalableImageSource
             $this->request
         );
 
-        if ($thumbnailData === null) {
-            return '';
-        }
+        $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
 
-        return $thumbnailData['src'];
+        return $this->srcCache;
+    }
+
+    public function __clone(): void
+    {
+        $this->srcCache = null;
     }
 
     public function dataSrc(): string
@@ -163,7 +177,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 
