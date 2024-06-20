@@ -96,6 +96,7 @@ Props:
 - `class`: class attribute for the img tag (deprecated in favor of attributes.class)
 - `attributes`: tag-attributes, will override any automatically rendered ones
 - `renderDimensionAttributes`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
+- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 #### Image with srcset in multiple resolutions:
 
@@ -154,6 +155,7 @@ Props:
 - `class`: class attribute for the picture tag (deprecated in favor of attributes.class)
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically for pictures that only use the `formats` options.
+- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 #### Picture multiple formats:
 
@@ -222,6 +224,7 @@ Props:
 - `media`: (optional) the media query for the given source
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the source-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically.
+- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
 
@@ -241,7 +244,7 @@ prototype (Vendor.Site:Component.ResponsiveKevisualImage) < prototype(Neos.Fusio
     # Enforce the dimensions of the passed images by cropping to 1600 x 800
     #
     imageSource = null
-    imageSource.@process.enforeDimensions = ${value ? value.withWidth(1600).withHeight(900) : null}
+    imageSource.@process.enforceDimensions = ${value ? value.withDimensions(1600,900) : null}
 
     renderer = afx`
         <Sitegeist.Kaleidoscope:Image imageSource={props.imageSource} srcset="1x, 1.5x, 2x" />
@@ -274,7 +277,7 @@ variants are needed. This frontend know-how is now encapsulated into the present
 
 To optimize the initial load time lazy loading should be disabled for the first contents but be
 enabled for others. This can be implemented by enabling the `lazy`ness in the ContentCase prototype
-depending on whether or not the current node is the first content in the main collection.
+depending on whether the current node is the first content in the main collection.
 
 ```
 renderer = Neos.Neos:ContentCollection {
@@ -297,10 +300,10 @@ renderer = Neos.Neos:ContentCollection {
 
 The package contains ImageSource-FusionObjects that encapsulate the intention to
 render an image. ImageSource-Objects return Eel-Helpers that allow to
-enforcing the rendered dimensions later in the rendering process.
+enforce the rendered dimensions later in the rendering process.
 
 Note: The settings for `width`, `height`, `thumbnailPreset` and `variantPreset` can be defined
-via fusion but can also applied to the returned object which will override the fusion-settings.
+via fusion but can also apply to the returned object which will override the fusion-settings.
 
 ### `Sitegeist.Kaleidoscope:AssetImageSource`
 
@@ -354,9 +357,9 @@ dimensions and to render the `src` and `srcset`-attributes.
 
 Methods of ImageSource-Helpers that are accessible via Eel:
 
-- `withWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if
-- `withHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
-- `withDimensions( integer, interger)`: Set the intended width and height
+- `withWidth( integer $width, bool $preserveAspect = false )`: Set the intended width & whether to modify height as well
+- `withHeight( integer $height, bool $preserveAspect = false )`: Set the intended height & whether to modify width as well
+- `withDimensions( integer $width, interger $height )`: Set the intended width and height
 - `withThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `withVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
 - `withFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
@@ -375,7 +378,7 @@ deprecated methods:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
-- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intend width modify height as well if
+- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intended width modify height as well if
 - `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
