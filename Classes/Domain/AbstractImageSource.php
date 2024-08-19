@@ -81,12 +81,12 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     /**
      * @deprecated
      */
-    public function setWidth(int $targetWidth, bool $preserveAspect = false): ImageSourceInterface
+    public function setWidth(int $targetWidth): ImageSourceInterface
     {
-        return $this->withWidth($targetWidth, $preserveAspect);
+        return $this->withWidth($targetWidth);
     }
 
-    public function withWidth(int $targetWidth, bool $preserveAspect = false): ImageSourceInterface
+    public function withWidth(int $targetWidth): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
@@ -97,12 +97,12 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
     /**
      * @deprecated
      */
-    public function setHeight(int $targetHeight, bool $preserveAspect = false): ImageSourceInterface
+    public function setHeight(int $targetHeight): ImageSourceInterface
     {
-        return $this->withHeight($targetHeight, $preserveAspect);
+        return $this->withHeight($targetHeight);
     }
 
-    public function withHeight(int $targetHeight, bool $preserveAspect = false): ImageSourceInterface
+    public function withHeight(int $targetHeight): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;

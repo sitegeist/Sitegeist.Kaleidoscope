@@ -20,7 +20,7 @@ renderer = afx`
 `
 ```
 
-By separating the aspects of image-definition, size-constraining and  rendering
+By separating the aspects of image-definition, size-constraining and rendering
 we enable the separation of those aspects into different fusion-components.
 
 We want to help implementing responsive-images in the context of atomic-fusion
@@ -96,7 +96,6 @@ Props:
 - `class`: class attribute for the img tag (deprecated in favor of attributes.class)
 - `attributes`: tag-attributes, will override any automatically rendered ones
 - `renderDimensionAttributes`: render dimension attributes (width/height) when the data is available from the imageSource. Enabled by default
-- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 #### Image with srcset in multiple resolutions:
 
@@ -155,7 +154,6 @@ Props:
 - `class`: class attribute for the picture tag (deprecated in favor of attributes.class)
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the img-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically for pictures that only use the `formats` options.
-- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 #### Picture multiple formats:
 
@@ -224,7 +222,6 @@ Props:
 - `media`: (optional) the media query for the given source
 - `renderDimensionAttributes`: render dimension attributes (width/height) for the source-tag when the data is available from the imageSource
   if not specified renderDimensionAttributes will be enabled automatically.
-- `preserveAspect`: preserve the aspect of the source image. Enabled by default
 
 ## Responsive Images with AtomicFusion-Components and Sitegeist.Monocle
 
@@ -357,8 +354,8 @@ dimensions and to render the `src` and `srcset`-attributes.
 
 Methods of ImageSource-Helpers that are accessible via Eel:
 
-- `withWidth( integer $width, bool $preserveAspect = false )`: Set the intended width & whether to modify height as well
-- `withHeight( integer $height, bool $preserveAspect = false )`: Set the intended height & whether to modify width as well
+- `withWidth( integer $width )`: Set the intended width & modify height to preserve the aspect ratio
+- `withHeight( integer $height )`: Set the intended height & modify width to preserve the aspect ratio
 - `withDimensions( integer $width, interger $height )`: Set the intended width and height
 - `withThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `withVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
@@ -378,8 +375,8 @@ deprecated methods:
 
 - `applyThumbnailPreset( string )`: Set width and/or height via named thumbnail preset from Settings `Neos.Media.thumbnailPresets`
 - `useVariantPreset( string, string )`: Select image variant via the named variant preset (parameters are "preset identifier" key and "preset variant name" key from Settings `Neos.Media.variantPresets`)
-- `setWidth( integer $width, bool $preserveAspect = false )`: Set the intended width modify height as well if
-- `setHeight( integer $height, bool $preserveAspect = false )`: Set the intended height
+- `setWidth( integer $width )`: Set the intended width
+- `setHeight( integer $height )`: Set the intended height
 - `setDimensions( integer, interger)`: Set the intended width and height
 - `setFormat( string )`: Set the image format to generate like  `webp`, `png` or `jpeg`
 - `setQuality( integer )`: Set the image quality from 0 to 100

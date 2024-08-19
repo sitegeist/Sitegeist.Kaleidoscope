@@ -16,12 +16,12 @@ interface ImageSourceHelperInterface
     /**
      * @deprecated use withWidth
      */
-    public function setWidth(int $width, bool $preserveAspect = false): ImageSourceInterface;
+    public function setWidth(int $width): ImageSourceInterface;
 
     /**
      * @deprecated use withHeight
      */
-    public function setHeight(int $height, bool $preserveAspect = false): ImageSourceInterface;
+    public function setHeight(int $height): ImageSourceInterface;
 
     /**
      * @deprecated use withDimension
