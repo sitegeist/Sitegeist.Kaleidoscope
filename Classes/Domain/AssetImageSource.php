@@ -46,6 +46,13 @@ class AssetImageSource extends AbstractScalableImageSource
     protected $request;
 
     /**
+     * Runtime cache for the src uri for the asset.
+     *
+     * @var string|null
+     */
+    private $srcCache = null;
+
+    /**
      * @param ImageInterface     $asset
      * @param string|null        $title
      * @param string|null        $alt
@@ -60,6 +67,11 @@ class AssetImageSource extends AbstractScalableImageSource
         $this->async = $async;
         $this->baseWidth = $this->asset->getWidth();
         $this->baseHeight = $this->asset->getHeight();
+    }
+
+    public function supportsUpscaling(): bool
+    {
+        return false;
     }
 
     /**
@@ -112,12 +124,16 @@ class AssetImageSource extends AbstractScalableImageSource
             return '';
         }
 
+        if ($this->srcCache !== null) {
+            return $this->srcCache;
+        }
+
         $width = $this->getCurrentWidth();
         $height = $this->getCurrentHeight();
 
         $async = $this->request ? $this->async : false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,
@@ -126,7 +142,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 
@@ -136,11 +152,14 @@ class AssetImageSource extends AbstractScalableImageSource
             $this->request
         );
 
-        if ($thumbnailData === null) {
-            return '';
-        }
+        $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
 
-        return $thumbnailData['src'];
+        return $this->srcCache;
+    }
+
+    public function __clone(): void
+    {
+        $this->srcCache = null;
     }
 
     public function dataSrc(): string
@@ -154,7 +173,7 @@ class AssetImageSource extends AbstractScalableImageSource
 
         $async = false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,
@@ -163,7 +182,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $allowCropping,
             $allowUpScaling,
             $async,
-            null,
+            $this->targetQuality,
             $this->targetFormat
         );
 

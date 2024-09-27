@@ -22,6 +22,9 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
     format = null
     format.@process.contextFallback = ${value || __format}
 
+    quality = null
+    quality.@process.contextFallback = ${value || __quality}
+
     type = null
     media = null
     renderDimensionAttributes = true
@@ -31,10 +34,11 @@ prototype(Sitegeist.Kaleidoscope:Source) < prototype(Neos.Fusion:Component) {
 
         imageSource = ${props.imageSource}
         imageSource.@if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
-        imageSource.@process.applyDimensions = ${(width && height) ? value.withDimensions(width, height) : value}
-        imageSource.@process.applyWidth = ${(width && !height) ? value.withWidth(width) : value}
-        imageSource.@process.applyHeight = ${(height && !width) ? value.withHeight(height) : value}
-        imageSource.@process.applyFormat = ${format ? value.withFormat(format) : value}
+        imageSource.@process.applyDimensions = ${(props.width && props.height) ? value.withDimensions(props.width, props.height) : value}
+        imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
+        imageSource.@process.applyQuality = ${props.quality ? value.withQuality(props.quality) : value}
 
         type = ${props.format ? 'image/' + props.format : props.type}
     }

@@ -29,6 +29,11 @@ interface ImageSourceHelperInterface
     public function setDimensions(int $width, int $height): ImageSourceInterface;
 
     /**
+     * @deprecated use withQuality
+     */
+    public function setQuality(int $quality): ImageSourceInterface;
+
+    /**
      * @deprecated use withFormat
      */
     public function setFormat(string $format): ImageSourceInterface;

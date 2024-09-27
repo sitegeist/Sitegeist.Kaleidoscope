@@ -54,6 +54,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
     loading = 'lazy'
     sources = null
     formats = null
+    quality = null
     width = null
     height = null
     alt = ''
@@ -76,6 +77,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         __width = ${this.width}
         __height = ${this.height}
         __format = ${this.format}
+        __quality = ${this.quality}
     }
 
     @private {
@@ -86,6 +88,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width) : value}
         imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height) : value}
         imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
+        imageSource.@process.applyQuality = ${props.quality ? value.withQuality(props.quality) : value}
     }
 
     renderer = afx`
