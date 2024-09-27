@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\Domain;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Http\ServerRequestAttributes;
+use Neos\Flow\Mvc\ActionRequestFactory;
+use Neos\Flow\Mvc\Routing\Dto\RouteParameters;
+use Neos\Flow\Mvc\Routing\UriBuilder;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 class DummyImageSource extends AbstractScalableImageSource
 {
@@ -14,6 +20,24 @@ class DummyImageSource extends AbstractScalableImageSource
      * @Flow\Inject
      */
     protected $dummyImageGenerator;
+
+    /**
+     * @var UriFactoryInterface
+     * @Flow\Inject
+     */
+    protected $uriFactory;
+
+    /**
+     * @var ServerRequestFactoryInterface
+     * @Flow\Inject
+     */
+    protected $serverRequestFactory;
+
+    /**
+     * @var ActionRequestFactory
+     * @Flow\Inject
+     */
+    protected $actionRequestFactory;
 
     /**
      * @var string
@@ -31,7 +55,7 @@ class DummyImageSource extends AbstractScalableImageSource
     protected $text;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $baseUri;
 
@@ -41,7 +65,7 @@ class DummyImageSource extends AbstractScalableImageSource
     private $allowUpScaling;
 
     /**
-     * @param string      $baseUri
+     * @param string|null $baseUri
      * @param string|null $title
      * @param string|null $alt
      * @param int|null    $baseWidth
@@ -49,8 +73,9 @@ class DummyImageSource extends AbstractScalableImageSource
      * @param string|null $backgroundColor
      * @param string|null $foregroundColor
      * @param string|null $text
+     * @param bool        $allowUpScaling
      */
-    public function __construct(string $baseUri, ?string $title = null, ?string $alt = null, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null, bool $allowUpScaling = true)
+    public function __construct(?string $baseUri, ?string $title = null, ?string $alt = null, ?int $baseWidth = null, ?int $baseHeight = null, ?string $backgroundColor = null, ?string $foregroundColor = null, ?string $text = null, $allowUpScaling = false)
     {
         parent::__construct($title, $alt);
         $this->baseUri = $baseUri;
@@ -94,6 +119,25 @@ class DummyImageSource extends AbstractScalableImageSource
      */
     public function src(): string
     {
+        if (is_string($this->baseUri)) {
+            $baseUri = $this->baseUri;
+        } else {
+            $uri = $this->uriFactory->createUri('http://localhost');
+
+            $httpRequest = $this->serverRequestFactory->createServerRequest('GET', $uri)
+                ->withAttribute(
+                    ServerRequestAttributes::ROUTING_PARAMETERS,
+                    RouteParameters::createEmpty()->withParameter('requestUriHost', $uri->getHost())
+                );
+
+            $uriBuilder = new UriBuilder();
+            $uriBuilder->setRequest($this->actionRequestFactory->createActionRequest($httpRequest));
+            $uriBuilder->setFormat('html');
+            $uriBuilder->setCreateAbsoluteUri(false);
+
+            $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
+        }
+
         $arguments = [
             'w' => $this->getCurrentWidth(),
             'h' => $this->getCurrentHeight(),
@@ -115,7 +159,7 @@ class DummyImageSource extends AbstractScalableImageSource
             $arguments['f'] = $this->targetFormat;
         }
 
-        return $this->baseUri . '?' . http_build_query($arguments);
+        return $baseUri . '?' . http_build_query($arguments);
     }
 
     public function dataSrc(): string
