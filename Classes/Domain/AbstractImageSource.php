@@ -82,6 +82,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setWidth(int $targetWidth, bool $preserveAspect = false): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->setWidth" is used that will be removed with kaleidoscope 8. Use "withWidth" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withWidth($targetWidth, $preserveAspect);
     }
 
@@ -98,6 +99,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setHeight(int $targetHeight, bool $preserveAspect = false): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->setHeight" is used that will be removed with kaleidoscope 8. Use "withHeight" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withHeight($targetHeight, $preserveAspect);
     }
 
@@ -114,6 +116,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setQuality(int $quality): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->setQuality" is used that will be removed with kaleidoscope 8. Use "withQuality" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withQuality($quality);
     }
 
@@ -130,6 +133,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setFormat(string $format): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->setFormat" is used that will be removed with kaleidoscope 8. Use "withFormat" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withFormat($format);
     }
 
@@ -146,6 +150,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setDimensions(int $targetWidth, int $targetHeight): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->setDimensions" is used that will be removed with kaleidoscope 8. Use "withDimensions" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withDimensions($targetWidth, $targetHeight);
     }
 
@@ -163,6 +168,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function applyPreset(string $name): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->applyPreset" is used that will be removed with kaleidoscope 8. Use "withThumbnailPreset" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withThumbnailPreset($name);
     }
 
@@ -171,6 +177,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function applyThumbnailPreset(string $name): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->applyThumbnailPreset" is used that will be removed with kaleidoscope 8. Use "withThumbnailPreset" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withThumbnailPreset($name);
     }
 
@@ -201,6 +208,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function useVariantPreset(string $presetIdentifier, string $presetVariantName): ImageSourceInterface
     {
+        $this->logger->warning('Deprecated method "ImageSource->useVariantPreset" is used that will be removed with kaleidoscope 8. Use "withVariantPreset" instead!', LogEnvironment::fromMethodName(__METHOD__));
         return $this->withVariantPreset($presetIdentifier, $presetVariantName);
     }
 
@@ -233,6 +241,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setTitle(?string $title): void
     {
+        $this->logger->warning('Deprecated method "ImageSource->setTitle" is used that will be removed with kaleidoscope 8. Use "withTitle" instead!', LogEnvironment::fromMethodName(__METHOD__));
         $this->title = $title;
     }
 
@@ -249,6 +258,7 @@ abstract class AbstractImageSource implements ImageSourceInterface, ProtectedCon
      */
     public function setAlt(?string $alt): void
     {
+        $this->logger->warning('Deprecated method "ImageSource->setAlt" is used that will be removed with kaleidoscope 8. Use "withAlt" instead!', LogEnvironment::fromMethodName(__METHOD__));
         $this->alt = $alt;
     }
 
