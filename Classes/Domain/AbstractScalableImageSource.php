@@ -36,44 +36,38 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
 
     /**
      * @param int|null $targetWidth
-     * @param bool     $preserveAspect
      *
      * @return ImageSourceInterface
      */
-    public function withWidth(int $targetWidth = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withWidth(int $targetWidth = null): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetWidth = $targetWidth;
-        if ($preserveAspect === true) {
-            if ($this->targetWidth && $this->targetHeight) {
-                $aspect = $this->targetWidth / $this->targetHeight;
-            } else {
-                $aspect = $this->baseWidth / $this->baseHeight;
-            }
-            $newSource->targetHeight = (int) round($targetWidth / $aspect);
+        if ($this->targetWidth && $this->targetHeight) {
+            $aspect = $this->targetWidth / $this->targetHeight;
+        } else {
+            $aspect = $this->baseWidth / $this->baseHeight;
         }
+        $newSource->targetHeight = (int) round($targetWidth / $aspect);
 
         return $newSource;
     }
 
     /**
      * @param int|null $targetHeight
-     * @param bool     $preserveAspect
      *
      * @return ImageSourceInterface
      */
-    public function withHeight(int $targetHeight = null, bool $preserveAspect = false): ImageSourceInterface
+    public function withHeight(int $targetHeight = null): ImageSourceInterface
     {
         $newSource = clone $this;
         $newSource->targetHeight = $targetHeight;
-        if ($preserveAspect === true) {
-            if ($this->targetWidth && $this->targetHeight) {
-                $aspect = $this->targetWidth / $this->targetHeight;
-            } else {
-                $aspect = $this->baseWidth / $this->baseHeight;
-            }
-            $newSource->targetWidth = (int) round($targetHeight * $aspect);
+        if ($this->targetWidth && $this->targetHeight) {
+            $aspect = $this->targetWidth / $this->targetHeight;
+        } else {
+            $aspect = $this->baseWidth / $this->baseHeight;
         }
+        $newSource->targetWidth = (int) round($targetHeight * $aspect);
 
         return $newSource;
     }
