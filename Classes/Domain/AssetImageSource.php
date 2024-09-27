@@ -69,6 +69,11 @@ class AssetImageSource extends AbstractScalableImageSource
         $this->baseHeight = $this->asset->getHeight();
     }
 
+    public function supportsUpscaling(): bool
+    {
+        return false;
+    }
+
     /**
      * Use the variant generated from the given variant preset in this image source.
      *
@@ -128,7 +133,7 @@ class AssetImageSource extends AbstractScalableImageSource
 
         $async = $this->request ? $this->async : false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,
@@ -168,7 +173,7 @@ class AssetImageSource extends AbstractScalableImageSource
 
         $async = false;
         $allowCropping = true;
-        $allowUpScaling = false;
+        $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
             $width,
             $width,
