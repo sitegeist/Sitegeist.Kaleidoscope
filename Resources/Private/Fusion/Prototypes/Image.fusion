@@ -128,42 +128,36 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
     attributes = Neos.Fusion:DataStructure
     renderDimensionAttributes = true
 
-    renderer = Neos.Fusion:Component {
-        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+    @private {
+        # detect scalable sources
         isScalableSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ScalableImageSourceInterface')}
 
         # apply format, width and height to the imageSource
         imageSource = ${props.imageSource}
-        imageSource.@process.applyWidth = ${props.width ? value.withWidth(props.width) : value}
-        imageSource.@process.applyHeight = ${props.height ? value.withHeight(props.height) : value}
+        imageSource.@if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\Domain\\ImageSourceInterface')}
+        imageSource.@process.applyDimensions = ${(props.width && props.height) ? value.withDimensions(props.width, props.height) : value}
+        imageSource.@process.applyWidth = ${(props.width && !props.height) ? value.withWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${(props.height && !props.width) ? value.withHeight(props.height) : value}
         imageSource.@process.applyFormat = ${props.format ? value.withFormat(props.format) : value}
         imageSource.@process.applyQuality = ${props.quality ? value.withQuality(props.quality) : value}
-
-        srcset = ${props.srcset}
-        sizes = ${props.sizes}
-        loading = ${props.loading}
-        alt =  ${props.alt}
-        title = ${props.title}
-        class = ${props.class}
-        attributes = ${props.attributes}
-        renderDimensionAttributes = ${props.renderDimensionAttributes}
-
-        renderer = afx`
-            <img
-                src={props.imageSource.src()}
-                srcset={props.imageSource.srcset(props.srcset)}
-                srcset.@if.isScalable={props.isScalableSource && props.srcset}
-                sizes={props.sizes}
-                sizes.@if.isScalable={props.isScalableSource && props.sizes}
-                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
-                loading={props.loading}
-                class={props.class}
-                alt={props.alt || props.imageSource.alt() || ''}
-                title={props.title || props.imageSource.title()}
-                width={props.renderDimensionAttributes ? props.imageSource.width() : null}
-                height={props.renderDimensionAttributes ? props.imageSource.height() : null}
-                {...props.attributes}
-            />
-        `
     }
+
+    renderer = afx`
+        <img
+            @if={private.imageSource}
+            src={private.imageSource.src()}
+            srcset={private.imageSource.srcset(props.srcset)}
+            srcset.@if.isScalable={private.isScalableSource && props.srcset}
+            sizes={props.sizes}
+            sizes.@if.isScalable={private.isScalableSource && props.sizes}
+            sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+            loading={props.loading}
+            class={props.class}
+            alt={props.alt || private.imageSource.alt() || ''}
+            title={props.title || private.imageSource.title()}
+            width={props.renderDimensionAttributes ? private.imageSource.width() : null}
+            height={props.renderDimensionAttributes ? private.imageSource.height() : null}
+            {...props.attributes}
+        />
+    `
 }
