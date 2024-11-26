@@ -59,11 +59,8 @@ class DummyImageSourceImplementation extends AbstractImageSourceImplementation
      */
     public function createHelper(): ?ImageSourceInterface
     {
-        $uriBuilder = $this->runtime->getControllerContext()->getUriBuilder()->reset()->setCreateAbsoluteUri(true);
-        $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
-
         return new DummyImageSource(
-            $baseUri,
+            null,
             $this->getTitle(),
             $this->getAlt(),
             $this->getBaseWidth(),
