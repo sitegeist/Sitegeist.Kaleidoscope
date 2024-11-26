@@ -73,7 +73,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             $this->getTitle(),
             $this->getAlt(),
             $this->getAsync(),
-            $this->getRuntime()->getControllerContext()->getRequest()
+            null
         );
 
         return $helper;
