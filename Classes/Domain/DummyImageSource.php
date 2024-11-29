@@ -132,7 +132,6 @@ class DummyImageSource extends AbstractScalableImageSource
 
             $uriBuilder = new UriBuilder();
             $uriBuilder->setRequest($this->actionRequestFactory->createActionRequest($httpRequest));
-            $uriBuilder->setFormat('html');
             $uriBuilder->setCreateAbsoluteUri(false);
 
             $baseUri = $uriBuilder->uriFor('image', [], 'DummyImage', 'Sitegeist.Kaleidoscope');
