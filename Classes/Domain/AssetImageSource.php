@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Sitegeist\Kaleidoscope\Domain;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Http\ServerRequestAttributes;
 use Neos\Flow\Mvc\ActionRequest;
+use Neos\Flow\Mvc\ActionRequestFactory;
+use Neos\Flow\Mvc\Routing\Dto\RouteParameters;
+use Neos\Flow\Mvc\Routing\UriBuilder;
 use Neos\Media\Domain\Model\AssetInterface;
 use Neos\Media\Domain\Model\AssetVariantInterface;
 use Neos\Media\Domain\Model\ImageInterface;
@@ -13,6 +17,8 @@ use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Media\Domain\Model\VariantSupportInterface;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\Media\Domain\Service\ThumbnailService;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 class AssetImageSource extends AbstractScalableImageSource
 {
@@ -29,6 +35,24 @@ class AssetImageSource extends AbstractScalableImageSource
      * @var AssetService
      */
     protected $assetService;
+
+    /**
+     * @var UriFactoryInterface
+     * @Flow\Inject
+     */
+    protected $uriFactory;
+
+    /**
+     * @var ServerRequestFactoryInterface
+     * @Flow\Inject
+     */
+    protected $serverRequestFactory;
+
+    /**
+     * @var ActionRequestFactory
+     * @Flow\Inject
+     */
+    protected $actionRequestFactory;
 
     /**
      * @var ImageInterface
@@ -131,7 +155,6 @@ class AssetImageSource extends AbstractScalableImageSource
         $width = $this->getCurrentWidth();
         $height = $this->getCurrentHeight();
 
-        $async = $this->request ? $this->async : false;
         $allowCropping = true;
         $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
@@ -141,15 +164,27 @@ class AssetImageSource extends AbstractScalableImageSource
             $height,
             $allowCropping,
             $allowUpScaling,
-            $async,
+            $this->async,
             $this->targetQuality,
             $this->targetFormat
         );
 
+        if ($this->request instanceof ActionRequest) {
+            $request = $this->request;
+        } else {
+            $uri = $this->uriFactory->createUri('http://localhost');
+            $httpRequest = $this->serverRequestFactory->createServerRequest('GET', $uri)
+                                                      ->withAttribute(
+                                                          ServerRequestAttributes::ROUTING_PARAMETERS,
+                                                          RouteParameters::createEmpty()->withParameter('requestUriHost', $uri->getHost())
+                                                      );
+            $request = $this->actionRequestFactory->createActionRequest($httpRequest);
+        }
+
         $thumbnailData = $this->assetService->getThumbnailUriAndSizeForAsset(
             $this->asset,
             $thumbnailConfiguration,
-            $this->request
+            $request
         );
 
         $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
@@ -171,7 +206,6 @@ class AssetImageSource extends AbstractScalableImageSource
         $width = $this->getCurrentWidth();
         $height = $this->getCurrentHeight();
 
-        $async = false;
         $allowCropping = true;
         $allowUpScaling = $this->supportsUpscaling();
         $thumbnailConfiguration = new ThumbnailConfiguration(
@@ -181,7 +215,7 @@ class AssetImageSource extends AbstractScalableImageSource
             $height,
             $allowCropping,
             $allowUpScaling,
-            $async,
+            false,
             $this->targetQuality,
             $this->targetFormat
         );
@@ -192,8 +226,9 @@ class AssetImageSource extends AbstractScalableImageSource
             if ($stream = $thumbnailImage->getResource()->getStream()) {
                 if (is_resource($stream)) {
                     if ($content = stream_get_contents($stream)) {
+                        $mediaType = $thumbnailImage->getResource()->getMediaType();
                         if (is_string($content)) {
-                            return 'data:image/png;base64,' . base64_encode($content);
+                            return 'data:' . $mediaType . ';base64,' . base64_encode($content);
                         }
                     }
                 }
