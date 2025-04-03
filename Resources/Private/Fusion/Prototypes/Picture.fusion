@@ -103,7 +103,7 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
         renderer = afx`
             <picture class={props.class} {...props.attributes}>
                 {props.content}
-                <Neos.Fusion:Collection collection={props.sources} itemName="source" @if.has={props.sources}>
+                <Neos.Fusion:Loop items={props.sources} itemName="source" @if.has={props.sources}>
                     <Sitegeist.Kaleidoscope:Source
                         imageSource={source.imageSource ? source.imageSource : props.imageSource}
                         type={source.type}
@@ -115,17 +115,17 @@ prototype(Sitegeist.Kaleidoscope:Picture) < prototype(Neos.Fusion:Component) {
                         sizes={source.sizes ? source.sizes : props.sizes}
                         renderDimensionAttributes={props.renderDimensionAttributes}
                     />
-                </Neos.Fusion:Collection>
-                <Neos.Fusion:Collection
+                </Neos.Fusion:Loop>
+                <Neos.Fusion:Loop
                     @if.has={props.imageSource && props.formats}
-                    collection={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
+                    items={Type.isArray(props.formats) ? props.formats : String.split(props.formats, ',')}
                     itemName="format"
                 >
                     <Sitegeist.Kaleidoscope:Source
                         imageSource={props.imageSource}
                         format={String.trim(format)}
                     />
-                </Neos.Fusion:Collection>
+                </Neos.Fusion:Loop>
                 <Sitegeist.Kaleidoscope:Image
                     imageSource={props.imageSource}
                     sizes={props.sizes}
