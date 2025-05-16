@@ -66,7 +66,7 @@ class DummyImageGenerator
      *
      * @return ?ImageInterface
      */
-    public function createDummyImage(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): ?ImageInterface
+    public function createDummyImage(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', ?string $t = null, string $f = 'png'): ?ImageInterface
     {
         // limit input arguments
         if ($w > 9999) {
