@@ -62,7 +62,7 @@ class DummyImageController extends ActionController
      *
      * @return string
      */
-    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', string $t = null, string $f = 'png'): string
+    public function imageAction(int $w = 600, int $h = 400, string $bg = '#000', string $fg = '#fff', ?string $t = null, string $f = 'png'): string
     {
         try {
             $dummyImage = $this->dummyImageService->createDummyImage($w, $h, $bg, $fg, $t, $f);
