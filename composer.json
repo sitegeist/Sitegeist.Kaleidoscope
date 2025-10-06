@@ -7,7 +7,8 @@
         "neos/neos": "^8.3 || ^9.0 || dev-master",
         "neos/fusion-afx": "^8.3 || ^9.0 || dev-master",
         "neos/media": "*",
-        "neos/imagine": "*"
+        "neos/imagine": "*",
+        "sitegeist/kaleidoscope-svgdimensions": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

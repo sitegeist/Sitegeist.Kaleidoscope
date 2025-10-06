@@ -52,15 +52,6 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
         }
 
         if ($asset->getWidth() > 0 && $asset->getHeight() > 0) {
-            if ($asset->getResource()->getMediaType() === 'image/svg+xml') {
-                return new SvgAssetImageSource(
-                    $asset,
-                    $this->getTitle(),
-                    $this->getAlt(),
-                    $this->getAsync(),
-                    $this->getRuntime()->getControllerContext()->getRequest()
-                );
-            }
             return new AssetImageSource(
                 $asset,
                 $this->getTitle(),
