@@ -51,15 +51,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             return null;
         }
 
-        if ($asset->getWidth() > 0 && $asset->getHeight() > 0) {
-            return new AssetImageSource(
-                $asset,
-                $this->getTitle(),
-                $this->getAlt(),
-                $this->getAsync(),
-                $this->getRuntime()->getControllerContext()->getRequest()
-            );
-        } else {
+        if (!$asset->getWidth() || !$asset->getHeight()) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             if (is_string($uri)) {
                 return new UriImageSource(
@@ -71,5 +63,15 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
                 return null;
             }
         }
+
+        $helper = new AssetImageSource(
+            $asset,
+            $this->getTitle(),
+            $this->getAlt(),
+            $this->getAsync(),
+            $this->getRuntime()->getControllerContext()->getRequest()
+        );
+
+        return $helper;
     }
 }
