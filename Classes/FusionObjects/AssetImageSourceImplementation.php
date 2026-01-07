@@ -7,8 +7,10 @@ namespace Sitegeist\Kaleidoscope\FusionObjects;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\ImageInterface;
+use Neos\Media\Domain\Model\ImageVariant;
 use Sitegeist\Kaleidoscope\Domain\AssetImageSource;
 use Sitegeist\Kaleidoscope\Domain\ImageSourceInterface;
+use Sitegeist\Kaleidoscope\Domain\SvgAssetImageSource;
 use Sitegeist\Kaleidoscope\Domain\UriImageSource;
 
 class AssetImageSourceImplementation extends AbstractImageSourceImplementation
@@ -20,12 +22,6 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
      */
     protected $resourceManager;
 
-    /**
-     * @var string[]
-     */
-    protected $nonScalableMediaTypes = [
-        'image/svg+xml',
-    ];
 
     /**
      * @return ImageInterface|null
@@ -55,7 +51,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             return null;
         }
 
-        if (in_array($asset->getResource()->getMediaType(), $this->nonScalableMediaTypes, true)) {
+        if (!$asset->getWidth() || !$asset->getHeight()) {
             $uri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
             if (is_string($uri)) {
                 return new UriImageSource(
@@ -73,7 +69,7 @@ class AssetImageSourceImplementation extends AbstractImageSourceImplementation
             $this->getTitle(),
             $this->getAlt(),
             $this->getAsync(),
-            null
+            $this->getRuntime()->getControllerContext()->getRequest()
         );
 
         return $helper;

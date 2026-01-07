@@ -77,6 +77,12 @@ class AssetImageSource extends AbstractScalableImageSource
     private $srcCache = null;
 
     /**
+     * Media types that are intrinsic scalable and thus need no srcset
+     * @var string[]
+     */
+    protected $scalableMediaTypes = ['image/svg+xml'];
+
+    /**
      * @param ImageInterface     $asset
      * @param string|null        $title
      * @param string|null        $alt
@@ -187,9 +193,17 @@ class AssetImageSource extends AbstractScalableImageSource
             $request
         );
 
-        $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData['src'];
+        $this->srcCache = ($thumbnailData === null) ? '' : $thumbnailData[ 'src' ];
 
         return $this->srcCache;
+    }
+
+    public function srcset($mediaDescriptors): string
+    {
+        if (in_array($this->asset->getResource()->getMediaType(), $this->scalableMediaTypes, true)) {
+            return '';
+        }
+        return parent::srcset($mediaDescriptors);
     }
 
     public function __clone(): void
