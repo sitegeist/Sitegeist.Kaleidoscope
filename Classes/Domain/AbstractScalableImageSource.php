@@ -273,11 +273,16 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
             if ($srcsetType === 'width') {
                 $width = (int)$matches['width'];
                 $scaleFactor = $width / $this->width();
-                if (!$this->supportsUpscaling() && ($width / $this->baseWidth > 1)) {
-                    $srcsetArray[] = $this->src() . ' ' . $this->baseWidth . 'w';
+                if (!$this->supportsUpscaling() && ($scaleFactor > $maxScaleFactor)) {
+                    $scaled = $this->scale($maxScaleFactor);
+                    if (!array_key_exists($scaled->width() . 'w', $srcsetArray)) {
+                        $srcsetArray[ $scaled->width() . 'w' ] = $scaled->src() . ' ' . $scaled->width() . 'w';
+                    }
                 } else {
-                    $scaled = $this->scale($scaleFactor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $width . 'w';
+                    if (!array_key_exists($width . 'w', $srcsetArray)) {
+                        $scaled = $this->scale($scaleFactor);
+                        $srcsetArray[ $width . 'w' ] = $scaled->src() . ' ' . $width . 'w';
+                    }
                 }
             } elseif ($srcsetType === 'factor') {
                 $factor = (float)$matches['factor'];
@@ -287,11 +292,15 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
                         ($this->targetWidth && ($maxScaleFactor < $factor))
                     )
                 ) {
-                    $scaled = $this->scale($maxScaleFactor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $maxScaleFactor . 'x';
+                    if (!array_key_exists($maxScaleFactor . 'x', $srcsetArray)) {
+                        $scaled = $this->scale($maxScaleFactor);
+                        $srcsetArray[ $maxScaleFactor . 'x' ] = $scaled->src() . ' ' . $maxScaleFactor . 'x';
+                    }
                 } else {
-                    $scaled = $this->scale($factor);
-                    $srcsetArray[] = $scaled->src() . ' ' . $factor . 'x';
+                    if (!array_key_exists($factor . 'x', $srcsetArray)) {
+                        $scaled = $this->scale($factor);
+                        $srcsetArray[ $factor . 'x' ] = $scaled->src() . ' ' . $factor . 'x';
+                    }
                 }
             }
         }
