@@ -37,6 +37,11 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
     protected $baseHeight;
 
     /**
+     * @var array<string, string>
+     */
+    private array $srcsetResultRuntimeCache = [];
+
+    /**
      * @param int|null $targetWidth
      * @param bool     $preserveAspect
      *
@@ -252,6 +257,14 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
             $descriptors = Arrays::trimExplode(',', (string)$mediaDescriptors);
         }
 
+        $runtimeCacheKey = implode(
+            ',',
+            $descriptors instanceof \Traversable ? iterator_to_array($descriptors) : $descriptors
+        );
+        if (array_key_exists($runtimeCacheKey, $this->srcsetResultRuntimeCache)) {
+            return $this->srcsetResultRuntimeCache[$runtimeCacheKey];
+        }
+
         $srcsetType = null;
         $maxScaleFactor = min($this->baseWidth / $this->width(), $this->baseHeight / $this->height());
 
@@ -305,6 +318,8 @@ abstract class AbstractScalableImageSource extends AbstractImageSource implement
             }
         }
 
-        return implode(', ', array_unique($srcsetArray));
+        $result =  implode(', ', array_unique($srcsetArray));
+        $this->srcsetResultRuntimeCache[$runtimeCacheKey] = $result;
+        return $result;
     }
 }
