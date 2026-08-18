@@ -149,7 +149,8 @@ prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
             srcset={private.imageSource.srcset(props.srcset) || false}
             srcset.@if.isScalable={private.isScalableSource && props.srcset}
             sizes={props.sizes}
-            sizes.@if.isScalable={private.isScalableSource && props.sizes && props.srcset}
+            sizes.@if.isScalable={private.isScalableSource && props.sizes}
+            sizes.@if.hasSrcset={props.srcset && private.imageSource.srcset(props.srcset)}
             sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
             loading={props.loading}
             class={props.class}
